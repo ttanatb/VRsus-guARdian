@@ -1,9 +1,10 @@
-﻿using System;
+﻿#if UNITY_IOS
+using System;
 using System.Collections.Generic;
 
 namespace UnityEngine.XR.iOS
 {
-	public class UnityARGeneratePlane : MonoBehaviour
+    public class UnityARGeneratePlane : MonoBehaviour
 	{
 		public GameObject planePrefab;
         private UnityARAnchorManager unityARAnchorManager;
@@ -31,3 +32,4 @@ namespace UnityEngine.XR.iOS
 	}
 }
 
+#endif

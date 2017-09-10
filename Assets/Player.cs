@@ -1,11 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Player : MonoBehaviour
+
+public class Player : NetworkBehaviour
 {
     public GameObject iOSPlayer;
     public GameObject VRPlayer;
+
+    private AudioListener[] listeners;
+
+    private void Awake()
+    {
+        listeners = GetComponentsInChildren<AudioListener>();
+    }
 
     // Use this for initialization
     void Start()
@@ -20,14 +29,13 @@ public class Player : MonoBehaviour
             VRPlayer = transform.GetChild(1).gameObject;
         }
 
-
-#if UNITY_IOS
-        VRPlayer.SetActive(false);
-        iOSPlayer.SetActive(true);
-#else
-        VRPlayer.SetActive(true);
-        iOSPlayer.SetActive(false);
-#endif
+        if (!isClient)
+        {
+            foreach(AudioListener listener in listeners)
+            {
+                listener.enabled = false;
+            }
+        }
     }
 
     // Update is called once per frame
