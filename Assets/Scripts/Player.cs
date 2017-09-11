@@ -70,6 +70,8 @@ public class Player : NetworkBehaviour
             {
                 obj.SetActive(false);
             }
+
+            UnityARCameraManager.Instance.SetCamera(Camera.main);
         }
 
         else

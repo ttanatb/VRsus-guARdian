@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.iOS;
 
-public class UnityARCameraManager : MonoBehaviour {
+public class UnityARCameraManager : Singleton<UnityARCameraManager> {
 
     public Camera m_camera;
+    public Material m_ClearMaterial;
+
     private UnityARSessionNativeInterface m_session;
 	private Material savedClearMaterial;
 
@@ -69,6 +71,9 @@ public class UnityARCameraManager : MonoBehaviour {
             }
             unityARVideo = m_camera.gameObject.AddComponent<UnityARVideo> ();
             unityARVideo.m_ClearMaterial = savedClearMaterial;
+
+            if (unityARVideo.m_ClearMaterial == null)
+                unityARVideo.m_ClearMaterial = m_ClearMaterial;
         }
 	}
 
