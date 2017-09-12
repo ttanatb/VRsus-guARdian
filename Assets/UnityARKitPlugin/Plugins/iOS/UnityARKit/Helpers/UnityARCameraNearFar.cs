@@ -30,7 +30,7 @@ public class UnityARCameraNearFar : MonoBehaviour {
 		}
 
 #if UNITY_IOS
-        debug.log(transform.position);
+        //.Log(transform.position);
 #endif
     }
 }
