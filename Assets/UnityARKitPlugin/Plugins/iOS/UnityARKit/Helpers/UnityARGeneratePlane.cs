@@ -1,11 +1,11 @@
-﻿#if UNITY_IOS
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace UnityEngine.XR.iOS
 {
     public class UnityARGeneratePlane : MonoBehaviour
 	{
+#if UNITY_IOS
 		public GameObject planePrefab;
         private UnityARAnchorManager unityARAnchorManager;
 
@@ -29,7 +29,6 @@ namespace UnityEngine.XR.iOS
                 //GUI.Box(new Rect(100, 200, 800, 60), string.Format ("Extent: x:{0}, y:{1}, z:{2}", ap.extent.x, ap.extent.y, ap.extent.z));
             }
         }
+#endif
 	}
 }
-
-#endif

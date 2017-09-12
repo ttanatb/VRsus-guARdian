@@ -22,6 +22,18 @@ public class Player : NetworkBehaviour
     private void Awake()
     {
         listeners = GetComponentsInChildren<AudioListener>();
+        cameras = GetComponentsInChildren<Camera>();
+
+#if UNITY_IOS
+         playerType = PlayerType.AR;
+#else
+        playerType = PlayerType.VR;
+#endif
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
     }
 
     // Use this for initialization
@@ -36,14 +48,6 @@ public class Player : NetworkBehaviour
         {
             VRPlayer = transform.GetChild(1).gameObject;
         }
-
-
-
-#if UNITY_IOS
-         playerType = PlayerType.AR;
-#else
-        playerType = PlayerType.VR;
-#endif
 
         if (!isLocalPlayer)
         {
