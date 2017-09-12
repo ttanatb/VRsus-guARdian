@@ -45,7 +45,7 @@ public class Player : NetworkBehaviour
         playerType = PlayerType.VR;
 #endif
 
-        if (!isClient)
+        if (!isLocalPlayer)
         {
             foreach(AudioListener listener in listeners)
             {
@@ -71,7 +71,9 @@ public class Player : NetworkBehaviour
                 obj.SetActive(false);
             }
 
+#if UNITY_IOS
             UnityARCameraManager.Instance.SetCamera(Camera.main);
+#endif
         }
 
         else
