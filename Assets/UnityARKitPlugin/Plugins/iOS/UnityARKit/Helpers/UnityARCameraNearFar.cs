@@ -28,5 +28,9 @@ public class UnityARCameraNearFar : MonoBehaviour {
 		if (currentNearZ != attachedCamera.nearClipPlane || currentFarZ != attachedCamera.farClipPlane) {
 			UpdateCameraClipPlanes ();
 		}
-	}
+
+#if UNITY_IOS
+        debug.log(transform.position);
+#endif
+    }
 }

@@ -1,10 +1,10 @@
-#if UNITY_IOS
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.iOS;
 
 public class UnityARCameraManager : Singleton<UnityARCameraManager> {
+#if UNITY_IOS
 
     public Camera m_camera;
     public Material m_ClearMaterial;
@@ -92,6 +92,5 @@ public class UnityARCameraManager : Singleton<UnityARCameraManager> {
         }
 
 	}
-
-}
 #endif
+}
