@@ -80,12 +80,14 @@ public class NetworkedPlaneManager : NetworkBehaviour {
 	#if UNITY_IOS
 	IEnumerator UpdateARPlanes()
 	{
+		if (!isServer)
+			yield return null;
 		for(;;) 
 		{
 			if (m_ARPlane.Count > UnityARAnchorManager.Instance.planeAnchorMap.Count) {
 				for (int i = 0; i < m_ARPlane.Count; i++) {
 					if (!UnityARAnchorManager.Instance.planeAnchorMap.ContainsKey (m_ARPlane [i].identifier)) {
-						m_ARPlane.RemoveAt (i);
+						CmdRemovePlane(i);
 						break;
 							}
 						}
@@ -95,17 +97,36 @@ public class NetworkedPlaneManager : NetworkBehaviour {
 				if (CheckIfContains (s)) {
 					int index = GetIndexOf (s);
 					if (index != -1) {
-						m_ARPlane [index].Update (UnityARAnchorManager.Instance.planeAnchorMap [s].planeAnchor.center, UnityARAnchorManager.Instance.planeAnchorMap [s].planeAnchor.extent);
+						CmdUpdatePlane(index, UnityARAnchorManager.Instance.planeAnchorMap [s].planeAnchor.center, UnityARAnchorManager.Instance.planeAnchorMap [s].planeAnchor.extent);
 					}
 				} else 
 				{
-					m_ARPlane.Add(new ARPlane(s, UnityARAnchorManager.Instance.planeAnchorMap [s].planeAnchor.center, UnityARAnchorManager.Instance.planeAnchorMap [s].planeAnchor.extent));
+					CmdAddPlane(s, UnityARAnchorManager.Instance.planeAnchorMap [s].planeAnchor.center, UnityARAnchorManager.Instance.planeAnchorMap [s].planeAnchor.extent);
 				}
 			}
 			yield return new WaitForSeconds (.1f);
 		}
 	}
+
 	#endif
+
+	[Command]
+	private void CmdAddPlane(string s, Vector3 center, Vector3 extents)
+	{
+		m_ARPlane.Add(new ARPlane(s, center, extents));
+	}
+
+	[Command]
+	private void CmdUpdatePlane(int index, Vector3 center, Vector3 extents)
+	{
+		m_ARPlane [index].Update (center, extents);
+	}
+
+	[Command]
+	private void CmdRemovePlane(int index)
+	{
+		m_ARPlane.RemoveAt (index);
+	}
 
 	private bool CheckIfContains(string identifier)
 	{
