@@ -28,16 +28,35 @@ public class NetworkedPlaneManager : NetworkBehaviour {
 	}
 
 	public class ARPlaneSync : SyncListStruct<ARPlane> { }
+
 	ARPlaneSync m_ARPlane = new ARPlaneSync();
+	List<GameObject> localPlanes;
+	public GameObject planePrefab;
 
 	void ARPlaneChanged(SyncListStruct<ARPlane>.Operation op, int itemIndex) 
 	{
+		if (!isLocalPlayer)
+			return;
+
+		if (op == SyncList<ARPlane>.Operation.OP_ADD) 
+		{
+			GameObject obj = Instantiate (planePrefab);
+			obj.GetComponent<LocalPlane> ().UpdatePos (m_ARPlane [itemIndex].center, m_ARPlane [itemIndex].extent);
+			localPlanes.Add (obj);
+		} 
+		else if (op == SyncList<ARPlane>.Operation.OP_REMOVEAT) 
+		{
+			Destroy (localPlanes [itemIndex]);
+			localPlanes.RemoveAt (itemIndex);
+		}
+
 		Debug.Log ("AR Plane changed: " + op);
 	}
 
 	// Use this for initialization
 	void Start () {
 		m_ARPlane.Callback = ARPlaneChanged;
+		localPlanes = new List<GameObject> ();
 		#if UNITY_IOS
 		StartCoroutine("UpdateARPlanes");
 		#endif
@@ -54,6 +73,14 @@ public class NetworkedPlaneManager : NetworkBehaviour {
 	{
 		for(;;) 
 		{
+			if (m_ARPlane.Count > UnityARAnchorManager.Instance.planeAnchorMap.Count) {
+				for (int i = 0; i < m_ARPlane.Count; i++) {
+					if (!UnityARAnchorManager.Instance.planeAnchorMap.ContainsKey (m_ARPlane [i].identifier)) {
+						m_ARPlane.RemoveAt (i);
+						break;
+							}
+						}
+			}
 			foreach (string s in UnityARAnchorManager.Instance.planeAnchorMap.Keys) 
 			{
 				if (CheckIfContains (s)) {
