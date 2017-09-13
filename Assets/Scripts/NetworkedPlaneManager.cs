@@ -28,6 +28,7 @@ public class NetworkedPlaneManager : NetworkBehaviour {
 	}
 
 	public class ARPlaneSync : SyncListStruct<ARPlane> { }
+	int prevListCount = 0;
 
 	ARPlaneSync m_ARPlane = new ARPlaneSync();
 	List<GameObject> localPlanes;
@@ -39,47 +40,44 @@ public class NetworkedPlaneManager : NetworkBehaviour {
 		if (!isServer)
 			return;
 
-		if (op == SyncList<ARPlane>.Operation.OP_ADD) 
-		{
-			GameObject obj = Instantiate (planePrefab);
-			obj.GetComponent<LocalPlane> ().UpdatePos (m_ARPlane [itemIndex].center, m_ARPlane [itemIndex].extent);
-			localPlanes.Add (obj);
-		} 
-		else if (op == SyncList<ARPlane>.Operation.OP_REMOVEAT) 
-		{
-			Destroy (localPlanes [itemIndex]);
-			localPlanes.RemoveAt (itemIndex);
-		}
+//		if (op == SyncList<ARPlane>.Operation.OP_ADD) 
+//		{
+//			GameObject obj = Instantiate (planePrefab);
+//			obj.GetComponent<LocalPlane> ().UpdatePos (m_ARPlane [itemIndex].center, m_ARPlane [itemIndex].extent);
+//			localPlanes.Add (obj);
+//		} 
+//		else if (op == SyncList<ARPlane>.Operation.OP_REMOVEAT) 
+//		{
+//			Destroy (localPlanes [itemIndex]);
+//			localPlanes.RemoveAt (itemIndex);
+//		}
 
 		Debug.Log ("AR Plane changed: " + op);
 	}
 
 	// Use this for initialization
-	void Start () {
-		if (!isLocalPlayer)
-			return;
-
-		Debug.Log ("Started!");
-		m_ARPlane.Callback = ARPlaneChanged;
-		localPlanes = new List<GameObject> ();
-		#if UNITY_IOS
-		StartCoroutine("UpdateARPlanes");
-		#endif
-
-		StartCoroutine("UpdateLocalPlanes");
+	void Start ()
+	{
+		Debug.Log ("Started! isServer: " + isServer + " isLocalPlayer: " + isLocalPlayer);
+		if (isServer || isLocalPlayer) {
+			m_ARPlane.Callback = ARPlaneChanged;
+			localPlanes = new List<GameObject> ();
+			#if UNITY_IOS
+			StartCoroutine ("UpdateARPlanes");
+			#endif
+			
+			StartCoroutine ("UpdateLocalPlanes");
+		}
 	}
 
-	int count = 0;
 	void Update ()
 	{
 		//Debug.Log (UnityARAnchorManager.Instance.planeAnchorMap.Count);
 		if (Input.GetKeyDown (KeyCode.D)) {
-			count++;
-			UnityARAnchorManager.Instance.planeAnchorMap.Add ("REEE" + count, new ARPlaneAnchorGameObject ());
+			//UnityARAnchorManager.Instance.planeAnchorMap.Add ("REEE" + count, new ARPlaneAnchorGameObject ());
 		}
 	}
 
-	int prevListCount = 0;
 	IEnumerator UpdateLocalPlanes()
 	{
 		if (!isLocalPlayer)
@@ -100,11 +98,13 @@ public class NetworkedPlaneManager : NetworkBehaviour {
 					break;
 			}
 
+			prevListCount = localPlanes.Count;
 			yield return new WaitForSeconds (.1f);
 		}
 	}
 
 	#if UNITY_IOS
+	[Server]
 	IEnumerator UpdateARPlanes()
 	{
 		if (!isServer)
