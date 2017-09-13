@@ -16,6 +16,7 @@ public class LocalPlane : MonoBehaviour {
 	public void UpdatePos(Vector3 center, Vector3 extents)
 	{
 		transform.position = center;
+        extents.y = 0.01f;
 		transform.localScale = extents;
 	}
 }
