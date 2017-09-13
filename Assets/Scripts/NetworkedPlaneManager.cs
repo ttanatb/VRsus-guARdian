@@ -29,14 +29,14 @@ public class NetworkedPlaneManager : NetworkBehaviour {
 
 	public class ARPlaneSync : SyncListStruct<ARPlane> { }
 
-	[SyncVar]
 	ARPlaneSync m_ARPlane = new ARPlaneSync();
 	List<GameObject> localPlanes;
 	public GameObject planePrefab;
 
 	void ARPlaneChanged(SyncListStruct<ARPlane>.Operation op, int itemIndex) 
 	{
-		if (!isLocalPlayer)
+
+		if (!isServer)
 			return;
 
 		if (op == SyncList<ARPlane>.Operation.OP_ADD) 
@@ -58,13 +58,15 @@ public class NetworkedPlaneManager : NetworkBehaviour {
 	void Start () {
 		if (!isLocalPlayer)
 			return;
-		
+
+		Debug.Log ("Started!");
 		m_ARPlane.Callback = ARPlaneChanged;
 		localPlanes = new List<GameObject> ();
 		#if UNITY_IOS
 		StartCoroutine("UpdateARPlanes");
 		#endif
 
+		StartCoroutine("UpdateLocalPlanes");
 	}
 
 	int count = 0;
@@ -74,6 +76,31 @@ public class NetworkedPlaneManager : NetworkBehaviour {
 		if (Input.GetKeyDown (KeyCode.D)) {
 			count++;
 			UnityARAnchorManager.Instance.planeAnchorMap.Add ("REEE" + count, new ARPlaneAnchorGameObject ());
+		}
+	}
+
+	int prevListCount = 0;
+	IEnumerator UpdateLocalPlanes()
+	{
+		if (!isLocalPlayer)
+			yield return null;
+		for (;;) {
+			if (prevListCount < m_ARPlane.Count) {
+				GameObject obj = Instantiate (planePrefab);
+				localPlanes.Add (obj);
+			} else if (prevListCount > m_ARPlane.Count) {
+				Destroy (localPlanes [prevListCount - 1]);
+				localPlanes.RemoveAt (prevListCount - 1);
+			}
+
+			for (int i = 0; i < localPlanes.Count; i++) {
+				if (i < m_ARPlane.Count)
+					localPlanes [0].GetComponent<LocalPlane> ().UpdatePos (m_ARPlane [0].center, m_ARPlane [0].extent);
+				else
+					break;
+			}
+
+			yield return new WaitForSeconds (.1f);
 		}
 	}
 
@@ -120,6 +147,7 @@ public class NetworkedPlaneManager : NetworkBehaviour {
 	private void CmdUpdatePlane(int index, Vector3 center, Vector3 extents)
 	{
 		m_ARPlane [index].Update (center, extents);
+		m_ARPlane.Dirty (index);
 	}
 
 	[Command]
