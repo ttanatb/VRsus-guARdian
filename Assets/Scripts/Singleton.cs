@@ -14,24 +14,16 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
         }
     }
 
-    protected virtual void Awake()
-    {
-        if (!instance)
-        {
-            instance = (T)this;
-        }
+	public Singleton() 
+	{
+		if (!instance)
+		{
+			instance = (T)this;
+		}
 
-        else
-        {
-            Debug.LogError("Singleton already created");
-        }
-    }
-
-    protected virtual void OnDestroy()
-    {
-        if (instance == this)
-        {
-            instance = null;
-        }
-    }
+		else
+		{
+			Debug.LogError("Singleton already created");
+		}
+	}
 }

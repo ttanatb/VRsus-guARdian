@@ -5,8 +5,8 @@ namespace UnityEngine.XR.iOS
 {
     public class UnityARGeneratePlane : MonoBehaviour
 	{
-#if UNITY_IOS
 		public GameObject planePrefab;
+		#if UNITY_IOS
         private UnityARAnchorManager unityARAnchorManager;
 
 		// Use this for initialization

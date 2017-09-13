@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.iOS;
 
-public class UnityARCameraManager : Singleton<UnityARCameraManager> {
-#if UNITY_IOS
+public class UnityARCameraManager : SingletonMonoBehaviour<UnityARCameraManager> {
 
-    public Camera m_camera;
     public Material m_ClearMaterial;
+	#if UNITY_IOS
+	public Camera m_camera;
 
     private UnityARSessionNativeInterface m_session;
 	private Material savedClearMaterial;

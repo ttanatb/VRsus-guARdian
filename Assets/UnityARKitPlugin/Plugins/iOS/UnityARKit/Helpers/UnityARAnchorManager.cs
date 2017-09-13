@@ -4,22 +4,20 @@ using System.Linq;
 
 namespace UnityEngine.XR.iOS
 {
-	public class UnityARAnchorManager 
+	public class UnityARAnchorManager : Singleton<UnityARAnchorManager>
 	{
 
 
-		private Dictionary<string, ARPlaneAnchorGameObject> planeAnchorMap;
+		public Dictionary<string, ARPlaneAnchorGameObject> planeAnchorMap;
 
 
-        public UnityARAnchorManager ()
+		public UnityARAnchorManager () : base()
 		{
 			planeAnchorMap = new Dictionary<string,ARPlaneAnchorGameObject> ();
 			UnityARSessionNativeInterface.ARAnchorAddedEvent += AddAnchor;
 			UnityARSessionNativeInterface.ARAnchorUpdatedEvent += UpdateAnchor;
 			UnityARSessionNativeInterface.ARAnchorRemovedEvent += RemoveAnchor;
-
 		}
-
 
 		public void AddAnchor(ARPlaneAnchor arPlaneAnchor)
 		{
