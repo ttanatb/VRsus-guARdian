@@ -39,15 +39,20 @@ public class NetworkedPlaneManager : NetworkBehaviour {
 	void Start () {
 		m_ARPlane.Callback = ARPlaneChanged;
 		#if UNITY_IOS
-		UpdateARPlanes ();
+		StartCoroutine("UpdateARPlanes");
 		#endif
 
 	}
 
+	void Update ()
+	{
+		//Debug.Log (UnityARAnchorManager.Instance.planeAnchorMap.Count);
+	}
+
+	#if UNITY_IOS
 	IEnumerator UpdateARPlanes()
 	{
-		#if UNITY_IOS
-		while (true) 
+		for(;;) 
 		{
 			foreach (string s in UnityARAnchorManager.Instance.planeAnchorMap.Keys) 
 			{
@@ -63,8 +68,8 @@ public class NetworkedPlaneManager : NetworkBehaviour {
 			}
 			yield return new WaitForSeconds (.1f);
 		}
-		#endif
 	}
+	#endif
 
 	private bool CheckIfContains(string identifier)
 	{
