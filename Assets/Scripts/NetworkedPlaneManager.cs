@@ -29,6 +29,7 @@ public class NetworkedPlaneManager : NetworkBehaviour {
 
 	public class ARPlaneSync : SyncListStruct<ARPlane> { }
 
+	[SyncVar]
 	ARPlaneSync m_ARPlane = new ARPlaneSync();
 	List<GameObject> localPlanes;
 	public GameObject planePrefab;
@@ -55,6 +56,9 @@ public class NetworkedPlaneManager : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		if (!isLocalPlayer)
+			return;
+		
 		m_ARPlane.Callback = ARPlaneChanged;
 		localPlanes = new List<GameObject> ();
 		#if UNITY_IOS
@@ -63,9 +67,14 @@ public class NetworkedPlaneManager : NetworkBehaviour {
 
 	}
 
+	int count = 0;
 	void Update ()
 	{
 		//Debug.Log (UnityARAnchorManager.Instance.planeAnchorMap.Count);
+		if (Input.GetKeyDown (KeyCode.D)) {
+			count++;
+			UnityARAnchorManager.Instance.planeAnchorMap.Add ("REEE" + count, new ARPlaneAnchorGameObject ());
+		}
 	}
 
 	#if UNITY_IOS
