@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Singleton<T> : MonoBehaviour where T : Singleton<T>
+public class Singleton<T> where T : Singleton<T>
 {
     private static T instance;
 
@@ -16,7 +16,7 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 
 	public Singleton() 
 	{
-		if (!instance)
+		if (instance == null)
 		{
 			instance = (T)this;
 		}
