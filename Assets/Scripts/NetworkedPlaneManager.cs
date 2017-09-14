@@ -11,20 +11,23 @@ public class NetworkedPlaneManager : NetworkBehaviour
     public struct ARPlane
     {
         public string identifier;
-        public Vector3 center;
-        public Vector3 extent;
+        public Vector3 position;
+		public float rotation;
+        public Vector3 scale;
 
-        public ARPlane(string identifier, Vector3 center, Vector3 extent)
+        public ARPlane(string identifier, Vector3 position, float rotation, Vector3 scale)
         {
             this.identifier = identifier;
-            this.center = center;
-            this.extent = extent;
+			this.position = position;
+			this.rotation = rotation;
+			this.scale = scale;
         }
 
-        public void Update(Vector3 center, Vector3 extent)
+        public void Update(Vector3 position, float rotation, Vector3 scale)
         {
-            this.center = center;
-            this.extent = extent;
+			this.position = position;
+			this.rotation = rotation;
+			this.scale = scale;
         }
     }
 
@@ -88,7 +91,9 @@ public class NetworkedPlaneManager : NetworkBehaviour
             for (int i = 0; i < localPlanes.Count; i++)
             {
                 if (i < m_ARPlane.Count)
-                    localPlanes[i].GetComponent<LocalPlane>().UpdatePos(m_ARPlane[i].center, m_ARPlane[i].extent);
+					localPlanes[i].GetComponent<LocalPlane>().UpdatePos(m_ARPlane[i].position, 
+						m_ARPlane[i].rotation, 
+						m_ARPlane[i].scale);
                 else
                     break;
             }
@@ -124,12 +129,19 @@ public class NetworkedPlaneManager : NetworkBehaviour
                     int index = GetIndexOf(s);
                     if (index != -1)
                     {
-						CmdUpdatePlane(index, UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.position, UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.localScale);
+						CmdUpdatePlane (index, 						
+							UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.position,
+							UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.rotation.eulerAngles.y,
+							UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.localScale);
                     }
                 }
+
                 else
                 {
-					CmdAddPlane(s, UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.position, UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.localScale);
+					CmdAddPlane(s, 
+						UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.position,
+						UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.rotation.eulerAngles.y,
+						UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.localScale);
                 }
             }
             yield return new WaitForSeconds(.1f);
@@ -138,17 +150,17 @@ public class NetworkedPlaneManager : NetworkBehaviour
 #endif
 
     [Command]
-    private void CmdAddPlane(string s, Vector3 center, Vector3 extents)
+	private void CmdAddPlane(string s, Vector3 pos, float rot, Vector3 scale)
     {
-        m_ARPlane.Add(new ARPlane(s, center, extents));
+		m_ARPlane.Add (new ARPlane (s, pos, rot, scale));
     }
 
     [Command]
-    private void CmdUpdatePlane(int index, Vector3 center, Vector3 extents)
+	private void CmdUpdatePlane(int index, Vector3 pos, float rot, Vector3 scale)
     {
         if (index >= m_ARPlane.Count)
         {
-            m_ARPlane[index].Update(center, extents);
+			m_ARPlane [index].Update (pos, rot, scale);
             m_ARPlane.Dirty(index);
         }
     }

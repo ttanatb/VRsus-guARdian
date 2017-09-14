@@ -18,12 +18,17 @@ public class LocalPlane : MonoBehaviour
 
     }
 
-    public void UpdatePos(Vector3 center, Vector3 extents)
+    public void UpdatePos(Vector3 position, float rotation, Vector3 scale)
     {
 		timeSinceLastUpdate = 0;
 
-        transform.position = center;
-        extents.y = 0.01f;
-        transform.localScale = extents;
+        transform.position = position;
+
+        scale.y = 0.01f;
+		transform.localScale = scale;
+
+		Vector3 euler = transform.rotation.eulerAngles;
+		euler.y = rotation;
+		transform.rotation = Quaternion.Euler (euler);
     }
 }

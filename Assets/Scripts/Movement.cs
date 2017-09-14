@@ -18,7 +18,7 @@ public class Movement : NetworkBehaviour
     const float TURNING_SPEED = 5f;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
 		player = GetComponent<Player> ();
     }
