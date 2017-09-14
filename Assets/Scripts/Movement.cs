@@ -21,16 +21,20 @@ public class Movement : NetworkBehaviour
     void Start()
     {
 		player = GetComponent<Player> ();
+    }
 
-		if (player.PlayerType == PlayerType.VR  && isLocalPlayer) {
+	public override void OnStartLocalPlayer()
+	{
+		if (player.PlayerType == PlayerType.VR) {
 			rigidBody = gameObject.AddComponent<Rigidbody> ();
 			rigidBody.mass = 1;
 			rigidBody.drag = 10;
-			rigidBody.useGravity = true;
+			rigidBody.useGravity = false;
 			rigidBody.isKinematic = false;
 			rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
 		}
-    }
+		base.OnStartLocalPlayer();
+	}
 
     // Update is called once per frame
     void Update()

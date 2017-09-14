@@ -32,6 +32,8 @@ public class NetworkedPlaneManager : NetworkBehaviour
     ARPlaneSync m_ARPlane = new ARPlaneSync();
 
     int prevListCount = 0;
+
+	[SerializeField]
     List<GameObject> localPlanes;
     public GameObject planePrefab;
 
@@ -86,7 +88,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
             for (int i = 0; i < localPlanes.Count; i++)
             {
                 if (i < m_ARPlane.Count)
-                    localPlanes[0].GetComponent<LocalPlane>().UpdatePos(m_ARPlane[0].center, m_ARPlane[0].extent);
+                    localPlanes[i].GetComponent<LocalPlane>().UpdatePos(m_ARPlane[i].center, m_ARPlane[i].extent);
                 else
                     break;
             }
@@ -122,12 +124,12 @@ public class NetworkedPlaneManager : NetworkBehaviour
                     int index = GetIndexOf(s);
                     if (index != -1)
                     {
-                        CmdUpdatePlane(index, UnityARAnchorManager.Instance.planeAnchorMap[s].planeAnchor.center, UnityARAnchorManager.Instance.planeAnchorMap[s].planeAnchor.extent);
+						CmdUpdatePlane(index, UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.position, UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.localScale);
                     }
                 }
                 else
                 {
-                    CmdAddPlane(s, UnityARAnchorManager.Instance.planeAnchorMap[s].planeAnchor.center, UnityARAnchorManager.Instance.planeAnchorMap[s].planeAnchor.extent);
+					CmdAddPlane(s, UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.position, UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.localScale);
                 }
             }
             yield return new WaitForSeconds(.1f);
