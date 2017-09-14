@@ -32,6 +32,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
     }
 
     public class ARPlaneSync : SyncListStruct<ARPlane> { }
+
     ARPlaneSync m_ARPlane = new ARPlaneSync();
 
     int prevListCount = 0;
@@ -131,6 +132,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
                     }
                 }
             }
+
             foreach (string s in UnityARAnchorManager.Instance.planeAnchorMap.Keys)
             {
                 if (CheckIfContains(s))
@@ -153,7 +155,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
 						UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).localScale * 10);
                 }
             }
-            yield return new WaitForSeconds(.1f);
+            yield return new WaitForSeconds(.3f);
         }
     }
 #endif
@@ -170,6 +172,8 @@ public class NetworkedPlaneManager : NetworkBehaviour
         if (index < m_ARPlane.Count)
         {
             m_ARPlane[index].Update(pos, rot, scale);
+			string identifier = m_ARPlane [index].identifier;
+			m_ARPlane [index] = new ARPlane (identifier, pos, rot, scale);
             m_ARPlane.Dirty(index);
         }
     }
