@@ -14,6 +14,8 @@ public class Player : NetworkBehaviour
     public GameObject ARPlayer;
     public GameObject VRPlayer;
 
+	public GameObject ARAvatar;
+
     private AudioListener[] listeners;
     private Camera[] cameras;
 
@@ -35,6 +37,7 @@ public class Player : NetworkBehaviour
 
     public override void OnStartLocalPlayer()
     {
+		ARAvatar.SetActive (false);
         base.OnStartLocalPlayer();
     }
 

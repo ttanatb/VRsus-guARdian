@@ -21,10 +21,14 @@ public class Movement : NetworkBehaviour
     void Start()
     {
 		player = GetComponent<Player> ();
-        rigidBody = GetComponentInChildren<Rigidbody>();
 
-		if (player.PlayerType == PlayerType.AR) {
-			Destroy (rigidBody);
+		if (player.PlayerType == PlayerType.VR  && isLocalPlayer) {
+			rigidBody = gameObject.AddComponent<Rigidbody> ();
+			rigidBody.mass = 1;
+			rigidBody.drag = 10;
+			rigidBody.useGravity = true;
+			rigidBody.isKinematic = false;
+			rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
 		}
     }
 
@@ -34,7 +38,7 @@ public class Movement : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
-		if (player.PlayerType == PlayerType.VR) {
+		if (rigidBody){
 			transform.Translate (transform.forward * Input.GetAxis ("Vertical") * MOVEMENT_SPEED, Space.World);
 			transform.Rotate (transform.up, Input.GetAxis ("Horizontal") * TURNING_SPEED, Space.World);
 
@@ -47,16 +51,15 @@ public class Movement : NetworkBehaviour
 				lerpTarget -= JUMP_DAMPING;
 			else
 				lerpTarget = 0;
-		} else {
-			transform.position = Camera.main.transform.position;
-			transform.rotation = Camera.main.transform.rotation;
-
+		} else if (player.PlayerType == PlayerType.AR) {
+			//transform.position = Camera.main.transform.position;
+			//transform.rotation = Camera.main.transform.rotation;
 		}
     }
 
     private void FixedUpdate()
     {
-		if (player.PlayerType == PlayerType.VR) {
+		if (rigidBody) {
 			rigidBody.velocity += Vector3.up * jumpValue;
 		}
 	}
