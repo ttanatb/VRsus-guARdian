@@ -12,22 +12,22 @@ public class NetworkedPlaneManager : NetworkBehaviour
     {
         public string identifier;
         public Vector3 position;
-		public float rotation;
+        public float rotation;
         public Vector3 scale;
 
         public ARPlane(string identifier, Vector3 position, float rotation, Vector3 scale)
         {
             this.identifier = identifier;
-			this.position = position;
-			this.rotation = rotation;
-			this.scale = scale;
+            this.position = position;
+            this.rotation = rotation;
+            this.scale = scale;
         }
 
         public void Update(Vector3 position, float rotation, Vector3 scale)
         {
-			this.position = position;
-			this.rotation = rotation;
-			this.scale = scale;
+            this.position = position;
+            this.rotation = rotation;
+            this.scale = scale;
         }
     }
 
@@ -36,7 +36,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
 
     int prevListCount = 0;
 
-	[SerializeField]
+    [SerializeField]
     List<GameObject> localPlanes;
     public GameObject planePrefab;
 
@@ -56,9 +56,9 @@ public class NetworkedPlaneManager : NetworkBehaviour
 
             if (isServer)
             {
-            #if UNITY_IOS
+#if UNITY_IOS
 			StartCoroutine ("UpdateARPlanes");
-            #endif
+#endif
             }
             StartCoroutine("UpdateLocalPlanes");
         }
@@ -69,6 +69,15 @@ public class NetworkedPlaneManager : NetworkBehaviour
         //Debug.Log (UnityARAnchorManager.Instance.planeAnchorMap.Count);
         //if (Input.GetKeyDown(KeyCode.D))
         //UnityARAnchorManager.Instance.planeAnchorMap.Add ("REEE" + count, new ARPlaneAnchorGameObject ());
+    }
+
+    private void OnDestroy()
+    {
+        for (int i = 0; i < localPlanes.Count; i++)
+        {
+            Destroy(localPlanes[i]);
+        }
+        localPlanes.Clear();
     }
 
     IEnumerator UpdateLocalPlanes()
@@ -91,9 +100,9 @@ public class NetworkedPlaneManager : NetworkBehaviour
             for (int i = 0; i < localPlanes.Count; i++)
             {
                 if (i < m_ARPlane.Count)
-					localPlanes[i].GetComponent<LocalPlane>().UpdatePos(m_ARPlane[i].position, 
-						m_ARPlane[i].rotation, 
-						m_ARPlane[i].scale);
+                    localPlanes[i].GetComponent<LocalPlane>().UpdatePos(m_ARPlane[i].position,
+                        m_ARPlane[i].rotation,
+                        m_ARPlane[i].scale);
                 else
                     break;
             }
@@ -150,17 +159,17 @@ public class NetworkedPlaneManager : NetworkBehaviour
 #endif
 
     [Command]
-	private void CmdAddPlane(string s, Vector3 pos, float rot, Vector3 scale)
+    private void CmdAddPlane(string s, Vector3 pos, float rot, Vector3 scale)
     {
-		m_ARPlane.Add (new ARPlane (s, pos, rot, scale));
+        m_ARPlane.Add(new ARPlane(s, pos, rot, scale));
     }
 
     [Command]
-	private void CmdUpdatePlane(int index, Vector3 pos, float rot, Vector3 scale)
+    private void CmdUpdatePlane(int index, Vector3 pos, float rot, Vector3 scale)
     {
         if (index >= m_ARPlane.Count)
         {
-			m_ARPlane [index].Update (pos, rot, scale);
+            m_ARPlane[index].Update(pos, rot, scale);
             m_ARPlane.Dirty(index);
         }
     }

@@ -11,17 +11,21 @@ public enum PlayerType
 
 public class Player : NetworkBehaviour
 {
-    public GameObject ARPlayer;
-    public GameObject VRPlayer;
+    //public GameObject ARPlayer;
+    //public GameObject VRPlayer;
 
-	public GameObject ARAvatar;
+    public GameObject ARAvatar;
+    public GameObject VRAvatar;
+
+    public GameObject ARCamera;
+    public GameObject VRCamera;
 
     private AudioListener[] listeners;
     private Camera[] cameras;
 
     private PlayerType playerType;
 
-	public PlayerType PlayerType { get { return playerType; } }
+    public PlayerType PlayerType { get { return playerType; } }
 
     private void Awake()
     {
@@ -37,48 +41,10 @@ public class Player : NetworkBehaviour
 
     public override void OnStartLocalPlayer()
     {
-		ARAvatar.SetActive (false);
-        base.OnStartLocalPlayer();
-    }
-
-    // Use this for initialization
-    void Start()
-    {
-        if (!ARPlayer)
-        {
-            ARPlayer = transform.GetChild(0).gameObject;
-        }
-
-        if (!VRPlayer)
-        {
-            VRPlayer = transform.GetChild(1).gameObject;
-        }
-
-        if (!isLocalPlayer)
-        {
-            foreach(AudioListener listener in listeners)
-            {
-                listener.enabled = false;
-            }
-
-            foreach(Camera cam in cameras)
-            {
-                cam.enabled = false;
-            }
-        }
-
         if (playerType == PlayerType.AR)
         {
-            foreach(Camera cam in VRPlayer.GetComponentsInChildren<Camera>())
-            {
-                cam.enabled = false;
-                cam.GetComponent<AudioListener>().enabled = false;
-            }
-
-            foreach(GameObject obj in GameObject.FindGameObjectsWithTag("VROnly"))
-            {
-                obj.SetActive(false);
-            }
+            ARCamera.GetComponent<Camera>().enabled = true;
+            ARCamera.GetComponent<AudioListener>().enabled = true;
 
 #if UNITY_IOS
             UnityARCameraManager.Instance.SetCamera(Camera.main);
@@ -87,15 +53,27 @@ public class Player : NetworkBehaviour
 
         else
         {
-            foreach (Camera cam in ARPlayer.GetComponentsInChildren<Camera>())
+            VRCamera.GetComponent<Camera>().enabled = true;
+            VRCamera.GetComponent<AudioListener>().enabled = true;
+        }
+
+
+        base.OnStartLocalPlayer();
+    }
+
+    // Use this for initialization
+    void Start()
+    {
+        if (!isLocalPlayer)
+        {
+            if (playerType == PlayerType.AR)
             {
-                cam.enabled = false;
-                cam.GetComponent<AudioListener>().enabled = false;
+                VRAvatar.SetActive(true);
             }
 
-            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("AROnly"))
+            else
             {
-                obj.SetActive(false);
+                ARAvatar.SetActive(true);
             }
         }
     }
