@@ -42,7 +42,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
 
     void ARPlaneChanged(SyncListStruct<ARPlane>.Operation op, int itemIndex)
     {
-        //Debug.Log ("AR Plane changed: " + op);
+		Debug.Log ("AR Plane changed: " + op + " at " + itemIndex);
     }
 
     // Use this for initialization
@@ -139,18 +139,18 @@ public class NetworkedPlaneManager : NetworkBehaviour
                     if (index != -1)
                     {
 						CmdUpdatePlane (index, 						
-							UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.position,
-							UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.rotation.eulerAngles.y,
-							UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.localScale);
+							UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).position,
+							UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).rotation.eulerAngles.y,
+							UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).localScale * 10);
                     }
                 }
 
                 else
                 {
 					CmdAddPlane(s, 
-						UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.position,
-						UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.rotation.eulerAngles.y,
-						UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.localScale);
+						UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).position,
+						UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).rotation.eulerAngles.y,
+						UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).localScale * 10);
                 }
             }
             yield return new WaitForSeconds(.1f);
@@ -167,7 +167,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
     [Command]
     private void CmdUpdatePlane(int index, Vector3 pos, float rot, Vector3 scale)
     {
-        if (index >= m_ARPlane.Count)
+        if (index < m_ARPlane.Count)
         {
             m_ARPlane[index].Update(pos, rot, scale);
             m_ARPlane.Dirty(index);
