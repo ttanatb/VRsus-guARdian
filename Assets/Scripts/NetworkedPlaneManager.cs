@@ -43,13 +43,13 @@ public class NetworkedPlaneManager : NetworkBehaviour
 
     void ARPlaneChanged(SyncListStruct<ARPlane>.Operation op, int itemIndex)
     {
-		Debug.Log ("AR Plane changed: " + op + " at " + itemIndex);
+		//Debug.Log ("AR Plane changed: " + op + " at " + itemIndex);
     }
 
     // Use this for initialization
     void Start()
     {
-        Debug.Log("Started! isServer: " + isServer + " isLocalPlayer: " + isLocalPlayer);
+        //Debug.Log("Started! isServer: " + isServer + " isLocalPlayer: " + isLocalPlayer);
         if (isServer || isLocalPlayer)
         {
             m_ARPlane.Callback = ARPlaneChanged;

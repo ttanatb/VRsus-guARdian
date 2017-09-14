@@ -25,6 +25,7 @@ public class Player : NetworkBehaviour
 
     private PlayerType playerType;
 
+
     public PlayerType PlayerType { get { return playerType; } }
 
     private void Awake()
