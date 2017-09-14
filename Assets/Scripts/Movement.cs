@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+//FPS camera movement adapted from: http://wiki.unity3d.com/index.php/SmoothMouseLook
 public class Movement : NetworkBehaviour
 {
     Player player;
