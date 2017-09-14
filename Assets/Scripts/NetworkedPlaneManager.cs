@@ -133,7 +133,6 @@ public class NetworkedPlaneManager : NetworkBehaviour
             yield return new WaitForSeconds(.1f);
         }
     }
-
 #endif
 
     [Command]
@@ -145,8 +144,11 @@ public class NetworkedPlaneManager : NetworkBehaviour
     [Command]
     private void CmdUpdatePlane(int index, Vector3 center, Vector3 extents)
     {
-        m_ARPlane[index].Update(center, extents);
-        m_ARPlane.Dirty(index);
+        if (index >= m_ARPlane.Count)
+        {
+            m_ARPlane[index].Update(center, extents);
+            m_ARPlane.Dirty(index);
+        }
     }
 
     [Command]
