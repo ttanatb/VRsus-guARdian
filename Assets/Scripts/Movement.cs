@@ -14,6 +14,9 @@ public class Movement : NetworkBehaviour
     float jumpValue = 0;
     float lerpTarget = 0;
 
+    public uint jumpCount = 4;
+    uint currJumps = 0;
+
     public float jumpFactor = 2;
     public float jumpDamping = 0.2f;
 
@@ -41,7 +44,7 @@ public class Movement : NetworkBehaviour
 
     public uint frameCounter = 20;
     Quaternion startingRot;
-
+    Vector3 startingPos;
 
     // Use this for initialization
     void Awake()
@@ -50,6 +53,7 @@ public class Movement : NetworkBehaviour
         objCollider = GetComponent<Collider>();
 
         startingRot = transform.rotation;
+        startingPos = transform.position;
     }
 
     public override void OnStartLocalPlayer()
@@ -83,6 +87,8 @@ public class Movement : NetworkBehaviour
                     rigidBody.isKinematic = true;
                     Cursor.lockState = CursorLockMode.None;
                     objCollider.enabled = true;
+                    transform.position = startingPos;
+                    currJumps = 0;
                 }
                 else
                 {
@@ -137,11 +143,11 @@ public class Movement : NetworkBehaviour
             transform.Translate(Vector3.ProjectOnPlane(transform.forward, Vector3.down) * Input.GetAxis("Vertical") * movementSpeed, Space.World);
             transform.Translate(transform.right * Input.GetAxis("Horizontal") * movementSpeed, Space.World);
 
-
-            //transform.Rotate(transform.up, Input.GetAxis("Horizontal") * MOVEMENT_SPEED, Space.World);
-
-            if (Input.GetKeyDown(KeyCode.Space))
-                lerpTarget = jumpFactor;
+            if (Input.GetKeyDown(KeyCode.Space) && currJumps <= jumpCount)
+            {
+                lerpTarget += jumpFactor;
+                currJumps++;
+            }
 
             jumpValue = Mathf.Lerp(jumpValue, lerpTarget, Time.deltaTime * 20);
 
@@ -149,11 +155,6 @@ public class Movement : NetworkBehaviour
                 lerpTarget -= jumpDamping;
             else
                 lerpTarget = 0;
-        }
-        else if (player.PlayerType == PlayerType.AR)
-        {
-            //transform.position = Camera.main.transform.position;
-            //transform.rotation = Camera.main.transform.rotation;
         }
     }
 
@@ -181,5 +182,15 @@ public class Movement : NetworkBehaviour
         }
 
         return Mathf.Clamp(angle, min, max);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        //CHANGE THIS LATER RIGHT NOW CLIENT DOES PHYSIC CHECKS
+        if (isServer)
+            return;
+
+        if ((collision.gameObject.tag == "Platform") && (transform.position.y > collision.transform.position.y + collision.transform.localScale.y / 2f))
+            currJumps = 0;
     }
 }

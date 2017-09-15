@@ -43,33 +43,23 @@ public class NetworkedPlaneManager : NetworkBehaviour
 
     void ARPlaneChanged(SyncListStruct<ARPlane>.Operation op, int itemIndex)
     {
-		//Debug.Log ("AR Plane changed: " + op + " at " + itemIndex);
+
     }
 
     // Use this for initialization
     void Start()
     {
-        //Debug.Log("Started! isServer: " + isServer + " isLocalPlayer: " + isLocalPlayer);
         if (isServer || isLocalPlayer)
         {
-            m_ARPlane.Callback = ARPlaneChanged;
+            //m_ARPlane.Callback = ARPlaneChanged;
             localPlanes = new List<GameObject>();
 
-            if (isServer)
-            {
 #if UNITY_IOS
 			StartCoroutine ("UpdateARPlanes");
-#endif
-            }
+#else 
             StartCoroutine("UpdateLocalPlanes");
+#endif
         }
-    }
-
-    void Update()
-    {
-        //Debug.Log (UnityARAnchorManager.Instance.planeAnchorMap.Count);
-        //if (Input.GetKeyDown(KeyCode.D))
-        //UnityARAnchorManager.Instance.planeAnchorMap.Add ("REEE" + count, new ARPlaneAnchorGameObject ());
     }
 
     private void OnDestroy()
@@ -155,7 +145,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
 						UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).localScale * 10);
                 }
             }
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(1f);
         }
     }
 #endif
@@ -172,8 +162,8 @@ public class NetworkedPlaneManager : NetworkBehaviour
         if (index < m_ARPlane.Count)
         {
             m_ARPlane[index].Update(pos, rot, scale);
-			string identifier = m_ARPlane [index].identifier;
-			m_ARPlane [index] = new ARPlane (identifier, pos, rot, scale);
+            string identifier = m_ARPlane[index].identifier;
+            m_ARPlane[index] = new ARPlane(identifier, pos, rot, scale);
             m_ARPlane.Dirty(index);
         }
     }

@@ -4,28 +4,19 @@ using UnityEngine;
 
 public class LocalPlane : MonoBehaviour
 {
-    [SerializeField]
-    float timeSinceLastUpdate = 0;
-
-    // Use this for initialization
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    //[SerializeField]
+    //float timeSinceLastUpdate = 0;
 
     public void UpdatePos(Vector3 position, float rotation, Vector3 scale)
     {
-        timeSinceLastUpdate = 0;
+        //timeSinceLastUpdate = 0;
 
         transform.position = position;
 
-        scale.y = 0.01f;
+        scale.y = 100f;
         transform.localScale = scale;
+
+        transform.Translate(50f * Vector3.down);
 
         Vector3 euler = transform.rotation.eulerAngles;
         euler.y = rotation;

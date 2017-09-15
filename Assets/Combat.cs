@@ -1,0 +1,80 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.iOS;
+
+public class Combat : NetworkBehaviour
+{
+    public const int maxHealth = 3;
+
+    [SyncVar]
+    public int health = maxHealth;
+
+    public GameObject bulletPrefab;
+    public float bulletSpeed = 1f;
+    public float bulletTimer = 2f;
+
+    [Command]
+    void CmdFire()
+    {
+        GameObject bullet = Instantiate(bulletPrefab, transform.position + transform.forward / 11f, Quaternion.identity);
+        bullet.GetComponent<Rigidbody>().velocity = transform.forward * bulletSpeed;
+
+        NetworkServer.Spawn(bullet);
+
+        Destroy(bullet, bulletTimer);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (!isLocalPlayer)
+            return;
+
+        if (Input.GetMouseButtonDown(0) || CheckTap())
+        {
+            CmdFire();
+        }
+    }
+
+    bool CheckTap()
+    {
+        if (Input.touchCount > 0)
+        {
+            for (int i = 0; i < Input.touchCount; i++)
+            {
+                if (Input.GetTouch(i).phase == TouchPhase.Began)
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void TakeDamage()
+    {
+        if (!isServer)
+            return;
+
+        health--;
+
+        if (health < 1)
+        {
+            health = maxHealth;
+            RpcRespawn();
+        }
+    }
+
+    [ClientRpc]
+    void RpcRespawn()
+    {
+        if (isLocalPlayer)
+        {
+            if (GetComponent<Player>().PlayerType == PlayerType.VR)
+                transform.position = Vector3.zero;
+
+
+        }
+    }
+}
