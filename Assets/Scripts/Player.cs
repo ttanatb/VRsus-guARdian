@@ -20,9 +20,6 @@ public class Player : NetworkBehaviour
     public GameObject ARCamera;
     public GameObject VRCamera;
 
-    private AudioListener[] listeners;
-    private Camera[] cameras;
-
     private PlayerType playerType;
 
 
@@ -30,9 +27,6 @@ public class Player : NetworkBehaviour
 
     private void Awake()
     {
-        listeners = GetComponentsInChildren<AudioListener>();
-        cameras = GetComponentsInChildren<Camera>();
-
 #if UNITY_IOS
          playerType = PlayerType.AR;
 #else
@@ -77,11 +71,5 @@ public class Player : NetworkBehaviour
                 ARAvatar.SetActive(true);
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }
