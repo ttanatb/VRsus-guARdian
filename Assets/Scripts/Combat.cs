@@ -19,7 +19,7 @@ public class Combat : NetworkBehaviour
     public Text playerHealth;
     public Text enemyHealth;
 
-	private Rigidbody rb = null;
+    private Player player;
 
     void Awake()
     {
@@ -31,7 +31,7 @@ public class Combat : NetworkBehaviour
     void CmdFire()
     {
         GameObject bullet = null;
-		if (!GetComponent<Rigidbody>())
+        if (player.PlayerType == PlayerType.AR)
         {
             bullet = Instantiate(bulletPrefab, Camera.main.transform.position + Camera.main.transform.forward / 15f, Quaternion.identity);
             bullet.GetComponent<Rigidbody>().velocity = Camera.main.transform.forward * bulletSpeed;
@@ -48,7 +48,7 @@ public class Combat : NetworkBehaviour
 
     private void Start()
     {
-		rb = GetComponent<Rigidbody> ();
+        player = GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -59,9 +59,11 @@ public class Combat : NetworkBehaviour
             enemyHealth.text = "Enemy Health: " + health;
             return;
         }
-        else
+        playerHealth.text = "Health: " + health;
+
+        if (Input.GetKeyDown(KeyCode.D))
         {
-            playerHealth.text = "Health: " + health;
+            TakeDamage();
         }
 
         if (Input.GetMouseButtonDown(0) || CheckTap())
@@ -84,6 +86,7 @@ public class Combat : NetworkBehaviour
         return false;
     }
 
+    [Server]
     public void TakeDamage()
     {
         if (!isServer)

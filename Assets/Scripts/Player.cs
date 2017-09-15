@@ -20,22 +20,31 @@ public class Player : NetworkBehaviour
     public GameObject ARCamera;
     public GameObject VRCamera;
 
+    [SerializeField]
     private PlayerType playerType;
-
 
     public PlayerType PlayerType { get { return playerType; } }
 
     private void Awake()
     {
+        if (!isLocalPlayer)
+        {
 #if UNITY_IOS
-         playerType = PlayerType.AR;
+            playerType = PlayerType.VR;
 #else
-         playerType = PlayerType.VR;
+            playerType = PlayerType.AR;
 #endif
+        }
     }
 
     public override void OnStartLocalPlayer()
     {
+#if UNITY_IOS
+         playerType = PlayerType.AR;
+#else
+        playerType = PlayerType.VR;
+#endif
+
         if (playerType == PlayerType.AR)
         {
             ARCamera.GetComponent<Camera>().enabled = true;
@@ -63,13 +72,13 @@ public class Player : NetworkBehaviour
         {
             if (playerType == PlayerType.AR)
             {
-                VRAvatar.SetActive(true);
-            }
-
-            else
-            {
                 ARAvatar.SetActive(true);
             }
+            else
+            {
+                VRAvatar.SetActive(true);
+            }
         }
+
     }
 }
