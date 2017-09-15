@@ -19,8 +19,7 @@ public class Combat : NetworkBehaviour
     public Text playerHealth;
     public Text enemyHealth;
 
-    private Transform ARTransform;
-    private Player player;
+	private Rigidbody rb = null;
 
     void Awake()
     {
@@ -32,7 +31,7 @@ public class Combat : NetworkBehaviour
     void CmdFire()
     {
         GameObject bullet = null;
-        if (player.PlayerType == PlayerType.AR)
+		if (GetComponent<Rigidbody>())
         {
             bullet = Instantiate(bulletPrefab, Camera.main.transform.position + Camera.main.transform.forward / 15f, Quaternion.identity);
             bullet.GetComponent<Rigidbody>().velocity = Camera.main.transform.forward * bulletSpeed;
@@ -49,8 +48,7 @@ public class Combat : NetworkBehaviour
 
     private void Start()
     {
-        player = GetComponent<Player>();
-        ARTransform = player.ARCamera.transform;
+		rb = GetComponent<Rigidbody> ();
     }
 
     // Update is called once per frame
@@ -96,7 +94,7 @@ public class Combat : NetworkBehaviour
         if (health < 1)
         {
             //health = maxHealth;
-            isDead = true;
+            //isDead = true;
             //RpcRespawn();
         }
     }

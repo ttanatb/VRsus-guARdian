@@ -68,6 +68,7 @@ public class Movement : NetworkBehaviour
             rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
             objCollider.enabled = true;
         }
+
         base.OnStartLocalPlayer();
     }
 

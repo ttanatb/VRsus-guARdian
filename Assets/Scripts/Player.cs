@@ -30,7 +30,7 @@ public class Player : NetworkBehaviour
 #if UNITY_IOS
          playerType = PlayerType.AR;
 #else
-        playerType = PlayerType.VR;
+         playerType = PlayerType.VR;
 #endif
     }
 
