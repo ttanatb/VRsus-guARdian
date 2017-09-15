@@ -16,49 +16,55 @@ public class Combat : NetworkBehaviour
     public float bulletSpeed = 1f;
     public float bulletTimer = 2f;
 
-	public Text playerHealth;
-	public Text enemyHealth;
+    public Text playerHealth;
+    public Text enemyHealth;
 
-	public bool isDead = false;
-
-#if UNITY_IOS
     private Transform ARTransform;
-#endif
+    private Player player;
 
-	void Awake()
-	{
-		playerHealth = GameObject.Find ("Player Health").GetComponent<Text> ();
-		enemyHealth = GameObject.Find ("Enemy Health").GetComponent<Text> ();
-	}
+    void Awake()
+    {
+        playerHealth = GameObject.Find("Player Health").GetComponent<Text>();
+        enemyHealth = GameObject.Find("Enemy Health").GetComponent<Text>();
+    }
 
     [Command]
     void CmdFire()
     {
-		GameObject bullet = Instantiate(bulletPrefab, Camera.main.transform.position + Camera.main.transform.forward / 15f, Quaternion.identity);
-
-        bullet.GetComponent<Rigidbody>().velocity = transform.forward * bulletSpeed;
+        GameObject bullet = null;
+        if (player.PlayerType == PlayerType.AR)
+        {
+            bullet = Instantiate(bulletPrefab, Camera.main.transform.position + Camera.main.transform.forward / 15f, Quaternion.identity);
+            bullet.GetComponent<Rigidbody>().velocity = Camera.main.transform.forward * bulletSpeed;
+        }
+        else
+        {
+            bullet = Instantiate(bulletPrefab, transform.position + transform.forward / 15f, Quaternion.identity);
+            bullet.GetComponent<Rigidbody>().velocity = transform.forward * bulletSpeed;
+        }
 
         NetworkServer.Spawn(bullet);
-
         Destroy(bullet, bulletTimer);
     }
 
     private void Start()
     {
-#if UNITY_IOS
-		ARTransform = GetComponent<Player>().ARCamera.transform;
-#endif
+        player = GetComponent<Player>();
+        ARTransform = player.ARCamera.transform;
     }
 
     // Update is called once per frame
     void Update()
     {
-		if (!isLocalPlayer) {
-			enemyHealth.text = "Enemy Health: " + health;
-			return;
-		} else {
-			playerHealth.text = "Health: " + health;
-		}
+        if (!isLocalPlayer)
+        {
+            enemyHealth.text = "Enemy Health: " + health;
+            return;
+        }
+        else
+        {
+            playerHealth.text = "Health: " + health;
+        }
 
         if (Input.GetMouseButtonDown(0) || CheckTap())
         {
@@ -90,7 +96,7 @@ public class Combat : NetworkBehaviour
         if (health < 1)
         {
             //health = maxHealth;
-			isDead = true;
+            isDead = true;
             //RpcRespawn();
         }
     }

@@ -6,14 +6,9 @@ public class Bullet : MonoBehaviour
 {
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "ARPlayer")
+        Combat combat;
+        if ((combat = collision.gameObject.GetComponent<Combat>()) || (combat = collision.gameObject.GetComponent<ARAvatar>().rootPlayer.GetComponent<Combat>()))
         {
-			Debug.Log ("Blargh");
-
-            Combat combat = collision.gameObject.GetComponent<Combat>();
-            if (!combat)
-                combat = collision.gameObject.GetComponent<ARAvatar>().rootPlayer.GetComponent<Combat>();
-
             combat.TakeDamage();
             Destroy(gameObject);
         }
