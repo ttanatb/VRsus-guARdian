@@ -10,10 +10,13 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "ARPlayer")
         {
-			if ((collision.gameObject.tag == "Player" && owner == "Player") 
-				|| (collision.gameObject.tag == "ARPlayer" && owner == "ARPlayer"))
+			Debug.Log ("Blargh");
+			if ((collision.gameObject.tag == "Player" && owner == "Player")
+			    || (collision.gameObject.tag == "ARPlayer" && owner == "ARPlayer")) {
 				Destroy (gameObject);
-			
+				return;
+			}
+
             Combat combat = collision.gameObject.GetComponent<Combat>();
             if (!combat)
                 combat = collision.gameObject.GetComponent<ARAvatar>().rootPlayer.GetComponent<Combat>();
