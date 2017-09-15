@@ -15,15 +15,30 @@ public class Combat : NetworkBehaviour
     public float bulletSpeed = 1f;
     public float bulletTimer = 2f;
 
+#if UNITY_IOS
+    private Transform ARTransform;
+#endif
+
     [Command]
     void CmdFire()
     {
-        GameObject bullet = Instantiate(bulletPrefab, transform.position + transform.forward / 11f, Quaternion.identity);
+#if UNITY_IOS
+        GameObject bullet = Instantiate(bulletPrefab, ARTransform.position + ARTransform.forward / 12f, Quaternion.identity);
+#else
+        GameObject bullet = Instantiate(bulletPrefab, transform.position + transform.forward / 15f, Quaternion.identity);
+#endif
         bullet.GetComponent<Rigidbody>().velocity = transform.forward * bulletSpeed;
 
         NetworkServer.Spawn(bullet);
 
         Destroy(bullet, bulletTimer);
+    }
+
+    private void Start()
+    {
+#if UNITY_IOS
+    ARTransform = GetComponentInChildren<ARAvatar>().transform;
+#endif
     }
 
     // Update is called once per frame

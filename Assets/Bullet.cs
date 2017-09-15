@@ -14,8 +14,7 @@ public class Bullet : MonoBehaviour
                 combat = collision.gameObject.GetComponent<ARAvatar>().rootPlayer.GetComponent<Combat>();
 
             combat.TakeDamage();
+            Destroy(gameObject);
         }
-
-        Destroy(gameObject);
     }
 }
