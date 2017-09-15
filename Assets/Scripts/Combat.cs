@@ -34,14 +34,7 @@ public class Combat : NetworkBehaviour
     [Command]
     void CmdFire()
     {
-		
-#if UNITY_IOS
-        GameObject bullet = Instantiate(bulletPrefab, ARTransform.position + ARTransform.forward / 12f, Quaternion.identity);
-		bullet.GetComponent<Bullet> ().owner = "ARPlayer";
-#else
-        GameObject bullet = Instantiate(bulletPrefab, transform.position + transform.forward / 15f, Quaternion.identity);
-		bullet.GetComponent<Bullet> ().owner = "Player";
-#endif
+		GameObject bullet = Instantiate(bulletPrefab, Camera.main.transform.position + Camera.main.transform.forward / 15f, Quaternion.identity);
 
         bullet.GetComponent<Rigidbody>().velocity = transform.forward * bulletSpeed;
 
