@@ -31,7 +31,7 @@ public class Combat : NetworkBehaviour
     void CmdFire()
     {
         GameObject bullet = null;
-		if (GetComponent<Rigidbody>())
+		if (!GetComponent<Rigidbody>())
         {
             bullet = Instantiate(bulletPrefab, Camera.main.transform.position + Camera.main.transform.forward / 15f, Quaternion.identity);
             bullet.GetComponent<Rigidbody>().velocity = Camera.main.transform.forward * bulletSpeed;
