@@ -56,20 +56,21 @@ public class Movement : NetworkBehaviour
         startingPos = transform.position;
     }
 
-    public override void OnStartLocalPlayer()
+    void Start()
     {
         if (player.PlayerType == PlayerType.VR)
         {
-            rigidBody = gameObject.AddComponent<Rigidbody>();
-            rigidBody.mass = 1;
-            rigidBody.drag = 10;
-            rigidBody.useGravity = false;
-            rigidBody.isKinematic = false;
-            rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+            if (isLocalPlayer)
+            {
+                rigidBody = gameObject.AddComponent<Rigidbody>();
+                rigidBody.mass = 1;
+                rigidBody.drag = 10;
+                rigidBody.useGravity = false;
+                rigidBody.isKinematic = false;
+                rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+            }
             objCollider.enabled = true;
         }
-
-        base.OnStartLocalPlayer();
     }
 
     // Update is called once per frame
@@ -124,7 +125,7 @@ public class Movement : NetworkBehaviour
                 rotListY.RemoveAt(0);
             }
 
-            for(int i = 0; i < rotListX.Count; i++)
+            for (int i = 0; i < rotListX.Count; i++)
             {
                 avgRotX += rotListX[i];
                 avgRotY += rotListY[i];
@@ -167,7 +168,7 @@ public class Movement : NetworkBehaviour
         }
     }
 
-    float ClampAngle (float angle, float min, float max)
+    float ClampAngle(float angle, float min, float max)
     {
         angle %= 360;
         if ((angle >= -360f) && (angle <= 360f))

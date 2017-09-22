@@ -23,8 +23,8 @@ public class Combat : NetworkBehaviour
 
     void Awake()
     {
-        playerHealth = GameObject.Find("Player Health").GetComponent<Text>();
-        enemyHealth = GameObject.Find("Enemy Health").GetComponent<Text>();
+        //playerHealth = GameObject.Find("Player Health").GetComponent<Text>();
+        //enemyHealth = GameObject.Find("Enemy Health").GetComponent<Text>();
     }
 
     [Command]
@@ -55,11 +55,14 @@ public class Combat : NetworkBehaviour
     void Update()
     {
         if (!isLocalPlayer)
-        {
-            enemyHealth.text = "Enemy Health: " + health;
             return;
-        }
-        playerHealth.text = "Health: " + health;
+
+        //if (!isLocalPlayer)
+        //{
+        //    enemyHealth.text = "Enemy Health: " + health;
+        //    return;
+        //}
+        //playerHealth.text = "Health: " + health;
 
         if (Input.GetKeyDown(KeyCode.D))
         {
