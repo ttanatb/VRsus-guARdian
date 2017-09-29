@@ -40,9 +40,9 @@ public class Player : NetworkBehaviour
     public override void OnStartLocalPlayer()
     {
 #if UNITY_IOS
-         playerType = PlayerType.AR;
-#else
         playerType = PlayerType.VR;
+#else
+        playerType = PlayerType.AR;
 #endif
 
         if (playerType == PlayerType.AR)

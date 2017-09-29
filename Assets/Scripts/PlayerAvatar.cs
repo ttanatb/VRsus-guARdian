@@ -28,6 +28,8 @@ public class PlayerAvatar : MonoBehaviour
 
     private bool isLeft = true;
     private float floorYPos;
+
+    [SerializeField]
     private StepPhase currFootPhase = StepPhase.Stationary;
     private Vector3 footLerpPos;
     private Vector3 stepDir;
@@ -38,16 +40,31 @@ public class PlayerAvatar : MonoBehaviour
     public float stepHeight = 1f;
     public float stepSpeed = 2f;
 
+    public float FloorYPos
+    {
+        get { return floorYPos; }
+        set
+        {
+            floorYPos = value;
+            yPos = .809f + value;
+
+            //Debug.Log(floorYPos + " " + yPos);
+        }
+    }
+
     // Use this for initialization
     private void Start()
     {
         animator = GetComponent<Animator>();
         yPos = transform.position.y;
-        floorYPos = leftFootObj.position.y;
+        floorYPos = 1.5f;
     }
 
     private void Update()
     {
+        Vector3 floorVec = transform.position;
+        floorVec.y = floorYPos;
+        Debug.DrawLine(transform.position, floorVec);
         //Finds the vector from the character to the controller, but parallel to floor
         Vector3 projectedForward = Vector3.ProjectOnPlane(lookObj.forward, Vector3.up).normalized;
 
@@ -77,7 +94,7 @@ public class PlayerAvatar : MonoBehaviour
         //        0, 0) * forward;
         //}
 
-        Vector3 footOrientation =  transform.forward;
+        Vector3 footOrientation = transform.forward;
         footOrientation.y = 0;
 
         leftFootObj.forward = Vector3.Lerp(leftFootObj.forward, footOrientation, Time.deltaTime * lerpConst);
@@ -94,7 +111,11 @@ public class PlayerAvatar : MonoBehaviour
         switch (currFootPhase)
         {
             case StepPhase.Stationary:
-                if (CheckCross(left, right, center))//, 0.00013f))
+                //Debug.Log(Mathf.Abs(left.position.y - floorYPos) + " " + Mathf.Abs(right.position.y - floorYPos));
+
+                if (CheckCross(left, right, center) || 
+                    Mathf.Abs(left.position.y - floorYPos) > 0.05f ||
+                    Mathf.Abs(right.position.y - floorYPos) > 0.05f)//, 0.00013f))
                 {
                     if (isLeft)
                     {
@@ -129,58 +150,58 @@ public class PlayerAvatar : MonoBehaviour
                 if (isLeft)
                 {
                     left.position = Vector3.Lerp(left.position, left.position + stepDir, Time.deltaTime * stepSpeed);
-                    if (left.position.y - footLerpPos.y > stepHeight)
+                    if (left.position.y - floorYPos > stepHeight)
                     {
                         stepDir = footLerpPos - left.position;
                         currFootPhase = StepPhase.Step;
                     }
-                    //Debug.DrawLine(left.position, footLerpPos);
                 }
                 else
                 {
                     right.position = Vector3.Lerp(right.position, footLerpPos + Vector3.up, Time.deltaTime * stepSpeed);
-                    if (right.position.y - footLerpPos.y > stepHeight)
+                    if (right.position.y - floorYPos > stepHeight)
                     {
                         stepDir = footLerpPos - right.position;
                         currFootPhase = StepPhase.Step;
                     }
-                    //Debug.DrawLine(right.position, footLerpPos);
 
                 }
+
+                Debug.DrawLine(left.position, footLerpPos);
+                Debug.DrawLine(right.position, footLerpPos);
+
                 break;
             case StepPhase.Step:
                 if (isLeft)
                 {
+                    left.position = Vector3.Lerp(left.position, left.position + stepDir, Time.deltaTime * stepSpeed);
                     if (left.localPosition.y - floorYPos < 0.03f)
                     {
                         isLeft = !isLeft;
                         currFootPhase = StepPhase.Stationary;
-                        if (left.localPosition.y > 0)
-                            left.Translate(0, -left.localPosition.y, 0, Space.Self);
+                        if (left.localPosition.y > floorYPos)
+                            left.Translate(0, left.localPosition.y - floorYPos, 0, Space.Self);
                         else
-                            left.Translate(0, left.localPosition.y, 0, Space.Self);
+                            left.Translate(0, floorYPos - left.localPosition.y, 0, Space.Self);
                     }
-                    else
-                        left.position = Vector3.Lerp(left.position, left.position + stepDir, Time.deltaTime * stepSpeed);
 
-                    //Debug.DrawLine(left.position, footLerpPos);
+                    Debug.DrawLine(left.position, footLerpPos);
 
                 }
                 else
                 {
+                    right.position = Vector3.Lerp(right.position, right.position + stepDir, Time.deltaTime * stepSpeed);
                     if (right.localPosition.y - floorYPos < 0.03f)
                     {
                         isLeft = !isLeft;
                         currFootPhase = StepPhase.Stationary;
-                        if (right.localPosition.y > 0)
-                            right.Translate(0, -right.localPosition.y, 0, Space.Self);
+                        if (right.localPosition.y > floorYPos)
+                            right.Translate(0, right.localPosition.y - floorYPos, 0, Space.Self);
                         else
-                            right.Translate(0, right.localPosition.y, 0, Space.Self);
+                            right.Translate(0, floorYPos - right.localPosition.y, 0, Space.Self);
                     }
-                    else
-                        right.position = Vector3.Lerp(right.position, right.position + stepDir, Time.deltaTime * stepSpeed);
-                   //Debug.DrawLine(right.position, footLerpPos);
 
+                    Debug.DrawLine(right.position, footLerpPos);
                 }
                 break;
         }

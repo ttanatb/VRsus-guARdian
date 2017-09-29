@@ -34,10 +34,15 @@ public class HurtFlash : MonoBehaviour {
 		image.color = c;	
 
 		if (Input.GetKeyDown (KeyCode.D)) {
-			StopAllCoroutines ();
-			StartCoroutine ("Flash");
+
 		}
 	}
+
+    public void FlashRed()
+    {
+        StopAllCoroutines();
+        StartCoroutine("Flash");
+    }
 
 	IEnumerator Flash() {
 		Debug.Log ("Flashing!");

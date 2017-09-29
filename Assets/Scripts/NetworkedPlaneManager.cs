@@ -39,7 +39,9 @@ public class NetworkedPlaneManager : NetworkBehaviour
 
     [SerializeField]
     List<GameObject> localPlanes;
+
     public GameObject planePrefab;
+    public PlayerAvatar arAvatar;
 
     void ARPlaneChanged(SyncListStruct<ARPlane>.Operation op, int itemIndex)
     {
@@ -71,29 +73,59 @@ public class NetworkedPlaneManager : NetworkBehaviour
         localPlanes.Clear();
     }
 
+    private void Update()
+    {
+        if (isServer)
+        {
+            if (Input.GetKeyDown(KeyCode.D))
+                CmdAddPlane("dfdf",
+                    new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f)),
+                    Random.Range(0f, 360f),
+                    new Vector3(Random.Range(3f, 6f), Random.Range(3f, 6f), Random.Range(3f, 6f)));
+        }
+    }
+
     IEnumerator UpdateLocalPlanes()
     {
+        //only updates if local player
         if (!isLocalPlayer)
             yield return null;
+
+        //endless loop
         for (; ; )
         {
+            //add a plane
             if (prevListCount < m_ARPlane.Count)
             {
                 GameObject obj = Instantiate(planePrefab);
                 localPlanes.Add(obj);
             }
+
+            //destory a plane
             else if (prevListCount > m_ARPlane.Count)
             {
                 Destroy(localPlanes[prevListCount - 1]);
                 localPlanes.RemoveAt(prevListCount - 1);
             }
 
+            //update all the planes
             for (int i = 0; i < localPlanes.Count; i++)
             {
+                //check to make sure plane exists
                 if (i < m_ARPlane.Count)
+                {
                     localPlanes[i].GetComponent<LocalPlane>().UpdatePos(m_ARPlane[i].position,
                         m_ARPlane[i].rotation,
                         m_ARPlane[i].scale);
+
+                    float yPos = m_ARPlane[i].position.y;
+
+                    Debug.DrawLine(m_ARPlane[i].position, arAvatar.transform.position);
+
+                    //Debug.Log("YPos: " + yPos + " floorPos " + arAvatar.FloorYPos);
+                    //update floorYPos
+                    arAvatar.FloorYPos = yPos < arAvatar.FloorYPos ? yPos : arAvatar.FloorYPos;
+                }
                 else
                     break;
             }

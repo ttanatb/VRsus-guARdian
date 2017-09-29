@@ -19,10 +19,24 @@ public class Combat : NetworkBehaviour
     public Text playerHealth;
     public Text enemyHealth;
 
+    public GameObject HurtScreenPrefab;
+
+    private HurtFlash[] hurtFlashes;
+    private int hurtFlashCount = 7;
+    private int hurtFlashIndex = 0;
+
+    private int prevHealth;
+
     private Player player;
 
     void Awake()
     {
+        hurtFlashes = new HurtFlash[hurtFlashCount];
+        Transform canvas = GameObject.Find("Canvas").transform;
+        for(int i = 0; i < hurtFlashCount; i++)
+        {
+            hurtFlashes[i] = Instantiate(HurtScreenPrefab, canvas).GetComponent<HurtFlash>();
+        }
         //playerHealth = GameObject.Find("Player Health").GetComponent<Text>();
         //enemyHealth = GameObject.Find("Enemy Health").GetComponent<Text>();
     }
@@ -57,14 +71,18 @@ public class Combat : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
-        //if (!isLocalPlayer)
-        //{
-        //    enemyHealth.text = "Enemy Health: " + health;
-        //    return;
-        //}
-        //playerHealth.text = "Health: " + health;
+        if (prevHealth != health)
+        {
+            hurtFlashes[hurtFlashIndex].FlashRed();
 
-        if (Input.GetKeyDown(KeyCode.D))
+            hurtFlashIndex++;
+            if (hurtFlashIndex > hurtFlashCount - 1)
+                hurtFlashIndex = 0;
+
+            prevHealth = health;
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
         {
             TakeDamage();
         }
