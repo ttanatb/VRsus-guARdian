@@ -11,11 +11,8 @@ public enum PlayerType
 
 public class Player : NetworkBehaviour
 {
-    //public GameObject ARPlayer;
-    //public GameObject VRPlayer;
-
-    public GameObject ARAvatar;
-    public GameObject VRAvatar;
+    public Object[] ObjsForARAvatarThatVRPlayerCanSee;
+    public Object[] ObjsForVRAvatarThatARPlayerCanSee;
 
     public GameObject ARCamera;
     public GameObject VRCamera;
@@ -23,61 +20,87 @@ public class Player : NetworkBehaviour
     [SerializeField]
     private PlayerType playerType;
 
+    [SerializeField]
+    private bool isThisALocalPlayer;
+
+    [SerializeField]
+    private bool isThisAServer;
+
+
     public PlayerType PlayerType { get { return playerType; } }
 
-    private void Awake()
+    private void Update()
     {
-        if (!isLocalPlayer)
+        isThisALocalPlayer = isLocalPlayer;
+        isThisAServer = isServer;
+    }
+
+    // Use this for initialization
+    void Start()
+    {
+        //set up if the Player should be VR or AR
+        if (isLocalPlayer)
+        {
+#if UNITY_IOS
+            playerType = PlayerType.AR;
+#else
+            playerType = PlayerType.VR;
+#endif
+        }
+        else
         {
 #if UNITY_IOS
             playerType = PlayerType.VR;
 #else
             playerType = PlayerType.AR;
 #endif
-        }
-    }
-
-    public override void OnStartLocalPlayer()
-    {
-#if UNITY_IOS
-        playerType = PlayerType.VR;
-#else
-        playerType = PlayerType.AR;
-#endif
-
-        if (playerType == PlayerType.AR)
-        {
-            ARCamera.GetComponent<Camera>().enabled = true;
-            ARCamera.GetComponent<AudioListener>().enabled = true;
-
-#if UNITY_IOS
-            UnityARCameraManager.Instance.SetCamera(Camera.main);
-#endif
+            Debug.Log("The other client is now: " + playerType);
         }
 
-        else
-        {
-            VRCamera.GetComponent<Camera>().enabled = true;
-            VRCamera.GetComponent<AudioListener>().enabled = true;
-        }
-
-
-        base.OnStartLocalPlayer();
-    }
-
-    // Use this for initialization
-    void Start()
-    {
+        //Enable objects or scripts of the other player
         if (!isLocalPlayer)
         {
             if (playerType == PlayerType.AR)
             {
-                ARAvatar.SetActive(true);
+                foreach (Object o in ObjsForARAvatarThatVRPlayerCanSee)
+                {
+                    if (o is GameObject)
+                        ((GameObject)o).SetActive(true);
+                    else if (o is MonoBehaviour)
+                        ((MonoBehaviour)o).enabled = true;
+                }
             }
             else
             {
-                VRAvatar.SetActive(true);
+                foreach (Object o in ObjsForVRAvatarThatARPlayerCanSee)
+                {
+                    if (o is GameObject)
+                        ((GameObject)o).SetActive(true);
+                    else if (o is MonoBehaviour)
+                        ((MonoBehaviour)o).enabled = true;
+                }
             }
+        }
+
+        //enable camera and audio listener for player
+        else
+        {
+            if (playerType == PlayerType.AR)
+            {
+                ARCamera.GetComponent<Camera>().enabled = true;
+                ARCamera.GetComponent<AudioListener>().enabled = true;
+
+#if UNITY_IOS
+            UnityARCameraManager.Instance.SetCamera(Camera.main);
+#endif
+            }
+
+            else
+            {
+                VRCamera.GetComponent<Camera>().enabled = true;
+                VRCamera.GetComponent<AudioListener>().enabled = true;
+            }
+
         }
 
     }

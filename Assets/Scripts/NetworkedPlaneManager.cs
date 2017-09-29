@@ -8,6 +8,7 @@ using UnityEngine.Networking;
 public class NetworkedPlaneManager : NetworkBehaviour
 {
 
+    #region SyncListStruct
     public struct ARPlane
     {
         public string identifier;
@@ -34,34 +35,36 @@ public class NetworkedPlaneManager : NetworkBehaviour
     public class ARPlaneSync : SyncListStruct<ARPlane> { }
 
     ARPlaneSync m_ARPlane = new ARPlaneSync();
+    #endregion
 
-    int prevListCount = 0;
 
     [SerializeField]
     List<GameObject> localPlanes;
+    int prevListCount = 0;
 
     public GameObject planePrefab;
     public PlayerAvatar arAvatar;
 
-    void ARPlaneChanged(SyncListStruct<ARPlane>.Operation op, int itemIndex)
-    {
-
-    }
+    private Player player;
 
     // Use this for initialization
     void Start()
     {
-        if (isServer || isLocalPlayer)
+        player = GetComponent<Player>();
+        if (isLocalPlayer || isServer)
         {
-            //m_ARPlane.Callback = ARPlaneChanged;
             localPlanes = new List<GameObject>();
-
-#if UNITY_IOS
-			StartCoroutine ("UpdateARPlanes");
-#else 
             StartCoroutine("UpdateLocalPlanes");
-#endif
+            if (player.PlayerType == PlayerType.AR)
+            {
+                StartCoroutine("UpdateARPlanes");
+            }
         }
+        else
+        {
+            Destroy(this);
+        }
+
     }
 
     private void OnDestroy()
@@ -78,7 +81,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
         if (isServer)
         {
             if (Input.GetKeyDown(KeyCode.D))
-                CmdAddPlane("dfdf",
+                ServerAddPlane("dfdf",
                     new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f)),
                     Random.Range(0f, 360f),
                     new Vector3(Random.Range(3f, 6f), Random.Range(3f, 6f), Random.Range(3f, 6f)));
@@ -92,7 +95,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
             yield return null;
 
         //endless loop
-        for (; ; )
+        for (;;)
         {
             //add a plane
             if (prevListCount < m_ARPlane.Count)
@@ -120,7 +123,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
 
                     float yPos = m_ARPlane[i].position.y;
 
-                    Debug.DrawLine(m_ARPlane[i].position, arAvatar.transform.position);
+                    //Debug.DrawLine(m_ARPlane[i].position, arAvatar.transform.position);
 
                     //Debug.Log("YPos: " + yPos + " floorPos " + arAvatar.FloorYPos);
                     //update floorYPos
@@ -134,6 +137,8 @@ public class NetworkedPlaneManager : NetworkBehaviour
             yield return new WaitForSeconds(.1f);
         }
     }
+
+    #region Server Functions
 
 #if UNITY_IOS
     [Server]
@@ -149,7 +154,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
                 {
                     if (!UnityARAnchorManager.Instance.planeAnchorMap.ContainsKey(m_ARPlane[i].identifier))
                     {
-                        CmdRemovePlane(i);
+                        ServerRemovePlane(i);
                         break;
                     }
                 }
@@ -162,7 +167,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
                     int index = GetIndexOf(s);
                     if (index != -1)
                     {
-						CmdUpdatePlane (index, 						
+						ServerUpdatePlane (index, 						
 							UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).position,
 							UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).rotation.eulerAngles.y,
 							UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).localScale * 10);
@@ -171,7 +176,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
 
                 else
                 {
-					CmdAddPlane(s, 
+					ServerAddPlane(s, 
 						UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).position,
 						UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).rotation.eulerAngles.y,
 						UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).localScale * 10);
@@ -182,14 +187,14 @@ public class NetworkedPlaneManager : NetworkBehaviour
     }
 #endif
 
-    [Command]
-    private void CmdAddPlane(string s, Vector3 pos, float rot, Vector3 scale)
+    [Server]
+    private void ServerAddPlane(string s, Vector3 pos, float rot, Vector3 scale)
     {
         m_ARPlane.Add(new ARPlane(s, pos, rot, scale));
     }
 
-    [Command]
-    private void CmdUpdatePlane(int index, Vector3 pos, float rot, Vector3 scale)
+    [Server]
+    private void ServerUpdatePlane(int index, Vector3 pos, float rot, Vector3 scale)
     {
         if (index < m_ARPlane.Count)
         {
@@ -200,12 +205,18 @@ public class NetworkedPlaneManager : NetworkBehaviour
         }
     }
 
-    [Command]
-    private void CmdRemovePlane(int index)
+    [Server]
+    private void ServerRemovePlane(int index)
     {
         m_ARPlane.RemoveAt(index);
     }
 
+    #endregion
+
+    #region Helper Functions
+    /// <summary>
+    /// Checks if m_ARPlane contains a plane with the string identifier
+    /// </summary>
     private bool CheckIfContains(string identifier)
     {
         for (int i = 0; i < m_ARPlane.Count; i++)
@@ -219,6 +230,9 @@ public class NetworkedPlaneManager : NetworkBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Gets an index of an ARPlane in m_ARPlane based off of the identifier
+    /// </summary>
     private int GetIndexOf(string identifier)
     {
         for (int i = 0; i < m_ARPlane.Count; i++)
@@ -231,4 +245,5 @@ public class NetworkedPlaneManager : NetworkBehaviour
 
         return -1;
     }
+    #endregion
 }

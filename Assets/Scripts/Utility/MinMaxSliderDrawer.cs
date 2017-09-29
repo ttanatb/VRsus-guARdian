@@ -1,4 +1,6 @@
-﻿//Based off of https://gist.github.com/frarees/9791517#file-minmaxsliderattribute-cs-L13
+﻿#if UNITY_EDITOR
+
+//Based off of https://gist.github.com/frarees/9791517#file-minmaxsliderattribute-cs-L13
 
 using UnityEngine;
 using UnityEditor;
@@ -39,3 +41,5 @@ public class MinMaxSliderDrawer : PropertyDrawer
         return 30f;
     }
 }
+
+#endif

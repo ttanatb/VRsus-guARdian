@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+#if UNITY_IOS
 using UnityEngine.iOS;
+#endif
 
 public class Combat : NetworkBehaviour
 {
@@ -25,7 +27,7 @@ public class Combat : NetworkBehaviour
     private int hurtFlashCount = 7;
     private int hurtFlashIndex = 0;
 
-    private int prevHealth;
+    private int prevHealth = maxHealth;
 
     private Player player;
 

@@ -286,6 +286,7 @@ public class PlayerAvatar : MonoBehaviour
                 animator.SetLookAtWeight(1);
                 animator.SetLookAtPosition(lookObj.position);
             }
+            else animator.SetLookAtWeight(0);
 
             if (leftHandObj)
             {
@@ -293,6 +294,11 @@ public class PlayerAvatar : MonoBehaviour
                 animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
                 animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandObj.position);
                 animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandObj.rotation);
+            }
+            else
+            {
+                animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0);
+                animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0);
             }
 
             if (rightHandObj)
@@ -302,6 +308,11 @@ public class PlayerAvatar : MonoBehaviour
                 animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandObj.position);
                 animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandObj.rotation);
             }
+            else
+            {
+                animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 0);
+                animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, 0);
+            }
 
             if (leftFootObj)
             {
@@ -309,6 +320,11 @@ public class PlayerAvatar : MonoBehaviour
                 animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 1);
                 animator.SetIKPosition(AvatarIKGoal.LeftFoot, leftFootObj.position);
                 animator.SetIKRotation(AvatarIKGoal.LeftFoot, leftFootObj.rotation);
+            }
+            else
+            {
+                animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 0);
+                animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 0);
             }
 
             if (rightFootObj)
@@ -318,19 +334,11 @@ public class PlayerAvatar : MonoBehaviour
                 animator.SetIKPosition(AvatarIKGoal.RightFoot, rightFootObj.position);
                 animator.SetIKRotation(AvatarIKGoal.RightFoot, rightFootObj.rotation);
             }
-        }
-
-        else
-        {
-            animator.SetLookAtWeight(0);
-            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0);
-            animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0);
-            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
-            animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 0);
-            animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 0);
-            animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 0);
-            animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 0);
-            animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, 0);
+            else
+            {
+                animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
+                animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 0);
+            }
         }
     }
 }
