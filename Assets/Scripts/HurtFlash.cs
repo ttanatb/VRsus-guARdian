@@ -3,66 +3,73 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HurtFlash : MonoBehaviour {
+public class HurtFlash : MonoBehaviour
+{
 
-	[Range(0f, 1f)]
-	public float flashSpeed;
-	[Range(0f, 1f)]
-	public float fadeSpeed;
-	public float waitTime = 3f;
+    //the speed in which the red increases in opacity
+    [Range(0f, 1f)]
+    public float flashSpeed;
 
-	private Image image;
+    //the speed in which the red fades away
+    [Range(0f, 1f)]
+    public float fadeSpeed;
 
-	private float alpha = 0;
+    //the amount of time in which the red stays on screen
+    public float waitTime = 3f;
 
-	private IEnumerator fadeCouroutine;
-	// Use this for initialization
-	void Start () {
-		image = GetComponent<Image> ();
-		fadeCouroutine = Fade (waitTime);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		Color c = image.color;
-		if (alpha > 1f) {
-			alpha = 1f;
-		} else if (alpha < 0f) {
-			alpha = 0f;
-		}
-		c.a = alpha;
-		image.color = c;	
+    private Image image;
+    private float alpha = 0;
+    private IEnumerator fadeCouroutine;
 
-		if (Input.GetKeyDown (KeyCode.D)) {
-
-		}
-	}
-
-    public void FlashRed()
+    //start
+    void Start()
     {
-        StopAllCoroutines();
-        StartCoroutine("Flash");
+        image = GetComponent<Image>();
     }
 
-	IEnumerator Flash() {
-		Debug.Log ("Flashing!");
-		for (; alpha < 1f; alpha += flashSpeed) {
-			yield return null;
-		}
+    // Update is called once per frame
+    void Update()
+    {
+        //get current color
+        Color c = image.color;
 
-		fadeCouroutine = Fade (waitTime);
-		StartCoroutine (fadeCouroutine);
-	}
+        //clamp the alpha
+        if (alpha > 1f)
+        {
+            alpha = 1f;
+        }
+        else if (alpha < 0f)
+        {
+            alpha = 0f;
+        }
 
-	IEnumerator Fade(float waitTime) {
-		Debug.Log ("Waiting!");
-		yield return new WaitForSeconds (waitTime);
+        //set the alpha
+        c.a = alpha;
+        image.color = c;
+    }
 
-		Debug.Log ("Fading!");
-		for (; alpha > 0f; alpha -= fadeSpeed) {
-			yield return null;
-		}
-		Debug.Log ("Done!");
+    //public function that's called to flash the screen
+    public void FlashRed()
+    {
+        StopCoroutine(fadeCouroutine);
+        fadeCouroutine = Flash(waitTime);
+        StartCoroutine(fadeCouroutine);
+    }
 
-	}
+    IEnumerator Flash(float waitTime)
+    {
+        //increases alpha
+        for (; alpha < 1f; alpha += flashSpeed)
+        {
+            yield return null;
+        }
+
+        //starts the next coroutine
+        yield return new WaitForSeconds(waitTime);
+
+        for (; alpha > 0f; alpha -= fadeSpeed)
+        {
+            yield return null;
+        }
+    }
 }

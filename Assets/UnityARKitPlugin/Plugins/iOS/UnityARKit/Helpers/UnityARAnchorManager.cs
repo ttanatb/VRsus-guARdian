@@ -6,10 +6,7 @@ namespace UnityEngine.XR.iOS
 {
 	public class UnityARAnchorManager : Singleton<UnityARAnchorManager>
 	{
-
-
 		public Dictionary<string, ARPlaneAnchorGameObject> planeAnchorMap;
-
 
 		public UnityARAnchorManager () : base()
 		{
@@ -61,6 +58,11 @@ namespace UnityEngine.XR.iOS
 		{
 			return planeAnchorMap.Values.ToList ();
 		}
+
+        public int GetAnchorCount()
+        {
+            return planeAnchorMap.Count;
+        }
 	}
 }
 

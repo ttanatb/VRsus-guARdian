@@ -6,23 +6,22 @@ using UnityEngine.Networking;
 //FPS camera movement adapted from: http://wiki.unity3d.com/index.php/SmoothMouseLook
 public class Movement : NetworkBehaviour
 {
-    Player player;
+    private Player player;
+    private Rigidbody rigidBody;
+    private Collider objCollider;
 
-    Rigidbody rigidBody;
-    Collider objCollider;
-
-    float jumpValue = 0;
-    float lerpTarget = 0;
+    private float jumpValue = 0;
+    private float lerpTarget = 0;
 
     public uint jumpCount = 4;
-    uint currJumps = 0;
+    private uint currJumps = 0;
 
     public float jumpFactor = 2;
     public float jumpDamping = 0.2f;
 
     public float movementSpeed = 0.025f;
 
-    bool isPlaying = false;
+    private bool isPlaying = false;
 
     public float sensitivityX = 15f;
     public float sensitivityY = 15f;
@@ -33,8 +32,8 @@ public class Movement : NetworkBehaviour
     public float minY = -60f;
     public float maxY = 60f;
 
-    float rotX = 0f;
-    float rotY = 0f;
+    private float rotX = 0f;
+    private float rotY = 0f;
 
     private List<float> rotListX = new List<float>();
     float avgRotX = 0f;
@@ -58,19 +57,27 @@ public class Movement : NetworkBehaviour
 
     void Start()
     {
+        if (!isLocalPlayer)
+        {
+            objCollider.enabled = true;
+            Destroy(this);
+        }
+    }
+
+    public override void OnStartLocalPlayer()
+    {
         if (player.PlayerType == PlayerType.VR)
         {
-            if (isLocalPlayer)
-            {
-                rigidBody = gameObject.AddComponent<Rigidbody>();
-                rigidBody.mass = 1;
-                rigidBody.drag = 10;
-                rigidBody.useGravity = false;
-                rigidBody.isKinematic = false;
-                rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
-            }
+            rigidBody = gameObject.AddComponent<Rigidbody>();
+            rigidBody.mass = 1;
+            rigidBody.drag = 10;
+            rigidBody.useGravity = false;
+            rigidBody.isKinematic = false;
+            rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
             objCollider.enabled = true;
         }
+
+        base.OnStartLocalPlayer();
     }
 
     // Update is called once per frame

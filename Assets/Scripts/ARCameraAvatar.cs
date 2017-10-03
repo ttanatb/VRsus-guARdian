@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ARAvatar : MonoBehaviour {
+public class ARCameraAvatar : MonoBehaviour {
 
     public GameObject rootPlayer;
 

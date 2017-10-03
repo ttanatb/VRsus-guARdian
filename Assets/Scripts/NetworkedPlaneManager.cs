@@ -37,10 +37,18 @@ public class NetworkedPlaneManager : NetworkBehaviour
     ARPlaneSync m_ARPlane = new ARPlaneSync();
     #endregion
 
-
     [SerializeField]
     List<GameObject> localPlanes;
     int prevListCount = 0;
+
+    enum GamePhase
+    {
+        Scanning = 0,
+        Playing = 1
+    }
+
+    [SyncVar]
+    int currGamePhase = (int)GamePhase.Scanning;
 
     public GameObject planePrefab;
     public PlayerAvatar arAvatar;

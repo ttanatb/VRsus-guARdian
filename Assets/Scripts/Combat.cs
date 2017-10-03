@@ -39,8 +39,6 @@ public class Combat : NetworkBehaviour
         {
             hurtFlashes[i] = Instantiate(HurtScreenPrefab, canvas).GetComponent<HurtFlash>();
         }
-        //playerHealth = GameObject.Find("Player Health").GetComponent<Text>();
-        //enemyHealth = GameObject.Find("Enemy Health").GetComponent<Text>();
     }
 
     [Command]
@@ -49,8 +47,8 @@ public class Combat : NetworkBehaviour
         GameObject bullet = null;
         if (player.PlayerType == PlayerType.AR)
         {
-            bullet = Instantiate(bulletPrefab, Camera.main.transform.position + Camera.main.transform.forward / 15f, Quaternion.identity);
-            bullet.GetComponent<Rigidbody>().velocity = Camera.main.transform.forward * bulletSpeed;
+            bullet = Instantiate(bulletPrefab, player.ARCamera.transform.position + player.ARCamera.transform.forward / 15f, Quaternion.identity);
+            bullet.GetComponent<Rigidbody>().velocity = player.ARCamera.transform.forward * bulletSpeed;
         }
         else
         {
@@ -132,8 +130,6 @@ public class Combat : NetworkBehaviour
         {
             if (GetComponent<Player>().PlayerType == PlayerType.VR)
                 transform.position = Vector3.zero;
-
-
         }
     }
 }
