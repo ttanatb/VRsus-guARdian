@@ -62,11 +62,8 @@ public class Movement : NetworkBehaviour
             objCollider.enabled = true;
             Destroy(this);
         }
-    }
 
-    public override void OnStartLocalPlayer()
-    {
-        if (player.PlayerType == PlayerType.VR)
+        else if (player.PlayerType == PlayerType.VR)
         {
             rigidBody = gameObject.AddComponent<Rigidbody>();
             rigidBody.mass = 1;
@@ -76,7 +73,10 @@ public class Movement : NetworkBehaviour
             rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
             objCollider.enabled = true;
         }
+    }
 
+    public override void OnStartLocalPlayer()
+    {
         base.OnStartLocalPlayer();
     }
 

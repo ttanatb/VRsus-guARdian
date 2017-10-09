@@ -26,7 +26,6 @@ public class Player : NetworkBehaviour
     [SerializeField]
     private bool isThisAServer;
 
-
     public PlayerType PlayerType { get { return playerType; } }
 
     private void Update()
@@ -103,5 +102,8 @@ public class Player : NetworkBehaviour
 
         }
 
+        GetComponent<NetworkedPlaneManager>().enabled = true;
+        GetComponent<Movement>().enabled = true;
+        GetComponent<Combat>().enabled = true;
     }
 }
