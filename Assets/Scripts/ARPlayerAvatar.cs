@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAvatar : MonoBehaviour
+public class ARPlayerAvatar : MonoBehaviour
 {
-
     enum StepPhase
     {
         Stationary,
@@ -40,6 +39,8 @@ public class PlayerAvatar : MonoBehaviour
     public float stepHeight = 1f;
     public float stepSpeed = 2f;
 
+    public NetworkedPlaneManager planeManager;
+
     public float FloorYPos
     {
         get { return floorYPos; }
@@ -62,6 +63,9 @@ public class PlayerAvatar : MonoBehaviour
 
     private void Update()
     {
+        if (planeManager)
+            floorYPos = planeManager.FloorPos;
+
         Vector3 floorVec = transform.position;
         floorVec.y = floorYPos;
         Debug.DrawLine(transform.position, floorVec);
@@ -113,7 +117,7 @@ public class PlayerAvatar : MonoBehaviour
             case StepPhase.Stationary:
                 //Debug.Log(Mathf.Abs(left.position.y - floorYPos) + " " + Mathf.Abs(right.position.y - floorYPos));
 
-                if (CheckCross(left, right, center) || 
+                if (CheckCross(left, right, center) ||
                     Mathf.Abs(left.position.y - floorYPos) > 0.05f ||
                     Mathf.Abs(right.position.y - floorYPos) > 0.05f)//, 0.00013f))
                 {

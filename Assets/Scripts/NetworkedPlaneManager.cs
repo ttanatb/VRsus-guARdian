@@ -51,9 +51,12 @@ public class NetworkedPlaneManager : NetworkBehaviour
     int currGamePhase = (int)GamePhase.Scanning;
 
     public GameObject planePrefab;
-    public PlayerAvatar arAvatar;
 
     private Player player;
+    private float floorPos;
+
+
+    public float FloorPos {  get { return floorPos; } }
 
     // Use this for initialization
     void Start()
@@ -131,11 +134,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
 
                     float yPos = m_ARPlane[i].position.y;
 
-                    //Debug.DrawLine(m_ARPlane[i].position, arAvatar.transform.position);
-
-                    //Debug.Log("YPos: " + yPos + " floorPos " + arAvatar.FloorYPos);
-                    //update floorYPos
-                    arAvatar.FloorYPos = yPos < arAvatar.FloorYPos ? yPos : arAvatar.FloorYPos;
+                    floorPos = yPos < floorPos ? yPos : floorPos;
                 }
                 else
                     break;
