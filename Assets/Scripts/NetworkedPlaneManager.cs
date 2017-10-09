@@ -56,26 +56,22 @@ public class NetworkedPlaneManager : NetworkBehaviour
     private float floorPos;
 
 
-    public float FloorPos {  get { return floorPos; } }
+    public float FloorPos { get { return floorPos; } }
 
     // Use this for initialization
     void Start()
     {
         player = GetComponent<Player>();
-        if (isLocalPlayer || isServer)
+        if (player.PlayerType == PlayerType.AR)
         {
-            localPlanes = new List<GameObject>();
-            StartCoroutine("UpdateLocalPlanes");
-            if (player.PlayerType == PlayerType.AR)
+            if (isServer)
             {
                 StartCoroutine("UpdateARPlanes");
             }
-        }
-        else
-        {
-            Destroy(this);
-        }
 
+            StartCoroutine("UpdateLocalPlanes");
+            localPlanes = new List<GameObject>();
+        }
     }
 
     private void OnDestroy()
@@ -106,7 +102,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
             yield return null;
 
         //endless loop
-        for (;;)
+        for (; ; )
         {
             //add a plane
             if (prevListCount < m_ARPlane.Count)
