@@ -59,11 +59,24 @@ public class Player : NetworkBehaviour
             Debug.Log("The other client is now: " + playerType);
         }
 
+        if (playerType == PlayerType.AR)
+        {
+            VRAvatar.GetComponent<Collider>().enabled = false;
+        }
+
+        else
+        {
+            ARAvatar.GetComponent<Collider>().enabled = false;
+
+        }
+
         //Enable objects or scripts of the other player
         if (!isLocalPlayer)
         {
             if (playerType == PlayerType.AR)
             {
+                VRAvatar.GetComponent<Renderer>().enabled = true;
+
                 foreach (Object o in ObjsForARAvatarThatVRPlayerCanSee)
                 {
                     if (o is GameObject)
@@ -71,9 +84,12 @@ public class Player : NetworkBehaviour
                     else if (o is MonoBehaviour)
                         ((MonoBehaviour)o).enabled = true;
                 }
+
             }
             else
             {
+                ARAvatar.GetComponent<Renderer>().enabled = true;
+
                 foreach (Object o in ObjsForVRAvatarThatARPlayerCanSee)
                 {
                     if (o is GameObject)
@@ -87,7 +103,6 @@ public class Player : NetworkBehaviour
         //enable camera and audio listener for player
         else
         {
-            ARAvatar.GetComponent<Renderer>().enabled = false;
             if (playerType == PlayerType.AR)
             {
                 ARCamera.GetComponent<Camera>().enabled = true;
@@ -100,7 +115,6 @@ public class Player : NetworkBehaviour
 
             else
             {
-                VRAvatar.GetComponent<Renderer>().enabled = false;
 
                 VRCamera.GetComponent<Camera>().enabled = true;
                 VRCamera.GetComponent<AudioListener>().enabled = true;
