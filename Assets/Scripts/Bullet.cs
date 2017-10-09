@@ -11,12 +11,16 @@ public class Bullet : NetworkBehaviour
             return;
 
         CameraAvatar avatar = collision.gameObject.GetComponent<CameraAvatar>();
+        Combat combat = collision.gameObject.GetComponent<Combat>();
 
         if (avatar)
         {
             avatar.rootPlayer.TakeDamage();
             Destroy(gameObject);
-
+        } else if (combat)
+        {
+            combat.TakeDamage();
+            Destroy(gameObject);
         }
 
         ////gets Combat from the colliding gameObject
