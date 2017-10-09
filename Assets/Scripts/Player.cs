@@ -14,6 +14,9 @@ public class Player : NetworkBehaviour
     public Object[] ObjsForARAvatarThatVRPlayerCanSee;
     public Object[] ObjsForVRAvatarThatARPlayerCanSee;
 
+    public GameObject ARAvatar;
+    public GameObject VRAvatar;
+
     public GameObject ARCamera;
     public GameObject VRCamera;
 
@@ -84,6 +87,7 @@ public class Player : NetworkBehaviour
         //enable camera and audio listener for player
         else
         {
+            ARAvatar.GetComponent<Renderer>().enabled = false;
             if (playerType == PlayerType.AR)
             {
                 ARCamera.GetComponent<Camera>().enabled = true;
@@ -96,6 +100,8 @@ public class Player : NetworkBehaviour
 
             else
             {
+                VRAvatar.GetComponent<Renderer>().enabled = false;
+
                 VRCamera.GetComponent<Camera>().enabled = true;
                 VRCamera.GetComponent<AudioListener>().enabled = true;
             }
