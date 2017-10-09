@@ -9,6 +9,13 @@ public class LocalPlane : MonoBehaviour
 {
     private const float HEIGHT = 100f;
 
+#if UNITY_IOS
+    public void Start()
+    {
+        GetComponent<Renderer>().enabled = false;  
+    }
+#endif
+
     public void UpdatePos(Vector3 position, float rotation, Vector3 scale)
     {
         transform.position = position;
