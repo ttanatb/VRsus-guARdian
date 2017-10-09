@@ -10,23 +10,32 @@ public class Bullet : NetworkBehaviour
         if (!isServer)
             return;
 
-        //gets Combat from the colliding gameObject
-        Combat combat = collision.gameObject.GetComponent<Combat>();
+        CameraAvatar avatar = collision.gameObject.GetComponent<CameraAvatar>();
 
-        //if it's the AR object try the gameobject from root
-        if (!combat)
+        if (avatar)
         {
-            //get root
-            ARCameraAvatar arChar = collision.gameObject.GetComponent<ARCameraAvatar>();
-            if (arChar)
-                combat = arChar.rootPlayer.GetComponent<Combat>();
-        }
-
-        //if there's combat
-        if (combat)
-        {
-            combat.TakeDamage();
+            avatar.rootPlayer.TakeDamage();
             Destroy(gameObject);
+
         }
+
+        ////gets Combat from the colliding gameObject
+        //Combat combat = collision.gameObject.GetComponent<Combat>();
+
+        ////if it's the AR object try the gameobject from root
+        //if (!combat)
+        //{
+        //    //get root
+        //    CameraAvatar arChar = collision.gameObject.GetComponent<CameraAvatar>();
+        //    if (arChar)
+        //        combat = arChar.rootPlayer.GetComponent<Combat>();
+        //}
+
+        ////if there's combat
+        //if (combat)
+        //{
+        //    combat.TakeDamage();
+        //    Destroy(gameObject);
+        //}
     }
 }
