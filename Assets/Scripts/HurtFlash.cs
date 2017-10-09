@@ -51,7 +51,9 @@ public class HurtFlash : MonoBehaviour
     //public function that's called to flash the screen
     public void FlashRed()
     {
-        StopCoroutine(fadeCouroutine);
+        if (fadeCouroutine != null)
+            StopCoroutine(fadeCouroutine);
+
         fadeCouroutine = Flash(waitTime);
         StartCoroutine(fadeCouroutine);
     }
