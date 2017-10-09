@@ -4,11 +4,10 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 //FPS camera movement adapted from: http://wiki.unity3d.com/index.php/SmoothMouseLook
-public class Movement : NetworkBehaviour
+public class Movement : MonoBehaviour
 {
     private Player player;
     private Rigidbody rigidBody;
-    private Collider objCollider;
 
     private float jumpValue = 0;
     private float lerpTarget = 0;
@@ -49,7 +48,6 @@ public class Movement : NetworkBehaviour
     void Awake()
     {
         player = GetComponent<Player>();
-        objCollider = GetComponent<Collider>();
 
         startingRot = transform.rotation;
         startingPos = transform.position;
@@ -57,13 +55,8 @@ public class Movement : NetworkBehaviour
 
     void Start()
     {
-        if (!isLocalPlayer)
-        {
-            objCollider.enabled = true;
-            Destroy(this);
-        }
-
-        else if (player.PlayerType == PlayerType.VR)
+#if !UNITY_IOS
+        if (player.PlayerType == PlayerType.VR)
         {
             rigidBody = gameObject.AddComponent<Rigidbody>();
             rigidBody.mass = 1;
@@ -71,21 +64,13 @@ public class Movement : NetworkBehaviour
             rigidBody.useGravity = false;
             rigidBody.isKinematic = false;
             rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
-            objCollider.enabled = true;
         }
-    }
-
-    public override void OnStartLocalPlayer()
-    {
-        base.OnStartLocalPlayer();
+#endif
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!isLocalPlayer)
-            return;
-
         if (rigidBody)
         {
             if (Input.GetKeyDown(KeyCode.G))
@@ -95,7 +80,6 @@ public class Movement : NetworkBehaviour
                     rigidBody.useGravity = false;
                     rigidBody.isKinematic = true;
                     Cursor.lockState = CursorLockMode.None;
-                    objCollider.enabled = true;
                     transform.position = startingPos;
                     currJumps = 0;
                 }
@@ -104,7 +88,6 @@ public class Movement : NetworkBehaviour
                     rigidBody.useGravity = true;
                     rigidBody.isKinematic = false;
                     Cursor.lockState = CursorLockMode.Locked;
-                    objCollider.enabled = true;
                 }
 
                 isPlaying = !isPlaying;
@@ -196,10 +179,8 @@ public class Movement : NetworkBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         //CHANGE THIS LATER RIGHT NOW CLIENT DOES PHYSIC CHECKS
-        if (isServer)
-            return;
-
-        if ((collision.gameObject.tag == "Platform") && (transform.position.y > collision.transform.position.y + collision.transform.localScale.y / 2f))
+        if ((collision.gameObject.tag == "Platform") && 
+            (transform.position.y > collision.transform.position.y + collision.transform.localScale.y / 2f))
             currJumps = 0;
     }
 }

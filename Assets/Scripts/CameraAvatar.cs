@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ARCameraAvatar : MonoBehaviour {
+public class CameraAvatar : MonoBehaviour {
 
-    public GameObject rootPlayer;
+    public Combat rootPlayer;
 
 #if UNITY_IOS
     private void Start()
