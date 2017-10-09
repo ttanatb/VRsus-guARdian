@@ -64,13 +64,13 @@ public class NetworkedPlaneManager : NetworkBehaviour
         player = GetComponent<Player>();
         if (player.PlayerType == PlayerType.AR)
         {
+            StartCoroutine("UpdateLocalPlanes");
+            localPlanes = new List<GameObject>();
             if (isServer)
             {
                 StartCoroutine("UpdateARPlanes");
             }
 
-            StartCoroutine("UpdateLocalPlanes");
-            localPlanes = new List<GameObject>();
         }
     }
 
