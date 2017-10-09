@@ -75,7 +75,7 @@ public class Player : NetworkBehaviour
         {
             if (playerType == PlayerType.AR)
             {
-                VRAvatar.GetComponent<Renderer>().enabled = true;
+                ARAvatar.GetComponent<Renderer>().enabled = true;
 
                 foreach (Object o in ObjsForARAvatarThatVRPlayerCanSee)
                 {
@@ -88,7 +88,7 @@ public class Player : NetworkBehaviour
             }
             else
             {
-                ARAvatar.GetComponent<Renderer>().enabled = true;
+                VRAvatar.GetComponent<Renderer>().enabled = true;
 
                 foreach (Object o in ObjsForVRAvatarThatARPlayerCanSee)
                 {
