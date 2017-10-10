@@ -6,7 +6,6 @@ using UnityEngine.Networking;
 //FPS camera movement adapted from: http://wiki.unity3d.com/index.php/SmoothMouseLook
 public class Movement : MonoBehaviour
 {
-    private Player player;
     private Rigidbody rigidBody;
 
     private float jumpValue = 0;
@@ -47,8 +46,6 @@ public class Movement : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
-        player = GetComponent<Player>();
-
         startingRot = transform.rotation;
         startingPos = transform.position;
     }
@@ -56,15 +53,12 @@ public class Movement : MonoBehaviour
     void Start()
     {
 #if !UNITY_IOS
-        if (player.PlayerType == PlayerType.VR)
-        {
-            rigidBody = gameObject.AddComponent<Rigidbody>();
-            rigidBody.mass = 1;
-            rigidBody.drag = 10;
-            rigidBody.useGravity = false;
-            rigidBody.isKinematic = false;
-            rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
-        }
+        rigidBody = gameObject.AddComponent<Rigidbody>();
+        rigidBody.mass = 1;
+        rigidBody.drag = 10;
+        rigidBody.useGravity = false;
+        rigidBody.isKinematic = false;
+        rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
 #endif
     }
 
@@ -178,9 +172,10 @@ public class Movement : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        //CHANGE THIS LATER RIGHT NOW CLIENT DOES PHYSIC CHECKS
-        if ((collision.gameObject.tag == "Platform") && 
+        if ((collision.gameObject.tag == "Platform") &&
             (transform.position.y > collision.transform.position.y + collision.transform.localScale.y / 2f))
+        {
             currJumps = 0;
+        }
     }
 }

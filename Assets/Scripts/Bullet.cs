@@ -5,41 +5,36 @@ using UnityEngine.Networking;
 
 public class Bullet : NetworkBehaviour
 {
+    PlayerType type;
+
+    public void Init(PlayerType bulletType)
+    {
+        type = bulletType;
+    }
     private void OnCollisionEnter(Collision collision)
+
     {
         if (!isServer)
             return;
 
+        if (collision.gameObject.tag == tag || collision.gameObject.tag == "Platform")
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         CameraAvatar avatar = collision.gameObject.GetComponent<CameraAvatar>();
         Combat combat = collision.gameObject.GetComponent<Combat>();
 
-        if (avatar)
+        if (avatar && avatar.rootPlayer.GetComponent<Player>().PlayerType != type)
         {
             avatar.rootPlayer.TakeDamage();
             Destroy(gameObject);
-        } else if (combat)
+        }
+        else if (combat && combat.GetComponent<Player>().PlayerType != type)
         {
             combat.TakeDamage();
             Destroy(gameObject);
         }
-
-        ////gets Combat from the colliding gameObject
-        //Combat combat = collision.gameObject.GetComponent<Combat>();
-
-        ////if it's the AR object try the gameobject from root
-        //if (!combat)
-        //{
-        //    //get root
-        //    CameraAvatar arChar = collision.gameObject.GetComponent<CameraAvatar>();
-        //    if (arChar)
-        //        combat = arChar.rootPlayer.GetComponent<Combat>();
-        //}
-
-        ////if there's combat
-        //if (combat)
-        //{
-        //    combat.TakeDamage();
-        //    Destroy(gameObject);
-        //}
     }
 }

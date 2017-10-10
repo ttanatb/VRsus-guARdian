@@ -56,7 +56,6 @@ public class Player : NetworkBehaviour
 #else
             playerType = PlayerType.AR;
 #endif
-            Debug.Log("The other client is now: " + playerType);
         }
 
         if (playerType == PlayerType.AR)
@@ -122,8 +121,19 @@ public class Player : NetworkBehaviour
 
         }
 
-        GetComponent<NetworkedPlaneManager>().enabled = true;
-        GetComponent<Movement>().enabled = true;
+        if (playerType == PlayerType.AR)
+        {
+            GetComponent<NetworkedPlaneManager>().enabled = true;
+            Destroy(GetComponent<Movement>());
+            Destroy(GetComponent<BlockPlacer>());
+        }
+        else
+        {
+            Destroy(GetComponent<NetworkedPlaneManager>());
+            GetComponent<Movement>().enabled = true;
+            GetComponent<BlockPlacer>().enabled = true;
+        }
+
         GetComponent<Combat>().enabled = true;
     }
 }

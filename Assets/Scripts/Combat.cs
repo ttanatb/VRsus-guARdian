@@ -27,42 +27,37 @@ public class Combat : NetworkBehaviour
     private int hurtFlashCount = 7;
     private int hurtFlashIndex = 0;
 
-    private int prevHealth = maxHealth;
-
     private Player player;
+    public Transform canvas;
 
-    void Awake()
-    {
-        hurtFlashes = new HurtFlash[hurtFlashCount];
-        Transform canvas = GameObject.Find("Canvas").transform;
-        for(int i = 0; i < hurtFlashCount; i++)
-        {
-            hurtFlashes[i] = Instantiate(HurtScreenPrefab, canvas).GetComponent<HurtFlash>();
-        }
-    }
-
-    [Command]
-    void CmdFire()
-    {
-        GameObject bullet = null;
-        if (player.PlayerType == PlayerType.AR)
-        {
-            bullet = Instantiate(bulletPrefab, player.ARCamera.transform.position + player.ARCamera.transform.forward / 15f, Quaternion.identity);
-            bullet.GetComponent<Rigidbody>().velocity = player.ARCamera.transform.forward * bulletSpeed;
-        }
-        else
-        {
-            bullet = Instantiate(bulletPrefab, transform.position + transform.forward / 15f, Quaternion.identity);
-            bullet.GetComponent<Rigidbody>().velocity = transform.forward * bulletSpeed;
-        }
-
-        NetworkServer.Spawn(bullet);
-        Destroy(bullet, bulletTimer);
-    }
+    private Transform avatar;
+    private Vector3 prevPos;
 
     private void Start()
     {
         player = GetComponent<Player>();
+        if (player.PlayerType == PlayerType.AR)
+        {
+            avatar = player.ARAvatar.transform;
+        }
+        else
+        {
+            avatar = player.VRAvatar.transform;
+        }
+
+        prevPos = avatar.position;
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        if (!canvas)
+            canvas = GameObject.Find("Canvas").transform;
+
+        hurtFlashes = new HurtFlash[hurtFlashCount];
+        for (int i = 0; i < hurtFlashCount; i++)
+        {
+            hurtFlashes[i] = Instantiate(HurtScreenPrefab, canvas).GetComponent<HurtFlash>();
+        }
     }
 
     // Update is called once per frame
@@ -71,18 +66,8 @@ public class Combat : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
-        if (prevHealth != health)
-        {
-            hurtFlashes[hurtFlashIndex].FlashRed();
-
-            hurtFlashIndex++;
-            if (hurtFlashIndex > hurtFlashCount - 1)
-                hurtFlashIndex = 0;
-
-            prevHealth = health;
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
+        //DEBUG CODE
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.E))
         {
             TakeDamage();
         }
@@ -91,10 +76,13 @@ public class Combat : NetworkBehaviour
         {
             CmdFire();
         }
+
+        prevPos = avatar.position;
     }
 
     bool CheckTap()
     {
+#if UNITY_IOS
         if (Input.touchCount > 0)
         {
             for (int i = 0; i < Input.touchCount; i++)
@@ -103,9 +91,23 @@ public class Combat : NetworkBehaviour
                     return true;
             }
         }
-
+#endif
         return false;
     }
+
+    [Command]
+    void CmdFire()
+    {
+        GameObject bulletObj = Instantiate(bulletPrefab,
+                                        avatar.position + avatar.localScale.z * avatar.forward ,
+                                        Quaternion.identity);
+        bulletObj.GetComponent<Rigidbody>().velocity = avatar.forward * bulletSpeed + (avatar.position - prevPos);
+        bulletObj.GetComponent<Bullet>().Init(player.PlayerType);
+
+        NetworkServer.Spawn(bulletObj);
+        Destroy(bulletObj, bulletTimer);
+    }
+
 
     [Server]
     public void TakeDamage()
@@ -114,6 +116,11 @@ public class Combat : NetworkBehaviour
             return;
 
         health--;
+        hurtFlashes[hurtFlashIndex].FlashRed();
+
+        hurtFlashIndex++;
+        if (hurtFlashIndex > hurtFlashCount - 1)
+            hurtFlashIndex = 0;
 
         if (health < 1)
         {

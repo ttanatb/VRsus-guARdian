@@ -24,12 +24,12 @@ public class NetworkedPlaneManager : NetworkBehaviour
             this.scale = scale;
         }
 
-        public void Update(Vector3 position, float rotation, Vector3 scale)
-        {
-            this.position = position;
-            this.rotation = rotation;
-            this.scale = scale;
-        }
+        //public void Update(Vector3 position, float rotation, Vector3 scale)
+        //{
+        //    this.position = position;
+        //    this.rotation = rotation;
+        //    this.scale = scale;
+        //}
     }
 
     public class ARPlaneSync : SyncListStruct<ARPlane> { }
@@ -64,10 +64,13 @@ public class NetworkedPlaneManager : NetworkBehaviour
         player = GetComponent<Player>();
         if (player.PlayerType == PlayerType.AR)
         {
+
+#if UNITY_IOS
             if (isServer)
             {
                 StartCoroutine("UpdateARPlanes");
             }
+#endif
 
             StartCoroutine("UpdateLocalPlanes");
             localPlanes = new List<GameObject>();
@@ -87,11 +90,13 @@ public class NetworkedPlaneManager : NetworkBehaviour
     {
         if (isServer)
         {
-            if (Input.GetKeyDown(KeyCode.D))
+            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.D))
+            {
                 ServerAddPlane("dfdf",
                     new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f)),
                     Random.Range(0f, 360f),
                     new Vector3(Random.Range(3f, 6f), Random.Range(3f, 6f), Random.Range(3f, 6f)));
+            }
         }
     }
 
@@ -141,7 +146,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
         }
     }
 
-    #region Server Functions
+#region Server Functions
 
 #if UNITY_IOS
     [Server]
@@ -201,9 +206,7 @@ public class NetworkedPlaneManager : NetworkBehaviour
     {
         if (index < m_ARPlane.Count)
         {
-            m_ARPlane[index].Update(pos, rot, scale);
-            string identifier = m_ARPlane[index].identifier;
-            m_ARPlane[index] = new ARPlane(identifier, pos, rot, scale);
+            m_ARPlane[index] = new ARPlane(m_ARPlane[index].identifier, pos, rot, scale);
             m_ARPlane.Dirty(index);
         }
     }
@@ -214,9 +217,9 @@ public class NetworkedPlaneManager : NetworkBehaviour
         m_ARPlane.RemoveAt(index);
     }
 
-    #endregion
+#endregion
 
-    #region Helper Functions
+#region Helper Functions
     /// <summary>
     /// Checks if m_ARPlane contains a plane with the string identifier
     /// </summary>
@@ -248,5 +251,5 @@ public class NetworkedPlaneManager : NetworkBehaviour
 
         return -1;
     }
-    #endregion
+#endregion
 }
