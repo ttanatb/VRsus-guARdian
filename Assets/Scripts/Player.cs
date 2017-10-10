@@ -123,15 +123,15 @@ public class Player : NetworkBehaviour
 
         if (playerType == PlayerType.AR)
         {
-            GetComponent<NetworkedPlaneManager>().enabled = true;
+            GetComponent<PlaneManager>().enabled = true;
             Destroy(GetComponent<Movement>());
-            Destroy(GetComponent<BlockPlacer>());
+            Destroy(GetComponent<BlockManager>());
         }
         else
         {
-            Destroy(GetComponent<NetworkedPlaneManager>());
+            Destroy(GetComponent<PlaneManager>());
             GetComponent<Movement>().enabled = true;
-            GetComponent<BlockPlacer>().enabled = true;
+            GetComponent<BlockManager>().enabled = true;
         }
 
         GetComponent<Combat>().enabled = true;

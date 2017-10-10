@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using UnityEngine.EventSystems;
 #if UNITY_IOS
 using UnityEngine.iOS;
 #endif
@@ -72,7 +73,7 @@ public class Combat : NetworkBehaviour
             TakeDamage();
         }
 
-        if (Input.GetMouseButtonDown(0) || CheckTap())
+        if (!IsPointerOverUIObject() && (Input.GetMouseButtonDown(0) || CheckTap()))
         {
             CmdFire();
         }
@@ -93,6 +94,15 @@ public class Combat : NetworkBehaviour
         }
 #endif
         return false;
+    }
+
+    private bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
     }
 
     [Command]

@@ -39,8 +39,6 @@ public class ARPlayerAvatar : MonoBehaviour
     public float stepHeight = 1f;
     public float stepSpeed = 2f;
 
-    public NetworkedPlaneManager planeManager;
-
     public float FloorYPos
     {
         get { return floorYPos; }
@@ -63,8 +61,7 @@ public class ARPlayerAvatar : MonoBehaviour
 
     private void Update()
     {
-        if (planeManager)
-            floorYPos = planeManager.FloorPos;
+        floorYPos = LocalObjectBuilder.Instance.FloorPos;
 
         Vector3 floorVec = transform.position;
         floorVec.y = floorYPos;
