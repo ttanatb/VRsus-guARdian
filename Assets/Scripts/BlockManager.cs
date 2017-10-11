@@ -133,13 +133,16 @@ public class BlockManager : NetworkBehaviour
         //Creates the action
         UnityAction action = () =>
         {
-            btns[currPlaceMode].interactable = false;
-            placementBtn.interactable = false;
-            placementSampleObj.GetComponent<MeshFilter>().mesh = null;
+            if (currPlaceMode != -1)
+            {
+                btns[currPlaceMode].interactable = false;
+                placementBtn.interactable = false;
+                placementSampleObj.GetComponent<MeshFilter>().mesh = null;
 
-            CmdAddBlock(placementSampleObj.transform.position, currPlaceMode);
+                CmdAddBlock(placementSampleObj.transform.position, currPlaceMode);
 
-            currPlaceMode = -1;
+                currPlaceMode = -1;
+            }
         };
 
         return action;

@@ -66,6 +66,9 @@ public class Combat : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (player.PlayerType == PlayerType.VR)
+            avatar.forward = transform.forward;
+
         if (!isLocalPlayer)
             return;
 
@@ -119,10 +122,23 @@ public class Combat : NetworkBehaviour
     [Command]
     void CmdFire()
     {
-        GameObject bulletObj = Instantiate(bulletPrefab,
-                                        avatar.position + avatar.localScale.z * avatar.forward,
-                                        Quaternion.identity);
-        bulletObj.GetComponent<Rigidbody>().velocity = avatar.forward * bulletSpeed + (avatar.position - prevPos);
+        GameObject bulletObj = null;
+
+        if (player.PlayerType == PlayerType.AR)
+        {
+            bulletObj = Instantiate(bulletPrefab,
+                                    avatar.position + avatar.localScale.z * avatar.forward,
+                                    Quaternion.identity);
+            bulletObj.GetComponent<Rigidbody>().velocity = avatar.forward * bulletSpeed;// + (avatar.position - prevPos);
+        }
+        else
+        {
+            bulletObj = Instantiate(bulletPrefab,
+                                    transform.position + avatar.localScale.z * transform.forward,
+                                    Quaternion.identity);
+            bulletObj.GetComponent<Rigidbody>().velocity = transform.forward * bulletSpeed;// + (avatar.position - prevPos);
+
+        }
         bulletObj.GetComponent<Bullet>().Init(player.PlayerType);
 
         NetworkServer.Spawn(bulletObj);
