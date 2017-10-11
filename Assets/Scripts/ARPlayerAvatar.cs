@@ -85,8 +85,9 @@ public class ARPlayerAvatar : MonoBehaviour
         //transform.position = pos;
 
         //used to widen feet a bit more
-        Vector3 vecBetweenFeet = (leftFootObj.position - rightFootObj.position).normalized / 2f;
-        float currFootSeperation = footSeperation * transform.localScale.x;
+        
+        //Vector3 vecBetweenFeet = (leftFootObj.position - rightFootObj.position).normalized / 2f;
+        //float currFootSeperation = footSeperation * transform.localScale.x;
 
         //bend hip if head's y pos is lowered
         //if (characterHeight > head.localPosition.y)

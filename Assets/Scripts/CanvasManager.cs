@@ -35,7 +35,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
             btns[i].onClick.AddListener(action);
         }
 
-        GameObject exitButton = Instantiate(exitButtonPrefab, blockPlacingUI.transform);
+        //GameObject exitButton = Instantiate(exitButtonPrefab, blockPlacingUI.transform);
         //set button listener for exit
 
         UnityAction placementBtnAction = blockPlacer.GetActionToPlaceBlock(btns, placementButton);

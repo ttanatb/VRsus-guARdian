@@ -24,60 +24,137 @@ public class BlockSync : SyncListStruct<Block> { }
 #endregion
 public class BlockManager : NetworkBehaviour
 {
+    //Sync Struct List
     public BlockSync blockList = new BlockSync();
+
+    //if currently in placing mode
     bool isPlacing = false;
     bool prevIsPlacing;
 
+    //if switching in/out of placing mode
     bool switching = false;
 
-    private GameObject vrCamObj;
+    //cameras
+    private Camera vrCamera;
     public GameObject topViewCamObj;
     private Camera topViewCam;
 
     private int currPlaceMode = -1;
 
+    //the speed of fading
     [Range(0f, 1f)]
     public float fadeSpeed;
 
+    //wait time between fade in/out
     public float waitTime = 1.2f;
 
+    //prefab for placement visualization
     public GameObject placementSamplePrefab;
     private GameObject placementSampleObj;
 
+    //mesh for placement visualization
     private Mesh[] blockMeshes;
 
-    // Use this for initialization
+    //player renderer
+    public Renderer vrPlayerRenderer;
+
+    /// <summary>
+    /// Initialization
+    /// </summary>
     void Start()
     {
+        //only initializes if isLocalPlayer
         if (isLocalPlayer)
         {
+            prevIsPlacing = isPlacing;
+
+            //creates top-view camera
             topViewCamObj = Instantiate(topViewCamObj);
             topViewCam = topViewCamObj.GetComponent<Camera>();
+            vrCamera = Camera.main;
 
+            //adjusts the black plane
             Color c = topViewCamObj.transform.GetChild(0).GetComponent<Renderer>().material.color;
             c.a = 1f;
             topViewCamObj.transform.GetChild(0).GetComponent<Renderer>().material.color = c;
 
-            vrCamObj = Camera.main.gameObject;
-            prevIsPlacing = isPlacing;
-
             placementSampleObj = Instantiate(placementSamplePrefab);
             blockMeshes = LocalObjectBuilder.Instance.blockMeshes;
+            vrPlayerRenderer = GetComponent<Player>().VRAvatar.GetComponent<Renderer>();
 
             LocalObjectBuilder.Instance.SetBlockManager(this);
         }
     }
 
+    #region Getter For Unity Actions
+    /// <summary>
+    /// Gets an action to attach to a button
+    /// </summary>
+    /// <param name="i">Index of the button</param>
+    /// <param name="placementBtn">Button for placement</param>
+    /// <returns></returns>
+    public UnityAction GetActionToSetPlacingMode(int i, Button placementBtn)
+    {
+        //creates the action
+        UnityAction action = () =>
+        {
+            //if already on current placemode
+            if (currPlaceMode == i)
+            {
+                placementSampleObj.GetComponent<MeshFilter>().mesh = null;
+                currPlaceMode = -1;
+                placementBtn.interactable = false;
+            }
+
+            //switches to desired placemode
+            else
+            {
+                placementSampleObj.GetComponent<MeshFilter>().mesh = blockMeshes[i];
+                currPlaceMode = i;
+                placementBtn.interactable = true;
+            }
+        };
+
+        return action;
+    }
+
+    /// <summary>
+    /// Function callback for placing blocks
+    /// </summary>
+    /// <param name="btns">Array of buttons</param>
+    /// <param name="placementBtn">The main placement button</param>
+    /// <returns></returns>
+    public UnityAction GetActionToPlaceBlock(Button[] btns, Button placementBtn)
+    {
+        //Creates the action
+        UnityAction action = () =>
+        {
+            btns[currPlaceMode].interactable = false;
+            placementBtn.interactable = false;
+            placementSampleObj.GetComponent<MeshFilter>().mesh = null;
+
+            CmdAddBlock(placementSampleObj.transform.position, currPlaceMode);
+
+            currPlaceMode = -1;
+        };
+
+        return action;
+    }
+    #endregion
+
     // Update is called once per frame
     void Update()
     {
+        //Exits if it isn't local player
         if (!isLocalPlayer)
             return;
 
+        //Makes it so that you can't do anything while switching
         UpdateSwitching();
         if (switching)
             return;
 
+        //Input to switch into or out of placing mode
         if (Input.GetKeyDown(KeyCode.T) && Input.GetKey(KeyCode.LeftShift))
         {
             if (!isPlacing)
@@ -85,18 +162,25 @@ public class BlockManager : NetworkBehaviour
             else StopPlacing();
         }
 
+        //if isPlacing
         if (isPlacing && currPlaceMode > -1)
         {
+            //gets mouse position
             Vector3 mousePos = Input.mousePosition;
             mousePos.z = topViewCamObj.transform.position.y;
             mousePos = topViewCam.ScreenToWorldPoint(mousePos);
-
             mousePos.y = 0;
 
+            //sets the position of the placement sample
             placementSampleObj.transform.position = mousePos;
         }
     }
 
+    #region Helper Functions
+
+    /// <summary>
+    /// Helper function for checking if switching between modes
+    /// </summary>
     void UpdateSwitching()
     {
         if (prevIsPlacing != isPlacing)
@@ -105,6 +189,9 @@ public class BlockManager : NetworkBehaviour
         prevIsPlacing = isPlacing;
     }
 
+    /// <summary>
+    /// Function to switch into placing mode
+    /// </summary>
     void StartPlacing()
     {
         if (isPlacing) return;
@@ -112,14 +199,16 @@ public class BlockManager : NetworkBehaviour
         StopAllCoroutines();
         switching = true;
 
-        IEnumerator fadeOut = FadeOut(vrCamObj, topViewCamObj, true);
-        IEnumerator fadeIn = FadeIn(topViewCamObj, vrCamObj);
+        IEnumerator fadeOut = FadeOut(vrCamera, topViewCam, true);
+        IEnumerator fadeIn = FadeIn(topViewCam, vrCamera);
 
-        //Debug.Log("Switching to placing mode");
         StartCoroutine(fadeOut);
         StartCoroutine(fadeIn);
     }
 
+    /// <summary>
+    /// Function to switch out of placing mode
+    /// </summary>
     void StopPlacing()
     {
         if (!isPlacing) return;
@@ -127,69 +216,16 @@ public class BlockManager : NetworkBehaviour
         StopAllCoroutines();
         switching = true;
 
-        IEnumerator fadeOut = FadeOut(topViewCamObj, vrCamObj, false);
-        IEnumerator fadeIn = FadeIn(vrCamObj, topViewCamObj);
+        IEnumerator fadeOut = FadeOut(topViewCam, vrCamera, false);
+        IEnumerator fadeIn = FadeIn(vrCamera, topViewCam);
 
-
-        //Debug.Log("Switching out of placing mode");
         StartCoroutine(fadeIn);
         StartCoroutine(fadeOut);
     }
 
-    void SetUpUI()
+    IEnumerator FadeOut(Camera cameraToFadeOut, Camera otherCamera, bool reposition)
     {
-        CanvasManager.Instance.SetUpBlockPlacingUI(this, blockMeshes.Length);
-    }
-
-    public UnityAction GetActionToSetPlacingMode(int i, Button placementBtn)
-    {
-        UnityAction action = () =>
-        {
-            if (currPlaceMode == i)
-            {
-                placementSampleObj.GetComponent<MeshFilter>().mesh = null;
-                currPlaceMode = -1;
-                placementBtn.interactable = false;
-            }
-            else
-            {
-                placementSampleObj.GetComponent<MeshFilter>().mesh = blockMeshes[i];
-                currPlaceMode = i;
-                placementBtn.interactable = true;
-            }
-
-            Debug.Log(currPlaceMode);
-        };
-
-        return action;
-    }
-
-    public UnityAction GetActionToPlaceBlock(Button[] btns, Button placementBtn)
-    {
-        UnityAction action = () =>
-        {
-            btns[currPlaceMode].interactable = false;
-            placementBtn.interactable = false;
-            placementSampleObj.GetComponent<MeshFilter>().mesh = null;
-
-            //run the thing to the server
-            ServerAddBlock(placementSampleObj.transform.position, currPlaceMode);
-
-            currPlaceMode = -1;
-        };
-
-        return action;
-    }
-
-    [Server]
-    private void ServerAddBlock(Vector3 position, int type)
-    {
-        blockList.Add(new Block(position, type));
-    }
-
-    IEnumerator FadeOut(GameObject cameraToFadeOut, GameObject otherCamera, bool reposition)
-    {
-        while (otherCamera.activeSelf)
+        while (otherCamera.enabled)
         {
             //Debug.Log("Other Camera (" + otherCamera.name + ") is still active");
             yield return null;
@@ -221,21 +257,22 @@ public class BlockManager : NetworkBehaviour
 
         yield return new WaitForSeconds(waitTime);
 
-        cameraToFadeOut.SetActive(false);
-        otherCamera.SetActive(true);
+        cameraToFadeOut.enabled = false;
+        otherCamera.enabled = true;
+
         if (isPlacing)
+        {
+            vrPlayerRenderer.enabled = false;
             CanvasManager.Instance.DisableBlockPlacingUI();
+        }
     }
 
-    IEnumerator FadeIn(GameObject cameraToFadeIn, GameObject otherCamera)
+    IEnumerator FadeIn(Camera cameraToFadeIn, Camera otherCamera)
     {
-        while (otherCamera.activeSelf)
+        while (otherCamera.enabled)
         {
-            //Debug.Log("Other Camera (" + otherCamera.name + ") is still active");
             yield return null;
         }
-
-        //Debug.Log("Fading in now!");
 
         Renderer rend = cameraToFadeIn.transform.GetChild(0).GetComponent<Renderer>();
         Color c = rend.material.color;
@@ -254,6 +291,26 @@ public class BlockManager : NetworkBehaviour
 
         isPlacing = !isPlacing;
         if (isPlacing)
+        {
+            vrPlayerRenderer.enabled = true;
             SetUpUI();
+        }
     }
+
+    /// <summary>
+    /// Helper function for Setting Up UI
+    /// </summary>
+    void SetUpUI()
+    {
+        CanvasManager.Instance.SetUpBlockPlacingUI(this, blockMeshes.Length);
+    }
+    #endregion
+
+    #region Networking Function(s)
+    [Command]
+    private void CmdAddBlock(Vector3 position, int type)
+    {
+        blockList.Add(new Block(position, type));
+    }
+    #endregion
 }
