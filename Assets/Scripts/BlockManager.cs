@@ -220,7 +220,6 @@ public class BlockManager : NetworkBehaviour
 
         StopAllCoroutines();
         switching = true;
-        movement.SwitchToPlaying();
 
         IEnumerator fadeOut = FadeOut(topViewCam, vrCamera, false);
         IEnumerator fadeIn = FadeIn(vrCamera, topViewCam);
@@ -300,6 +299,11 @@ public class BlockManager : NetworkBehaviour
         {
             vrPlayerRenderer.enabled = true;
             SetUpUI();
+        }
+        else
+        {
+            movement.SwitchToPlaying();
+
         }
     }
 

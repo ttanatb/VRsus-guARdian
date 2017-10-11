@@ -85,8 +85,13 @@ public class Movement : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.G))
             {
-                transform.position = startingPos;
-                currJumps = 0;
+                if (isPlaying)
+                {
+                    SwitchOutOfPlaying();
+                    transform.position = startingPos;
+                    currJumps = 0;
+                }
+                else SwitchToPlaying();
             }
 
             if (!isPlaying)
