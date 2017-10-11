@@ -70,14 +70,15 @@ public class PlaneManager : NetworkBehaviour
         {
             if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.D))
             {
-                ServerAddPlane("dfdf",
-                    new Vector3(Random.Range(-5f, 5f), Random.Range(-3f, 1f), Random.Range(-6f, 4f)),
-                    Random.Range(0f, 360f),
-                    new Vector3(Random.Range(3f, 6f), Random.Range(3f, 6f), Random.Range(3f, 6f)));
+                //ServerAddPlane("dfdf",
+                 //   new Vector3(Random.Range(-5f, 5f), Random.Range(-3f, 1f), Random.Range(-6f, 4f)),
+                 //   Random.Range(0f, 360f),
+                 //   new Vector3(Random.Range(3f, 6f), Random.Range(3f, 6f), Random.Range(3f, 6f)));
             }
         }
     }
 
+#if UNITY_IOS
     #region Server Functions
     [Server]
     IEnumerator UpdateARPlanes()
@@ -92,7 +93,7 @@ public class PlaneManager : NetworkBehaviour
                 {
                     if (!UnityARAnchorManager.Instance.planeAnchorMap.ContainsKey(m_ARPlane[i].identifier))
                     {
-                        //ServerRemovePlane(i);
+                        ServerRemovePlane(i);
                         break;
                     }
                 }
@@ -147,6 +148,7 @@ public class PlaneManager : NetworkBehaviour
     }
 
     #endregion
+#endif
 
     #region Helper Functions
     /// <summary>
@@ -180,5 +182,5 @@ public class PlaneManager : NetworkBehaviour
 
         return -1;
     }
-    #endregion
+#endregion
 }
