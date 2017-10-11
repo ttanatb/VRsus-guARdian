@@ -139,7 +139,7 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
                 GameObject obj = Instantiate(blockPrefab);
                 obj.transform.position = blockManager.blockList[blockManager.blockList.Count - 1].position;
                 obj.GetComponent<MeshFilter>().mesh = blockMeshes[blockManager.blockList[blockManager.blockList.Count - 1].type];
-                localPlanes.Add(obj);
+                localBlocks.Add(obj);
             }
 
             ////destory a plane
@@ -167,7 +167,7 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
             //        break;
             //}
 
-            prevBlocksListCount = localPlanes.Count;
+            prevBlocksListCount = localBlocks.Count;
             yield return new WaitForSeconds(.1f);
         }
     }

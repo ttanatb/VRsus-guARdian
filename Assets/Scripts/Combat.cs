@@ -34,6 +34,8 @@ public class Combat : NetworkBehaviour
     private Transform avatar;
     private Vector3 prevPos;
 
+    private int prevHealth = maxHealth;
+
     private void Start()
     {
         player = GetComponent<Player>();
@@ -78,6 +80,15 @@ public class Combat : NetworkBehaviour
             CmdFire();
         }
 
+        if (prevHealth != health)
+        {
+            hurtFlashes[hurtFlashIndex].FlashRed();
+            hurtFlashIndex++;
+            if (hurtFlashIndex > hurtFlashCount - 1)
+                hurtFlashIndex = 0;
+        }
+
+        prevHealth = health;
         prevPos = avatar.position;
     }
 
@@ -109,7 +120,7 @@ public class Combat : NetworkBehaviour
     void CmdFire()
     {
         GameObject bulletObj = Instantiate(bulletPrefab,
-                                        avatar.position + avatar.localScale.z * avatar.forward ,
+                                        avatar.position + avatar.localScale.z * avatar.forward,
                                         Quaternion.identity);
         bulletObj.GetComponent<Rigidbody>().velocity = avatar.forward * bulletSpeed + (avatar.position - prevPos);
         bulletObj.GetComponent<Bullet>().Init(player.PlayerType);
@@ -126,11 +137,7 @@ public class Combat : NetworkBehaviour
             return;
 
         health--;
-        hurtFlashes[hurtFlashIndex].FlashRed();
 
-        hurtFlashIndex++;
-        if (hurtFlashIndex > hurtFlashCount - 1)
-            hurtFlashIndex = 0;
 
         if (health < 1)
         {

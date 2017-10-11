@@ -58,6 +58,8 @@ public class BlockManager : NetworkBehaviour
     //player renderer
     public Renderer vrPlayerRenderer;
 
+    private Movement movement;
+
     /// <summary>
     /// Initialization
     /// </summary>
@@ -82,8 +84,10 @@ public class BlockManager : NetworkBehaviour
             blockMeshes = LocalObjectBuilder.Instance.blockMeshes;
             vrPlayerRenderer = GetComponent<Player>().VRAvatar.GetComponent<Renderer>();
 
-            LocalObjectBuilder.Instance.SetBlockManager(this);
+            movement = GetComponent<Movement>();
         }
+
+        LocalObjectBuilder.Instance.SetBlockManager(this);
     }
 
     #region Getter For Unity Actions
@@ -198,6 +202,7 @@ public class BlockManager : NetworkBehaviour
 
         StopAllCoroutines();
         switching = true;
+        movement.SwitchOutOfPlaying();
 
         IEnumerator fadeOut = FadeOut(vrCamera, topViewCam, true);
         IEnumerator fadeIn = FadeIn(topViewCam, vrCamera);
@@ -215,6 +220,7 @@ public class BlockManager : NetworkBehaviour
 
         StopAllCoroutines();
         switching = true;
+        movement.SwitchToPlaying();
 
         IEnumerator fadeOut = FadeOut(topViewCam, vrCamera, false);
         IEnumerator fadeIn = FadeIn(vrCamera, topViewCam);

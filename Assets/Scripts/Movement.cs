@@ -62,6 +62,22 @@ public class Movement : MonoBehaviour
 #endif
     }
 
+    public void SwitchToPlaying()
+    {
+        rigidBody.useGravity = true;
+        rigidBody.isKinematic = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        isPlaying = true;
+    }
+
+    public void SwitchOutOfPlaying()
+    {
+        rigidBody.useGravity = false;
+        rigidBody.isKinematic = true;
+        Cursor.lockState = CursorLockMode.None;
+        isPlaying = false;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -69,22 +85,8 @@ public class Movement : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.G))
             {
-                if (isPlaying)
-                {
-                    rigidBody.useGravity = false;
-                    rigidBody.isKinematic = true;
-                    Cursor.lockState = CursorLockMode.None;
-                    transform.position = startingPos;
-                    currJumps = 0;
-                }
-                else
-                {
-                    rigidBody.useGravity = true;
-                    rigidBody.isKinematic = false;
-                    Cursor.lockState = CursorLockMode.Locked;
-                }
-
-                isPlaying = !isPlaying;
+                transform.position = startingPos;
+                currJumps = 0;
             }
 
             if (!isPlaying)
