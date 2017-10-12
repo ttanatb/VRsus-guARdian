@@ -6,7 +6,7 @@ public class HealthBar : MonoBehaviour
 {
     private Combat player;
     int maxHealth;
-    int healthPercentage;
+    float healthPercentage;
 
     private Transform healthBarPivot;
 
@@ -52,7 +52,9 @@ public class HealthBar : MonoBehaviour
 
         if (player)
         {
-            healthPercentage = player.health / maxHealth;
+            healthPercentage = (float)player.health / (float)maxHealth;
+            if (healthPercentage < 0)
+                healthPercentage = 0f;
 
             Vector3 scale = healthBarPivot.localScale;
             scale.x = Mathf.Lerp(scale.x, healthPercentage, Time.deltaTime * 20f);
