@@ -12,6 +12,8 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     public GameObject exitButtonPrefab;
     public Button placementButton;
 
+    public GameObject crossHairUI;
+
     public void SetUpBlockPlacingUI(BlockManager blockPlacer, int count)
     {
         placementButton.gameObject.SetActive(true);
@@ -55,5 +57,10 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
         {
             //SetUpBlockPlacingUI(new GameObject(), new GameObject(), new GameObject());
         }
+    }
+
+    public void ToggleCrossHairUI()
+    {
+        crossHairUI.SetActive(!crossHairUI.activeSelf);
     }
 }

@@ -272,6 +272,7 @@ public class BlockManager : NetworkBehaviour
         {
             vrPlayerRenderer.enabled = false;
             CanvasManager.Instance.DisableBlockPlacingUI();
+            CanvasManager.Instance.ToggleCrossHairUI();
         }
     }
 
@@ -316,6 +317,7 @@ public class BlockManager : NetworkBehaviour
     void SetUpUI()
     {
         CanvasManager.Instance.SetUpBlockPlacingUI(this, blockMeshes.Length);
+        CanvasManager.Instance.ToggleCrossHairUI();
     }
     #endregion
 
