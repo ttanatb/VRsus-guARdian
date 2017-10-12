@@ -36,6 +36,8 @@ public class Combat : NetworkBehaviour
 
     private int prevHealth = maxHealth;
 
+    public GameObject healthBarPrefab;
+
     private void Start()
     {
         player = GetComponent<Player>();
@@ -46,6 +48,12 @@ public class Combat : NetworkBehaviour
         else
         {
             avatar = player.VRAvatar.transform;
+        }
+
+        if (!isLocalPlayer)
+        {
+            HealthBar hb = Instantiate(healthBarPrefab).GetComponent<HealthBar>();
+            hb.Init(this, player.PlayerType, avatar);
         }
 
         prevPos = avatar.position;
