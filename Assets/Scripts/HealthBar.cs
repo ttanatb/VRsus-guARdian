@@ -16,7 +16,6 @@ public class HealthBar : MonoBehaviour
     public float displayDistAR = 1f;
     public float displayDistVR = 1f;
 
-
     // Use this for initialization
     void Start()
     {

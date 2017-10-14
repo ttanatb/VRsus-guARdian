@@ -37,6 +37,17 @@ public class Combat : NetworkBehaviour
     private int prevHealth = maxHealth;
 
     public GameObject healthBarPrefab;
+    public GameObject healthBarUIPrefab;
+
+    private HealthBar healthBar;
+    private HealthBarUI healthBarUI;
+
+
+    private void Awake()
+    {
+        if (!canvas)
+            canvas = GameObject.Find("Canvas").transform;
+    }
 
     private void Start()
     {
@@ -52,8 +63,14 @@ public class Combat : NetworkBehaviour
 
         if (!isLocalPlayer)
         {
-            HealthBar hb = Instantiate(healthBarPrefab).GetComponent<HealthBar>();
-            hb.Init(this, player.PlayerType, avatar);
+            healthBar = Instantiate(healthBarPrefab).GetComponent<HealthBar>();
+            healthBar.Init(this, player.PlayerType, avatar);
+        }
+
+        else
+        {
+            healthBarUI = Instantiate(healthBarUIPrefab, canvas).GetComponent<HealthBarUI>();
+            healthBarUI.Init(this);
         }
 
         prevPos = avatar.position;
@@ -61,14 +78,26 @@ public class Combat : NetworkBehaviour
 
     public override void OnStartLocalPlayer()
     {
-        if (!canvas)
-            canvas = GameObject.Find("Canvas").transform;
-
         hurtFlashes = new HurtFlash[hurtFlashCount];
         for (int i = 0; i < hurtFlashCount; i++)
         {
             hurtFlashes[i] = Instantiate(HurtScreenPrefab, canvas).GetComponent<HurtFlash>();
         }
+    }
+
+    private void OnDestroy()
+    {
+        for(int i = 0; i < hurtFlashCount; i++)
+        {
+            if (hurtFlashes[i])
+                Destroy(hurtFlashes[i].gameObject);
+        }
+
+        if (healthBar)
+            Destroy(healthBar.gameObject);
+
+        if (healthBarUI)
+            Destroy(healthBarUI.gameObject);
     }
 
     // Update is called once per frame

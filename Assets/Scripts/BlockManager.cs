@@ -90,6 +90,19 @@ public class BlockManager : NetworkBehaviour
         LocalObjectBuilder.Instance.SetBlockManager(this);
     }
 
+    private void OnDestroy()
+    {
+        if (topViewCamObj)
+        {
+            Destroy(topViewCamObj);
+        }
+
+        if (placementSampleObj)
+        {
+            Destroy(placementSampleObj);
+        }
+    }
+
     #region Getter For Unity Actions
     /// <summary>
     /// Gets an action to attach to a button
