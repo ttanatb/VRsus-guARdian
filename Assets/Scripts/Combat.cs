@@ -122,20 +122,23 @@ public class Combat : NetworkBehaviour
             TakeDamage();
         }
 
-        if (CheckTap())
+        if (!IsPointerOverUIObject())
         {
-            if (isPlacing)
+            if (CheckTap())
             {
-                CheckTapOnARPlane();
+                if (isPlacing)
+                {
+                    CheckTapOnARPlane();
+                }
+                else
+                {
+                    CmdFire(avatar.position, avatar.forward);
+                }
             }
-            else
+            else if ((Input.GetMouseButtonDown(0)))
             {
-                CmdFire(Camera.main.transform.position, Camera.main.transform.forward);
+                CmdCreateJumpPad(transform.position + Vector3.down * 0.01f);
             }
-        }
-        else if (!IsPointerOverUIObject() && (Input.GetMouseButtonDown(0)))
-        {
-            CmdCreateJumpPad(transform.position + Vector3.down * 0.01f);
         }
 
         if (prevHealth != health)

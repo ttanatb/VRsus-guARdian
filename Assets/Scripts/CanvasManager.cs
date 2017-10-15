@@ -61,5 +61,6 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     {
         goalPlacingUI.SetActive(true);
         goalPlacingUI.GetComponent<Button>().onClick.AddListener(combat.GetActionToSwitchToPlacingMode());
+        goalPlacingUI.GetComponent<Button>().onClick.AddListener(() => { goalPlacingUI.SetActive(false); });
     }
 }
