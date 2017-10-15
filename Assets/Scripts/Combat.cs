@@ -119,12 +119,11 @@ public class Combat : NetworkBehaviour
 
         if (CheckTap())
         {
-            CmdFire();
+            CmdFire(Camera.main.transform.position, Camera.main.transform.forward);
         }
         else if (!IsPointerOverUIObject() && (Input.GetMouseButtonDown(0)))
         {
-            Debug.Log("Recognizing mouse down");
-            CmdCreateJumpPad(transform.position);
+            CmdCreateJumpPad(transform.position + Vector3.down * 0.1f);
         }
 
         if (prevHealth != health)
@@ -164,25 +163,16 @@ public class Combat : NetworkBehaviour
     }
 
     [Command]
-    void CmdFire()
+    void CmdFire(Vector3 pos, Vector3 forward)
     {
         GameObject bulletObj = null;
+        bulletObj = Instantiate(bulletPrefab, pos, Quaternion.identity);
+        bulletObj.GetComponent<Rigidbody>().velocity = forward * bulletSpeed;// + (avatar.position - prevPos);
+        //bulletObj = Instantiate(bulletPrefab,
+        //                        transform.position + avatar.localScale.z * transform.forward,
+        //                        Quaternion.identity);
+        //bulletObj.GetComponent<Rigidbody>().velocity = transform.forward * bulletSpeed;// + (avatar.position - prevPos);
 
-        if (player.PlayerType == PlayerType.AR)
-        {
-            bulletObj = Instantiate(bulletPrefab,
-                                    avatar.position + avatar.localScale.z * avatar.forward,
-                                    Quaternion.identity);
-            bulletObj.GetComponent<Rigidbody>().velocity = avatar.forward * bulletSpeed;// + (avatar.position - prevPos);
-        }
-        else
-        {
-            bulletObj = Instantiate(bulletPrefab,
-                                    transform.position + avatar.localScale.z * transform.forward,
-                                    Quaternion.identity);
-            bulletObj.GetComponent<Rigidbody>().velocity = transform.forward * bulletSpeed;// + (avatar.position - prevPos);
-
-        }
         bulletObj.GetComponent<Bullet>().Init(player.PlayerType, isLocalPlayer);
 
         NetworkServer.Spawn(bulletObj);
