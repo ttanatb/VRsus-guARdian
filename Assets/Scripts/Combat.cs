@@ -176,7 +176,7 @@ public class Combat : NetworkBehaviour
             bulletObj.GetComponent<Rigidbody>().velocity = transform.forward * bulletSpeed;// + (avatar.position - prevPos);
 
         }
-        bulletObj.GetComponent<Bullet>().Init(player.PlayerType);
+        bulletObj.GetComponent<Bullet>().Init(player.PlayerType, isLocalPlayer);
 
         NetworkServer.Spawn(bulletObj);
         Destroy(bulletObj, bulletTimer);

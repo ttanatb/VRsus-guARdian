@@ -15,9 +15,10 @@ public class Movement : MonoBehaviour
     private uint currJumps = 0;
 
     public float jumpFactor = 2;
-    public float jumpDamping = 0.2f;
-
     public float movementSpeed = 0.025f;
+    public float sprintFactor = 3f;
+
+    public float maxSpeed = 5f;
 
     private bool isPlaying = false;
 
@@ -55,7 +56,7 @@ public class Movement : MonoBehaviour
 #if !UNITY_IOS
         rigidBody = gameObject.AddComponent<Rigidbody>();
         rigidBody.mass = 1;
-        rigidBody.drag = 10;
+        rigidBody.drag = 3;
         rigidBody.useGravity = false;
         rigidBody.isKinematic = false;
         rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
@@ -68,6 +69,7 @@ public class Movement : MonoBehaviour
         rigidBody.isKinematic = false;
         Cursor.lockState = CursorLockMode.Locked;
         isPlaying = true;
+        rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
     public void SwitchOutOfPlaying()
@@ -75,6 +77,7 @@ public class Movement : MonoBehaviour
         rigidBody.useGravity = false;
         rigidBody.isKinematic = true;
         Cursor.lockState = CursorLockMode.None;
+        rigidBody.constraints = RigidbodyConstraints.FreezeAll;
         isPlaying = false;
     }
 
@@ -100,8 +103,8 @@ public class Movement : MonoBehaviour
             avgRotX = 0f;
             avgRotY = 0f;
 
-            rotY += Input.GetAxis("Mouse Y") * sensitivityY;
-            rotX += Input.GetAxis("Mouse X") * sensitivityX;
+            rotY += Input.GetAxis("Mouse Y") * sensitivityY * Time.deltaTime;
+            rotX += Input.GetAxis("Mouse X") * sensitivityX * Time.deltaTime;
 
             rotListY.Add(rotY);
             rotListX.Add(rotX);
@@ -132,30 +135,30 @@ public class Movement : MonoBehaviour
             Quaternion xRot = Quaternion.AngleAxis(avgRotX, Vector3.up);
 
             transform.rotation = startingRot * xRot * yRot;
-
-            transform.Translate(Vector3.ProjectOnPlane(transform.forward, Vector3.down) * Input.GetAxis("Vertical") * movementSpeed, Space.World);
-            transform.Translate(transform.right * Input.GetAxis("Horizontal") * movementSpeed, Space.World);
-
-            if (Input.GetKeyDown(KeyCode.Space) && currJumps <= jumpCount)
-            {
-                lerpTarget += jumpFactor;
-                currJumps++;
-            }
-
-            jumpValue = Mathf.Lerp(jumpValue, lerpTarget, Time.deltaTime * 20);
-
-            if (lerpTarget > 0)
-                lerpTarget -= jumpDamping;
-            else
-                lerpTarget = 0;
         }
     }
 
     private void FixedUpdate()
     {
-        if (rigidBody)
+        if (rigidBody && isPlaying)
         {
-            rigidBody.velocity += Vector3.up * jumpValue;
+            Vector3 movement = (Vector3.ProjectOnPlane(transform.forward, Vector3.down) * Input.GetAxis("Vertical") +
+                                transform.right * Input.GetAxis("Horizontal")) * movementSpeed;
+
+            if (Input.GetKey(KeyCode.LeftShift))
+                movement *= sprintFactor;
+
+            rigidBody.MovePosition(movement + transform.position);
+
+            //rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, maxSpeed);
+            //print(rigidBody.velocity.magnitude);
+
+            if (Input.GetKeyDown(KeyCode.Space))// && currJumps <= jumpCount)
+            {
+                rigidBody.AddForce(jumpFactor * Vector3.up, ForceMode.VelocityChange);
+                currJumps++;
+            }
+
         }
     }
 

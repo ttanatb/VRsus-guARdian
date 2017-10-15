@@ -5,14 +5,31 @@ using UnityEngine;
 /// <summary>
 /// Helper class for updating local plane transforms
 /// </summary>
+/// 
+[ExecuteInEditMode]
 public class LocalPlane : MonoBehaviour
 {
     private const float HEIGHT = 100f;
 
-#if UNITY_IOS
+    private Vector2 scale = Vector2.one;
+    private Material m;
+
     public void Start()
     {
+#if UNITY_IOS
         GetComponent<Renderer>().enabled = false;  
+#else
+        m = GetComponent<Renderer>().material;
+#endif
+    }
+
+#if !UNITY_IOS
+    private void Update()
+    {
+        scale = new Vector2(transform.localScale.x, transform.localScale.z);
+        if (!m)
+            m = GetComponent<Renderer>().material;
+        m.SetTextureScale("_MainTex", scale / 0.75f);
     }
 #endif
 

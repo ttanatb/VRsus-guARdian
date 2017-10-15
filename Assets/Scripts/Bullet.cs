@@ -7,10 +7,17 @@ public class Bullet : NetworkBehaviour
 {
     PlayerType type;
 
-    public void Init(PlayerType bulletType)
+
+    public void Init(PlayerType bulletType, bool isLocalPlayer)
     {
         type = bulletType;
+
+        if (isLocalPlayer)
+        {
+            GetComponent<Renderer>().material.color = Color.blue;
+        }
     }
+
     private void OnCollisionEnter(Collision collision)
 
     {
