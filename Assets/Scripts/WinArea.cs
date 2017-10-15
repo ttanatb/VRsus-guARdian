@@ -27,12 +27,26 @@ public class WinArea : NetworkBehaviour
         if (other.tag == "Player")
         {
             CmdSetWin();
+            RpcSetWin();
+
             //GameObject ui = Instantiate(winUIPrefab, GameObject.Find("Canvas").transform);
+            GameObject ui = Instantiate(winUIPrefab, GameObject.Find("Canvas").transform);
+            NetworkServer.Spawn(ui);
         }
     }
 
     [Command]
     void CmdSetWin()
+    {
+        GameObject ui = Instantiate(winUIPrefab, GameObject.Find("Canvas").transform);
+#if UNITY_IOS
+        ui.GetComponent<Text>().text = "You lose!";
+#endif
+        NetworkServer.Spawn(ui);
+    }
+
+    [ClientRpc]
+    void RpcSetWin()
     {
         GameObject ui = Instantiate(winUIPrefab, GameObject.Find("Canvas").transform);
 #if UNITY_IOS
