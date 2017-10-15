@@ -214,10 +214,25 @@ public class Combat : NetworkBehaviour
     void CmdFire(Vector3 pos, Vector3 forward)
     {
         GameObject bulletObj = null;
-        bulletObj = Instantiate(bulletPrefab, pos, Quaternion.identity);
-        bulletObj.GetComponent<Bullet>().Init(player.PlayerType, isLocalPlayer);
+        if (player.PlayerType == PlayerType.AR)
+        {
+            bulletObj = Instantiate(bulletPrefab,
+            avatar.position + avatar.localScale.z * avatar.forward,
+            Quaternion.identity);
+            bulletObj.GetComponent<Rigidbody>().velocity = avatar.forward * bulletSpeed;// + (avatar.position - prevPos);		
+        }
+        else
+        {
+            bulletObj = Instantiate(bulletPrefab,
+            transform.position + avatar.localScale.z * transform.forward,
+            Quaternion.identity);
+            bulletObj.GetComponent<Rigidbody>().velocity = transform.forward * bulletSpeed;// + (avatar.position - prevPos);		
+
+        }
+        //bulletObj = Instantiate(bulletPrefab, pos, Quaternion.identity);
+        //bulletObj.GetComponent<Rigidbody>().velocity = forward * bulletSpeed;
         NetworkServer.Spawn(bulletObj);
-        bulletObj.GetComponent<Rigidbody>().velocity = forward * bulletSpeed;
+        bulletObj.GetComponent<Bullet>().Init(player.PlayerType, isLocalPlayer);
         Destroy(bulletObj, bulletTimer);
     }
 
