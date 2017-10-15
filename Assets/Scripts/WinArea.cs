@@ -23,7 +23,7 @@ public class WinArea : NetworkBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //only run checks on server
-        if (isServer)
+        if (!isServer)
             return;
 
         if (other.tag == "Player")
