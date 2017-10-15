@@ -179,7 +179,7 @@ public class Combat : NetworkBehaviour
             {
                 if (t.phase == TouchPhase.Began && Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
                 {
-                    GameObject obj = Instantiate(winAreaPrefab, hit.point + Vector3.up * 0.3f, Quaternion.identity);
+                    GameObject obj = Instantiate(winAreaPrefab, hit.point + Vector3.up * 0.1f, Quaternion.identity);
                     NetworkServer.Spawn(obj);
 
                     isPlacing = false;

@@ -24,10 +24,6 @@ public class WinArea : NetworkBehaviour
     {
         Debug.Log(other.gameObject + other.tag);
 
-        if (!isServer)
-            return;
-
-
         if (other.tag == "Player")
         {
             CmdSetWin();
