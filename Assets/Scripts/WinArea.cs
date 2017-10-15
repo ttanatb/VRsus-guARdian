@@ -27,11 +27,11 @@ public class WinArea : NetworkBehaviour
         if (other.tag == "Player")
         {
             CmdSetWin();
-            RpcSetWin();
+            //RpcSetWin();
 
             //GameObject ui = Instantiate(winUIPrefab, GameObject.Find("Canvas").transform);
-            GameObject ui = Instantiate(winUIPrefab, GameObject.Find("Canvas").transform);
-            NetworkServer.Spawn(ui);
+            //GameObject ui = Instantiate(winUIPrefab, GameObject.Find("Canvas").transform);
+            //NetworkServer.Spawn(ui);
         }
     }
 
