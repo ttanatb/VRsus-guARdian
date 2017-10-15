@@ -29,6 +29,7 @@ public class WinArea : NetworkBehaviour
         if (other.tag == "Player")
         {
             CmdSetWin();
+            GameObject ui = Instantiate(winUIPrefab, GameObject.Find("Canvas").transform);
             Destroy(this);
         }
     }
