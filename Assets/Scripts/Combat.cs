@@ -192,7 +192,7 @@ public class Combat : NetworkBehaviour
     [Command]
     void CmdCreateJumpPad(Vector3 position)
     {
-        GameObject springPad = Instantiate(springPadPrefab);
+        GameObject springPad = Instantiate(springPadPrefab, position, Quaternion.identity);
         NetworkServer.Spawn(springPad);
     }
 
