@@ -36,7 +36,8 @@ public class BlockManager : NetworkBehaviour
 
     //cameras
     private Camera vrCamera;
-    public GameObject topViewCamObj;
+    public GameObject topViewCamPrefab;
+    private GameObject topViewCamObj;
     private Camera topViewCam;
 
     private int currPlaceMode = -1;
@@ -71,7 +72,7 @@ public class BlockManager : NetworkBehaviour
             prevIsPlacing = isPlacing;
 
             //creates top-view camera
-            topViewCamObj = Instantiate(topViewCamObj);
+            topViewCamObj = Instantiate(topViewCamPrefab);
             topViewCam = topViewCamObj.GetComponent<Camera>();
             vrCamera = Camera.main;
 

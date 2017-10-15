@@ -123,6 +123,7 @@ public class Combat : NetworkBehaviour
         }
         else if (!IsPointerOverUIObject() && (Input.GetMouseButtonDown(0)))
         {
+            Debug.Log("Recognizing mouse down");
             CmdCreateJumpPad(transform.position);
         }
 
