@@ -47,6 +47,7 @@ public class HealthBar : MonoBehaviour
         else
         {
             Debug.LogError("Missing Avatar for " + gameObject.name);
+            Destroy(gameObject);
         }
 
         if (player)
@@ -63,6 +64,7 @@ public class HealthBar : MonoBehaviour
         else
         {
             Debug.LogError("Missing Player combat for " + gameObject.name);
+            Destroy(gameObject);
         }
 
         if (Camera.main)
@@ -72,6 +74,7 @@ public class HealthBar : MonoBehaviour
         else
         {
             Debug.LogError("Missing Main Camera for " + gameObject.name);
+            Destroy(gameObject);
         }
     }
 }

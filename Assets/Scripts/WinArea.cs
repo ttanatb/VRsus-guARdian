@@ -23,15 +23,20 @@ public class WinArea : NetworkBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //only run checks on server
-        if (!isServer)
+        if (isServer)
             return;
 
         if (other.tag == "Player")
         {
-            GameObject ui  = Instantiate(winUIPrefab, GameObject.Find("Canvas").transform);
-            NetworkServer.Spawn(ui);
-
+            CmdSetWin();
             Destroy(this);
         }
+    }
+
+    [Command]
+    void CmdSetWin()
+    {
+        GameObject ui = Instantiate(winUIPrefab, GameObject.Find("Canvas").transform);
+        NetworkServer.Spawn(ui);
     }
 }
