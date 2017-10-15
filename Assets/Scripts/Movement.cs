@@ -150,16 +150,18 @@ public class Movement : MonoBehaviour
 
             rigidBody.MovePosition(movement + transform.position);
 
-            //rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, maxSpeed);
-            //print(rigidBody.velocity.magnitude);
-
-            if (Input.GetKeyDown(KeyCode.Space))// && currJumps <= jumpCount)
+            if (Input.GetKeyDown(KeyCode.Space) && currJumps <= jumpCount)
             {
-                rigidBody.AddForce(jumpFactor * Vector3.up, ForceMode.VelocityChange);
+                Jump(jumpFactor);
                 currJumps++;
             }
 
         }
+    }
+
+    public void Jump(float jumpAmount)
+    {
+        rigidBody.AddForce(jumpAmount * Vector3.up, ForceMode.VelocityChange);
     }
 
     float ClampAngle(float angle, float min, float max)

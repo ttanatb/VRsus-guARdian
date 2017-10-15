@@ -15,6 +15,8 @@ public class Combat : NetworkBehaviour
     [SyncVar]
     public int health = maxHealth;
 
+    public GameObject springPadPrefab;
+
     public GameObject bulletPrefab;
     public float bulletSpeed = 1f;
     public float bulletTimer = 2f;
@@ -87,7 +89,7 @@ public class Combat : NetworkBehaviour
 
     private void OnDestroy()
     {
-        for(int i = 0; i < hurtFlashCount; i++)
+        for (int i = 0; i < hurtFlashCount; i++)
         {
             if (hurtFlashes[i])
                 Destroy(hurtFlashes[i].gameObject);
@@ -115,9 +117,13 @@ public class Combat : NetworkBehaviour
             TakeDamage();
         }
 
-        if (!IsPointerOverUIObject() && (Input.GetMouseButtonDown(0) || CheckTap()))
+        if (CheckTap())
         {
             CmdFire();
+        }
+        else if (!IsPointerOverUIObject() && (Input.GetMouseButtonDown(0)))
+        {
+            CmdCreateJumpPad(transform.position);
         }
 
         if (prevHealth != health)
@@ -180,6 +186,13 @@ public class Combat : NetworkBehaviour
 
         NetworkServer.Spawn(bulletObj);
         Destroy(bulletObj, bulletTimer);
+    }
+
+    [Command]
+    void CmdCreateJumpPad(Vector3 position)
+    {
+        GameObject springPad = Instantiate(springPadPrefab);
+        NetworkServer.Spawn(springPad);
     }
 
 
