@@ -86,6 +86,8 @@ public class BlockManager : NetworkBehaviour
             vrPlayerRenderer = GetComponent<Player>().VRAvatar.GetComponent<Renderer>();
 
             movement = GetComponent<Movement>();
+
+            CanvasManager.Instance.ToggleCrossHairUI();
         }
 
         LocalObjectBuilder.Instance.SetBlockManager(this);
@@ -286,7 +288,7 @@ public class BlockManager : NetworkBehaviour
         {
             vrPlayerRenderer.enabled = false;
             CanvasManager.Instance.DisableBlockPlacingUI();
-            CanvasManager.Instance.ToggleCrossHairUI();
+            //CanvasManager.Instance.ToggleCrossHairUI();
         }
     }
 
@@ -331,7 +333,7 @@ public class BlockManager : NetworkBehaviour
     void SetUpUI()
     {
         CanvasManager.Instance.SetUpBlockPlacingUI(this, blockMeshes.Length);
-        CanvasManager.Instance.ToggleCrossHairUI();
+        //CanvasManager.Instance.ToggleCrossHairUI();
     }
     #endregion
 

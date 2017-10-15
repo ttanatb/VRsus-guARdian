@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using UnityEngine.Networking;
 using UnityEngine.EventSystems;
 #if UNITY_IOS
@@ -16,6 +17,7 @@ public class Combat : NetworkBehaviour
     public int health = maxHealth;
 
     public GameObject springPadPrefab;
+    public GameObject winAreaPrefab;
 
     public GameObject bulletPrefab;
     public float bulletSpeed = 1f;
@@ -45,6 +47,8 @@ public class Combat : NetworkBehaviour
     private HealthBarUI healthBarUI;
 
 
+    private bool isPlacing = false;
+
     private void Awake()
     {
         if (!canvas)
@@ -68,11 +72,13 @@ public class Combat : NetworkBehaviour
             healthBar = Instantiate(healthBarPrefab).GetComponent<HealthBar>();
             healthBar.Init(this, player.PlayerType, avatar);
         }
-
         else
         {
             healthBarUI = Instantiate(healthBarUIPrefab, canvas).GetComponent<HealthBarUI>();
             healthBarUI.Init(this);
+
+            if (player.PlayerType == PlayerType.AR)
+                CanvasManager.Instance.SetUpGoalPlacingUI(this);
         }
 
         prevPos = avatar.position;
@@ -111,7 +117,6 @@ public class Combat : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
-        //DEBUG CODE
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.E))
         {
             TakeDamage();
@@ -119,11 +124,18 @@ public class Combat : NetworkBehaviour
 
         if (CheckTap())
         {
-            CmdFire(Camera.main.transform.position, Camera.main.transform.forward);
+            if (isPlacing)
+            {
+                CheckTapOnARPlane();
+            }
+            else
+            {
+                CmdFire(Camera.main.transform.position, Camera.main.transform.forward);
+            }
         }
         else if (!IsPointerOverUIObject() && (Input.GetMouseButtonDown(0)))
         {
-            CmdCreateJumpPad(transform.position + Vector3.down * 0.1f);
+            CmdCreateJumpPad(transform.position + Vector3.down * 0.01f);
         }
 
         if (prevHealth != health)
@@ -153,6 +165,39 @@ public class Combat : NetworkBehaviour
         return false;
     }
 
+    void CheckTapOnARPlane()
+    {
+        RaycastHit hit;
+        int layer = LayerMask.NameToLayer("Tower");
+
+        if (Input.touchCount > 0)
+        {
+            foreach (Touch t in Input.touches)
+            {
+                if (t.phase == TouchPhase.Began && Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
+                {
+                    GameObject obj = Instantiate(winAreaPrefab, hit.point, Quaternion.identity);
+                    NetworkServer.Spawn(obj);
+
+                    isPlacing = false;
+                    return;
+                }
+            }
+
+        }
+        return;
+    }
+
+    public UnityAction GetActionToSwitchToPlacingMode()
+    {
+        UnityAction action = () =>
+        {
+            isPlacing = true;
+        };
+
+        return action;
+    }
+
     private bool IsPointerOverUIObject()
     {
         PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
@@ -167,15 +212,9 @@ public class Combat : NetworkBehaviour
     {
         GameObject bulletObj = null;
         bulletObj = Instantiate(bulletPrefab, pos, Quaternion.identity);
-        bulletObj.GetComponent<Rigidbody>().velocity = forward * bulletSpeed;// + (avatar.position - prevPos);
-        //bulletObj = Instantiate(bulletPrefab,
-        //                        transform.position + avatar.localScale.z * transform.forward,
-        //                        Quaternion.identity);
-        //bulletObj.GetComponent<Rigidbody>().velocity = transform.forward * bulletSpeed;// + (avatar.position - prevPos);
-
         bulletObj.GetComponent<Bullet>().Init(player.PlayerType, isLocalPlayer);
-
         NetworkServer.Spawn(bulletObj);
+        bulletObj.GetComponent<Rigidbody>().velocity = forward * bulletSpeed;
         Destroy(bulletObj, bulletTimer);
     }
 

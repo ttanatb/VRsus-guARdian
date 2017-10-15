@@ -14,6 +14,8 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
 
     public GameObject crossHairUI;
 
+    public GameObject goalPlacingUI;
+
     public void SetUpBlockPlacingUI(BlockManager blockPlacer, int count)
     {
         placementButton.gameObject.SetActive(true);
@@ -50,17 +52,14 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
         placementButton.gameObject.SetActive(false);
     }
 
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            //SetUpBlockPlacingUI(new GameObject(), new GameObject(), new GameObject());
-        }
-    }
-
     public void ToggleCrossHairUI()
     {
         crossHairUI.SetActive(!crossHairUI.activeSelf);
+    }
+
+    public void SetUpGoalPlacingUI(Combat combat)
+    {
+        goalPlacingUI.SetActive(true);
+        goalPlacingUI.GetComponent<Button>().onClick.AddListener(combat.GetActionToSwitchToPlacingMode());
     }
 }
