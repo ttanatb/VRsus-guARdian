@@ -1,4 +1,3 @@
-#if UNITY_IOS
 
 using System;
 using System.Runtime.InteropServices;
@@ -11,6 +10,7 @@ namespace UnityEngine.XR.iOS
     public class UnityARVideo : MonoBehaviour
     {
         public Material m_ClearMaterial;
+#if UNITY_IOS
 
         private CommandBuffer m_VideoCommandBuffer;
         private Texture2D _videoTextureY;
@@ -149,6 +149,6 @@ namespace UnityEngine.XR.iOS
 		}
  
 #endif
+#endif
     }
 }
-#endif
