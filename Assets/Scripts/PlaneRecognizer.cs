@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.XR.iOS;
 
 public class PlaneRecognizer : MonoBehaviour
@@ -17,10 +18,16 @@ public class PlaneRecognizer : MonoBehaviour
             this.rotation = rotation;
             this.scale = scale;
         }
+
+        public override string ToString()
+        {
+            return "X: " + scale.x + " Z: " + scale.z;
+        }
     }
 
     //List<ARPlane> m_ARPlane = new List<ARPlane>();
     Dictionary<string, ARPlane> m_ARPlane = new Dictionary<string, ARPlane>();
+    List<Text> texts = new List<Text>();
 
     // Use this for initialization
     void Start()
@@ -31,13 +38,64 @@ public class PlaneRecognizer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        while (texts.Count < m_ARPlane.Count)
+            texts.Add(CreateTextUI(texts.Count));
 
+        int counter = 0;
+        foreach (string key in m_ARPlane.Keys)
+        {
+            texts[counter].text = m_ARPlane[key].ToString();
+        }
+
+
+        //if (Input.GetKeyDown(KeyCode.E))
+        //{
+        //    CreateTextUI(counter);
+        //    counter++;
+        //}
+    }
+
+    Text CreateTextUI(int count)
+    {
+        GameObject obj = new GameObject();
+        obj.name = "Text : " + count;
+        obj.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        RectTransform rect = obj.AddComponent<RectTransform>();
+
+        Vector3 pos = Vector3.zero;
+        pos.x = 10;
+        pos.y = -10;
+        for(int i = 0; i < count; i++)
+        {
+            pos.y -= 25;
+        }
+
+        rect.localPosition = pos;
+
+        rect.anchorMin = new Vector2(0, 1);
+        rect.anchorMax = new Vector2(0, 1);
+        rect.pivot = new Vector2(0, 1);
+        rect.sizeDelta = new Vector2(160, 15);
+
+        obj.AddComponent<CanvasRenderer>();
+        Text text = obj.AddComponent<Text>();
+        text.font = Font.CreateDynamicFontFromOSFont("Arial", 15);
+        text.horizontalOverflow = HorizontalWrapMode.Overflow;
+        text.verticalOverflow = VerticalWrapMode.Overflow;
+        text.text = "REE";
+
+        return text;
     }
 
     IEnumerator UpdateARPlanes()
     {
         for (; ; )
         {
+            yield return new WaitForSeconds(1f);
+
+            if (UnityARAnchorManager.Instance == null)
+                continue;
+
             if (m_ARPlane.Count > UnityARAnchorManager.Instance.planeAnchorMap.Count)
             {
                 foreach (string key in m_ARPlane.Keys)
@@ -66,7 +124,6 @@ public class PlaneRecognizer : MonoBehaviour
                 }
             }
 
-            yield return new WaitForSeconds(1f);
         }
     }
     private void AddPlane(string key, Vector3 pos, float rot, Vector3 scale)
