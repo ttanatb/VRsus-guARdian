@@ -45,14 +45,8 @@ public class PlaneRecognizer : MonoBehaviour
         foreach (string key in m_ARPlane.Keys)
         {
             texts[counter].text = m_ARPlane[key].ToString();
+            counter++;
         }
-
-
-        //if (Input.GetKeyDown(KeyCode.E))
-        //{
-        //    CreateTextUI(counter);
-        //    counter++;
-        //}
     }
 
     Text CreateTextUI(int count)
