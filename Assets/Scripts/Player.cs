@@ -140,6 +140,7 @@ public class Player : NetworkBehaviour
                 GetComponent<BlockManager>().enabled = true;
         }
 
-        GetComponent<Combat>().enabled = true;
+        if (GetComponent<Combat>())
+            GetComponent<Combat>().enabled = true;
     }
 }

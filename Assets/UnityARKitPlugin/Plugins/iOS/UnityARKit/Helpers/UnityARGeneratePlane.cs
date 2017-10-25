@@ -26,7 +26,7 @@ namespace UnityEngine.XR.iOS
 			List<ARPlaneAnchorGameObject> arpags = unityARAnchorManager.GetCurrentPlaneAnchors();
 
 			if (arpags.Count != prevCount) {
-				Debug.Log ("Added plane");
+				//Debug.Log ("Added plane");
 			}
 
 			prevCount = arpags.Count;
