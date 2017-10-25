@@ -112,6 +112,19 @@ public class GameManager : NetworkBehaviour
     {
         currGamePhase = (int)newPhase;
         CanvasManager.Instance.SetUI(this);
+
+        switch(newPhase)
+        {
+            case GamePhase.Placing:
+                //TO-DO:
+                //Spawn Relics
+                break;
+
+            case GamePhase.Playing:
+                //TO-DO:
+                //Spawn entrances
+                break;
+        }
     }
 
     public void SetCurrTrapSelection(int toSelect)
