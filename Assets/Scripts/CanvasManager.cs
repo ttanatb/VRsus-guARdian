@@ -66,7 +66,10 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
 
     public void SetUI(GameManager manager)
     {
-        ARUI.SetActive(true);
+        if ((int)manager.CurrGamePhase > 2)
+            ARUI.SetActive(false);
+        else ARUI.SetActive(true);
+
         foreach(Text t in ARUI.GetComponentsInChildren<Text>())
         {
             if (t.name == "Phase")
@@ -83,10 +86,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
                 b.onClick.RemoveAllListeners();
                 b.onClick.AddListener(() => 
                 {
-                    Debug.Log("Curr phase: " + manager.CurrGamePhase);
                     GamePhase nextLvl = (GamePhase)((int)manager.CurrGamePhase + 1);
-                    Debug.Log("Next phase: " + nextLvl);
-
                     manager.SetPhaseTo(nextLvl);
                 });
                 break;
