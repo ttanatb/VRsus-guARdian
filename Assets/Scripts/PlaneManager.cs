@@ -59,7 +59,9 @@ public class PlaneManager : NetworkBehaviour
                 StartCoroutine("UpdateARPlanes");
             }
 #endif
-            LocalObjectBuilder.Instance.SetPlaneManager(this);
+
+            if (LocalObjectBuilder.Instance)
+                LocalObjectBuilder.Instance.SetPlaneManager(this);
         }
     }
 
