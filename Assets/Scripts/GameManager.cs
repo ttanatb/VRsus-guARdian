@@ -1,25 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public enum GamePhase
 {
-    Scanning,
-    Placing,
-    Playing,
+    Scanning = 0,
+    Placing = 1,
+    Playing = 2,
 }
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
+    [SyncVar]
+    private int currGamePhase = 0;
 
-    private GamePhase currGamePhase = GamePhase.Scanning;
+    public GamePhase CurrGamePhase { get { return (GamePhase)currGamePhase; } }
 
-    public GamePhase CurrGamePhase { get { return currGamePhase; } }
+    public GameObject PlaneGeneratorPrefab;
 
     // Use this for initialization
     void Start()
     {
 
+    }
+
+    public override void OnStartServer()
+    {
+#if UNITY_IOS
+        Instantiate(PlaneGeneratorPrefab);
+#endif
     }
 
     // Update is called once per frame
