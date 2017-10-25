@@ -13,8 +13,9 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     public Button placementButton;
 
     public GameObject crossHairUI;
-
     public GameObject goalPlacingUI;
+
+    public GameObject ARUI;
 
     public void SetUpBlockPlacingUI(BlockManager blockPlacer, int count)
     {
@@ -45,7 +46,6 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
         UnityAction placementBtnAction = blockPlacer.GetActionToPlaceBlock(btns, placementButton);
         placementButton.onClick.AddListener(placementBtnAction);
     }
-
     public void DisableBlockPlacingUI()
     {
         blockPlacingUI.SetActive(false);
@@ -62,5 +62,35 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
         goalPlacingUI.SetActive(true);
         goalPlacingUI.GetComponent<Button>().onClick.AddListener(combat.GetActionToSwitchToPlacingMode());
         goalPlacingUI.GetComponent<Button>().onClick.AddListener(() => { goalPlacingUI.SetActive(false); });
+    }
+
+    public void SetUI(GameManager manager)
+    {
+        ARUI.SetActive(true);
+        foreach(Text t in ARUI.GetComponentsInChildren<Text>())
+        {
+            if (t.name == "Phase")
+            {
+                t.text = "Current Phase: " + manager.CurrGamePhase.ToString();
+                break;
+            }
+        }
+
+        foreach (Button b in ARUI.GetComponentsInChildren<Button>())
+        {
+            if (b.name == "Done")
+            {
+                b.onClick.RemoveAllListeners();
+                b.onClick.AddListener(() => 
+                {
+                    Debug.Log("Curr phase: " + manager.CurrGamePhase);
+                    GamePhase nextLvl = (GamePhase)((int)manager.CurrGamePhase + 1);
+                    Debug.Log("Next phase: " + nextLvl);
+
+                    manager.SetPhaseTo(nextLvl);
+                });
+                break;
+            }
+        }
     }
 }

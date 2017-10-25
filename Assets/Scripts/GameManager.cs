@@ -29,6 +29,7 @@ public class GameManager : NetworkBehaviour
     {
 #if UNITY_IOS
         Instantiate(PlaneGeneratorPrefab);
+        CanvasManager.Instance.SetUI(this);
 #endif
     }
 
@@ -36,5 +37,11 @@ public class GameManager : NetworkBehaviour
     void Update()
     {
 
+    }
+
+    public void SetPhaseTo(GamePhase newPhase)
+    {
+        currGamePhase = (int)newPhase;
+        CanvasManager.Instance.SetUI(this);
     }
 }
