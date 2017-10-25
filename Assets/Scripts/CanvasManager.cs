@@ -16,6 +16,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     public GameObject goalPlacingUI;
 
     public GameObject ARUI;
+    private GameObject[] arUIbuttons;
 
     public void SetUpBlockPlacingUI(BlockManager blockPlacer, int count)
     {
@@ -66,9 +67,66 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
 
     public void SetUI(GameManager manager)
     {
-        if ((int)manager.CurrGamePhase > 2)
-            ARUI.SetActive(false);
-        else ARUI.SetActive(true);
+        switch(manager.CurrGamePhase)
+        {
+            case GamePhase.Scanning:
+                ARUI.SetActive(true);
+                foreach (Button b in ARUI.GetComponentsInChildren<Button>())
+                {
+                    if (b.name == "Done")
+                    {
+                        b.onClick.AddListener(() =>
+                        {
+                            GamePhase nextLvl = (GamePhase)((int)manager.CurrGamePhase + 1);
+                            manager.SetPhaseTo(nextLvl);
+                        });
+                        break;
+                    }
+                }
+                break;
+            case GamePhase.Placing:
+                List<GameObject> buttons = new List<GameObject>();
+                for(int i = 0; i < manager.trapList.Length; i++)
+                {
+                    buttons.Add(Instantiate(buttonPrefab, ARUI.transform));
+                    buttons[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(-20, -70 - i * 50);
+                }
+                arUIbuttons = buttons.ToArray();
+
+                for(int i = 0; i < arUIbuttons.Length; i++)
+                {
+                    int num = i;
+                    int count = arUIbuttons.Length;
+                    GameObject[] arbuttons = arUIbuttons;
+                    UnityAction action = () => {
+                        manager.SetCurrTrapSelection(num);
+
+                        for(int j = 0; j < count; j++)
+                        {
+                            if (j == num)
+                            {
+                                arbuttons[j].GetComponent<Button>().interactable = false;
+                            }
+                            else
+                            {
+                                arbuttons[j].GetComponent<Button>().interactable = true;
+                            }
+                        }
+                    };
+
+                    arUIbuttons[i].GetComponent<Button>().onClick.AddListener(action);
+                }
+                break;
+            case GamePhase.Playing:
+                for (int i = 0; i < arUIbuttons.Length; i++)
+                {
+                    arUIbuttons[i].SetActive(false);
+                }
+                break;
+            default:
+                ARUI.SetActive(false);
+                break;
+        }
 
         foreach(Text t in ARUI.GetComponentsInChildren<Text>())
         {
@@ -78,18 +136,14 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
                 break;
             }
         }
+    }
 
-        foreach (Button b in ARUI.GetComponentsInChildren<Button>())
-        {
-            if (b.name == "Done")
+    public void ClearSelection(GameManager manager)
+    {
+        for (int i = 0; i < arUIbuttons.Length; i++) {
+            if (manager.trapList[i].count > 0)
             {
-                b.onClick.RemoveAllListeners();
-                b.onClick.AddListener(() => 
-                {
-                    GamePhase nextLvl = (GamePhase)((int)manager.CurrGamePhase + 1);
-                    manager.SetPhaseTo(nextLvl);
-                });
-                break;
+                arUIbuttons[i].GetComponent<Button>().interactable = true;
             }
         }
     }

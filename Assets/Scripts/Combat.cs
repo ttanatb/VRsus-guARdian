@@ -17,7 +17,6 @@ public class Combat : NetworkBehaviour
     public int health = maxHealth;
 
     public GameObject springPadPrefab;
-    public GameObject winAreaPrefab;
 
     public GameObject bulletPrefab;
     public float bulletSpeed = 1f;
@@ -45,9 +44,6 @@ public class Combat : NetworkBehaviour
 
     private HealthBar healthBar;
     private HealthBarUI healthBarUI;
-
-
-    private bool isPlacing = false;
 
     private void Awake()
     {
@@ -122,23 +118,16 @@ public class Combat : NetworkBehaviour
             TakeDamage();
         }
 
-        if (!IsPointerOverUIObject())
+        if (Utility.IsPointerOverUIObject())
+            return;
+
+        if (CheckTap())
         {
-            if (CheckTap())
-            {
-                if (isPlacing)
-                {
-                    CheckTapOnARPlane();
-                }
-                else
-                {
-                    CmdFire(avatar.position, avatar.forward);
-                }
-            }
-            else if ((Input.GetMouseButtonDown(0)))
-            {
-                CmdCreateJumpPad(transform.position + Vector3.down * 0.01f);
-            }
+            CmdFire(avatar.position, avatar.forward);
+        }
+        else if ((Input.GetMouseButtonDown(0)))
+        {
+            CmdCreateJumpPad(transform.position + Vector3.down * 0.01f);
         }
 
         if (prevHealth != health)
@@ -168,46 +157,15 @@ public class Combat : NetworkBehaviour
         return false;
     }
 
-    void CheckTapOnARPlane()
-    {
-        RaycastHit hit;
-        int layer = LayerMask.NameToLayer("Tower");
 
-        if (Input.touchCount > 0)
-        {
-            foreach (Touch t in Input.touches)
-            {
-                if (t.phase == TouchPhase.Began && Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
-                {
-                    GameObject obj = Instantiate(winAreaPrefab, hit.point + Vector3.up * 0.1f, Quaternion.identity);
-                    NetworkServer.Spawn(obj);
-
-                    isPlacing = false;
-                    return;
-                }
-            }
-
-        }
-        return;
-    }
 
     public UnityAction GetActionToSwitchToPlacingMode()
     {
         UnityAction action = () =>
         {
-            isPlacing = true;
         };
 
         return action;
-    }
-
-    private bool IsPointerOverUIObject()
-    {
-        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-        return results.Count > 0;
     }
 
     [Command]
