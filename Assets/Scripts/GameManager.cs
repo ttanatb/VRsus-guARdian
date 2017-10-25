@@ -34,8 +34,8 @@ public class GameManager : NetworkBehaviour
     {
 #if UNITY_IOS
         Instantiate(planeGeneratorPrefab);
-        CanvasManager.Instance.SetUI(this);
 #endif
+        CanvasManager.Instance.SetUI(this);
     }
 
     // Update is called once per frame
@@ -49,7 +49,12 @@ public class GameManager : NetworkBehaviour
             //Placing
             case 1:
                 if (Utility.IsPointerOverUIObject()) return;
-                CheckTapOnARPlane();
+                if (currTrapSelection == -1)
+                    CheckTapOnARPlane();
+                else
+                {
+                    //move traps around??
+                }
                 break;
             default:
                 break;
@@ -66,7 +71,7 @@ public class GameManager : NetworkBehaviour
         {
             foreach (Touch t in Input.touches)
             {
-                if (t.phase == TouchPhase.Began && 
+                if (t.phase == TouchPhase.Began &&
                     (currTrapSelection >= 0 && currTrapSelection < trapList.Length && trapList[currTrapSelection].count > 0) &&
                     Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
                 {
@@ -76,11 +81,30 @@ public class GameManager : NetworkBehaviour
                     NetworkServer.Spawn(go);
 
                     CanvasManager.Instance.ClearSelection(this);
+                    CanvasManager.Instance.UpdateTrapCount(this);
+
+                    currTrapSelection = -1;
                     return;
                 }
             }
-
         }
+
+        //Testing for PC
+        if (Input.GetKeyDown(KeyCode.S) &&
+         (currTrapSelection >= 0 && currTrapSelection < trapList.Length && trapList[currTrapSelection].count > 0))
+        {
+            trapList[currTrapSelection].count -= 1;
+
+            GameObject go = Instantiate(trapList[currTrapSelection].trap, Vector3.zero, Quaternion.identity);
+            NetworkServer.Spawn(go);
+
+            CanvasManager.Instance.ClearSelection(this);
+            CanvasManager.Instance.UpdateTrapCount(this);
+
+            currTrapSelection = -1;
+            return;
+        }
+
         return;
     }
 

@@ -116,12 +116,16 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
 
                     arUIbuttons[i].GetComponent<Button>().onClick.AddListener(action);
                 }
+
+
+                UpdateTrapCount(manager);
                 break;
             case GamePhase.Playing:
-                for (int i = 0; i < arUIbuttons.Length; i++)
+                foreach (Button b in ARUI.GetComponentsInChildren<Button>())
                 {
-                    arUIbuttons[i].SetActive(false);
+                    b.gameObject.SetActive(false);
                 }
+
                 break;
             default:
                 ARUI.SetActive(false);
@@ -145,6 +149,14 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
             {
                 arUIbuttons[i].GetComponent<Button>().interactable = true;
             }
+        }
+    }
+
+    public void UpdateTrapCount(GameManager manager)
+    {
+        for (int i = 0; i < arUIbuttons.Length; i++)
+        {
+            arUIbuttons[i].GetComponentInChildren<Text>().text = manager.trapList[i].trap.name + ": (" + manager.trapList[i].count + ")";
         }
     }
 }
