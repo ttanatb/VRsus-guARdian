@@ -33,7 +33,7 @@ public class GameManager : NetworkBehaviour
     public override void OnStartServer()
     {
 #if UNITY_IOS
-        Instantiate(PlaneGeneratorPrefab);
+        Instantiate(planeGeneratorPrefab);
         CanvasManager.Instance.SetUI(this);
 #endif
     }

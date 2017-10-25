@@ -107,7 +107,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
                             {
                                 arbuttons[j].GetComponent<Button>().interactable = false;
                             }
-                            else
+                            else if (manager.trapList[j].count > 0)
                             {
                                 arbuttons[j].GetComponent<Button>().interactable = true;
                             }
