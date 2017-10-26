@@ -52,7 +52,7 @@ public class GameManager : NetworkBehaviour
             //Placing
             case 1:
                 if (Utility.IsPointerOverUIObject()) return;
-                if (currTrapSelection == -1)
+                if (currTrapSelection != -1)
                     CheckTapOnARPlane();
                 else
                 {
