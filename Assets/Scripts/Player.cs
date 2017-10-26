@@ -11,6 +11,8 @@ public enum PlayerType
 
 public class Player : NetworkBehaviour
 {
+    public GameObject gameManagerPrefab;
+
     public Object[] ObjsForARAvatarThatVRPlayerCanSee;
     public Object[] ObjsForVRAvatarThatARPlayerCanSee;
 
@@ -40,6 +42,13 @@ public class Player : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
+        if (isServer)
+        {
+            GameObject obj = Instantiate(gameManagerPrefab);
+            NetworkServer.Spawn(obj);
+        }
+
+
         //set up if the Player should be VR or AR
         if (isLocalPlayer)
         {
