@@ -10,14 +10,6 @@ public class NetworkedGameManager : NetworkManager
     public override void OnServerConnect(NetworkConnection conn)
     {
         Debug.Log("Player number " + (numPlayers + 1) + " has connected to the server");
-
-        if (numPlayers == 0)
-        {
-            Debug.Log("Spawn a game manager!");
-            GameObject go = Instantiate(gameManagerPrefab);
-            NetworkServer.Spawn(go);
-        }
-
         base.OnServerConnect(conn);
     }
 
@@ -25,5 +17,12 @@ public class NetworkedGameManager : NetworkManager
     {
         Debug.Log("Someone disconnected. " + numPlayers + " players are left ");
         base.OnServerDisconnect(conn);
+    }
+
+    public override void OnClientConnect(NetworkConnection conn)
+    {
+        GameObject go = Instantiate(gameManagerPrefab);
+        NetworkServer.Spawn(go);
+        base.OnClientConnect(conn);
     }
 }

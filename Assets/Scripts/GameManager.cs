@@ -44,9 +44,9 @@ public class GameManager : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-#if UNITY_IOS
-#endif
-
+        if (!isServer)
+            return;
+            
         switch (currGamePhase)
         {
             //Placing
