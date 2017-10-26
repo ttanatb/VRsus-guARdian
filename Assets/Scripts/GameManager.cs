@@ -28,6 +28,9 @@ public class GameManager : NetworkBehaviour
 
     public Trap[] trapList;
 
+    public GameObject relicPrefab;
+    public GameObject entrancePrefab;
+
     private int currTrapSelection = -1;
 
     public override void OnStartServer()
@@ -116,13 +119,11 @@ public class GameManager : NetworkBehaviour
         switch(newPhase)
         {
             case GamePhase.Placing:
-                //TO-DO:
-                //Spawn Relics
+                SpawnRelic();
                 break;
 
             case GamePhase.Playing:
-                //TO-DO:
-                //Spawn entrances
+                SpawnEntrancce();
                 break;
         }
     }
@@ -130,5 +131,17 @@ public class GameManager : NetworkBehaviour
     public void SetCurrTrapSelection(int toSelect)
     {
         currTrapSelection = toSelect;
+    }
+
+    private void SpawnRelic()
+    {
+        GameObject obj = Instantiate(relicPrefab);
+        NetworkServer.Spawn(obj);
+    }
+
+    private void SpawnEntrancce()
+    {
+        GameObject obj = Instantiate(entrancePrefab);
+        NetworkServer.Spawn(obj);
     }
 }
