@@ -124,6 +124,7 @@ public class GameManager : NetworkBehaviour
         {
             case GamePhase.Placing:
                 SpawnRelic();
+                SpawnTrap(2, Vector3.zero);
                 break;
 
             case GamePhase.Playing:
