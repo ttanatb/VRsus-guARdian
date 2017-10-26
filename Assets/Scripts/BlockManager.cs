@@ -74,7 +74,7 @@ public class BlockManager : NetworkBehaviour
             //creates top-view camera
             topViewCamObj = Instantiate(topViewCamPrefab);
             topViewCam = topViewCamObj.GetComponent<Camera>();
-            vrCamera = Camera.main;
+            vrCamera = GetComponent<Player>().VRCamera.GetComponent<Camera>();
 
             //adjusts the black plane
             Color c = topViewCamObj.transform.GetChild(0).GetComponent<Renderer>().material.color;
@@ -87,7 +87,8 @@ public class BlockManager : NetworkBehaviour
 
             movement = GetComponent<Movement>();
 
-            CanvasManager.Instance.ToggleCrossHairUI();
+            //CanvasManager.Instance.ToggleCrossHairUI();
+            StartPlacing();
         }
 
         LocalObjectBuilder.Instance.SetBlockManager(this);
@@ -221,8 +222,10 @@ public class BlockManager : NetworkBehaviour
 
         StopAllCoroutines();
         switching = true;
-        movement.SwitchOutOfPlaying();
+        if (movement) 
+            movement.SwitchOutOfPlaying();
 
+        Debug.Log(vrCamera);
         IEnumerator fadeOut = FadeOut(vrCamera, topViewCam, true);
         IEnumerator fadeIn = FadeIn(topViewCam, vrCamera);
 
@@ -286,8 +289,8 @@ public class BlockManager : NetworkBehaviour
 
         if (isPlacing)
         {
-            vrPlayerRenderer.enabled = false;
-            CanvasManager.Instance.DisableBlockPlacingUI();
+            //vrPlayerRenderer.enabled = false;
+            //CanvasManager.Instance.DisableBlockPlacingUI();
             //CanvasManager.Instance.ToggleCrossHairUI();
         }
     }
@@ -317,7 +320,7 @@ public class BlockManager : NetworkBehaviour
         isPlacing = !isPlacing;
         if (isPlacing)
         {
-            vrPlayerRenderer.enabled = true;
+            //vrPlayerRenderer.enabled = true;
             SetUpUI();
         }
         else
@@ -332,7 +335,7 @@ public class BlockManager : NetworkBehaviour
     /// </summary>
     void SetUpUI()
     {
-        CanvasManager.Instance.SetUpBlockPlacingUI(this, blockMeshes.Length);
+        //CanvasManager.Instance.SetUpBlockPlacingUI(this, blockMeshes.Length);
         //CanvasManager.Instance.ToggleCrossHairUI();
     }
     #endregion
