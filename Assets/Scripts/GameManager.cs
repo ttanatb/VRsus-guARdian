@@ -33,7 +33,7 @@ public class GameManager : NetworkBehaviour
 
     private int currTrapSelection = -1;
 
-    public override void OnStartServer()
+    public override void OnStartLocalPlayer()
     {
 #if UNITY_IOS
         Instantiate(planeGeneratorPrefab);
@@ -44,7 +44,7 @@ public class GameManager : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isServer)
+        if (!isServer || !isLocalPlayer)
             return;
             
         switch (currGamePhase)
