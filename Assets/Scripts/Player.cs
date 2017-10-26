@@ -40,12 +40,6 @@ public class Player : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
-        if (isServer && isLocalPlayer)
-        {
-            GetComponent<GameManager>().enabled = true;
-        } 
-
-
         //set up if the Player should be VR or AR
         if (isLocalPlayer)
         {
@@ -113,6 +107,8 @@ public class Player : NetworkBehaviour
                 ARCamera.GetComponent<Camera>().enabled = true;
                 ARCamera.GetComponent<AudioListener>().enabled = true;
 
+
+
 #if UNITY_IOS
             UnityARCameraManager.Instance.SetCamera(Camera.main);
 #endif
@@ -135,6 +131,9 @@ public class Player : NetworkBehaviour
                 Destroy(GetComponent<Movement>());
             if (GetComponent<BlockManager>())
                 Destroy(GetComponent<BlockManager>());
+
+            if (GetComponent<GameManager>())
+                GetComponent<GameManager>().enabled = true;
         }
         else
         {
@@ -144,6 +143,10 @@ public class Player : NetworkBehaviour
                 GetComponent<Movement>().enabled = true;
             if (GetComponent<BlockManager>())
                 GetComponent<BlockManager>().enabled = true;
+
+
+            if (GetComponent<GameManager>())
+                Destroy(GetComponent<GameManager>());
         }
 
         if (GetComponent<Combat>())

@@ -37,8 +37,8 @@ public class GameManager : NetworkBehaviour
     {
 #if UNITY_IOS
         Instantiate(planeGeneratorPrefab);
-#endif
         CanvasManager.Instance.SetUI(this);
+#endif
     }
 
     // Update is called once per frame
@@ -80,8 +80,7 @@ public class GameManager : NetworkBehaviour
                 {
                     trapList[currTrapSelection].count -= 1;
 
-                    GameObject go = Instantiate(trapList[currTrapSelection].trap, hit.point, Quaternion.identity);
-                    NetworkServer.Spawn(go);
+                    SpawnTrap(currTrapSelection, hit.point);
 
                     CanvasManager.Instance.ClearSelection(this);
                     CanvasManager.Instance.UpdateTrapCount(this);
@@ -98,8 +97,7 @@ public class GameManager : NetworkBehaviour
         {
             trapList[currTrapSelection].count -= 1;
 
-            GameObject go = Instantiate(trapList[currTrapSelection].trap, Vector3.zero, Quaternion.identity);
-            NetworkServer.Spawn(go);
+            SpawnTrap(currTrapSelection, Vector3.zero);
 
             CanvasManager.Instance.ClearSelection(this);
             CanvasManager.Instance.UpdateTrapCount(this);
@@ -109,6 +107,12 @@ public class GameManager : NetworkBehaviour
         }
 
         return;
+    }
+
+    private void SpawnTrap(int index, Vector3 pos)
+    {
+        GameObject go = Instantiate(trapList[index].trap, pos, Quaternion.identity);
+        NetworkServer.Spawn(go);
     }
 
     public void SetPhaseTo(GamePhase newPhase)
