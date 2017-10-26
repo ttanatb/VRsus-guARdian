@@ -11,8 +11,6 @@ public enum PlayerType
 
 public class Player : NetworkBehaviour
 {
-    public GameObject gameManagerPrefab;
-
     public Object[] ObjsForARAvatarThatVRPlayerCanSee;
     public Object[] ObjsForVRAvatarThatARPlayerCanSee;
 
@@ -39,21 +37,13 @@ public class Player : NetworkBehaviour
         isThisAServer = isServer;
     }
 
-    [Command]
-    void CmdSpawnGameManager()
-    {
-        GameObject obj = Instantiate(gameManagerPrefab);
-        NetworkServer.Spawn(obj);
-    }
-
-
     // Use this for initialization
     void Start()
     {
-        if (isServer && !isLocalPlayer)
+        if (isServer && isLocalPlayer)
         {
-            CmdSpawnGameManager();
-        }
+            GetComponent<GameManager>().enabled = true;
+        } 
 
 
         //set up if the Player should be VR or AR
