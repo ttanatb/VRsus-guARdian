@@ -39,13 +39,20 @@ public class Player : NetworkBehaviour
         isThisAServer = isServer;
     }
 
+    [Command]
+    void CmdSpawnGameManager()
+    {
+        GameObject obj = Instantiate(gameManagerPrefab);
+        NetworkServer.Spawn(obj);
+    }
+
+
     // Use this for initialization
     void Start()
     {
-        if (isServer)
+        if (isServer && !isLocalPlayer)
         {
-            GameObject obj = Instantiate(gameManagerPrefab);
-            NetworkServer.Spawn(obj);
+            CmdSpawnGameManager();
         }
 
 
