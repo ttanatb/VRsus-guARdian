@@ -183,6 +183,6 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
 
     public void UpdateTotalPlaneArea(float newArea)
     {
-        planeAreaText.text = "Total Plane Area: " + newArea;
+		planeAreaText.text = "Total Plane Area: " + newArea.ToString();
     }
 }

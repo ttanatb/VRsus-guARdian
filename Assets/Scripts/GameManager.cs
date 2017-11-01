@@ -130,6 +130,8 @@ public class GameManager : NetworkBehaviour
             area += planeArea;
         }
 
+		area *= 100f;
+
         Debug.Log("Total plane area: " + area);
 
         if (area > minPlayArea)

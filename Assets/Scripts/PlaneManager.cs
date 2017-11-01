@@ -111,7 +111,7 @@ public class PlaneManager : NetworkBehaviour
                     int index = GetIndexOf(s);
                     if (index != -1)
                     {
-                        area += plane.localScale.x * plane.localScale.y;
+                        area += plane.localScale.x * plane.localScale.z;
                         ServerUpdatePlane(index, plane.position, plane.rotation.eulerAngles.y, plane.localScale * 10);
                     }
                 }
@@ -120,7 +120,7 @@ public class PlaneManager : NetworkBehaviour
                     ServerAddPlane(s, plane.position, plane.rotation.eulerAngles.y, plane.localScale * 10);
                 }
             }
-            CanvasManager.Instance.UpdateTotalPlaneArea(area);
+            CanvasManager.Instance.UpdateTotalPlaneArea(area * 100f);
 
             yield return new WaitForSeconds(1f);
         }
