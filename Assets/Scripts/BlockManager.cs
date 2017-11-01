@@ -186,18 +186,36 @@ public class BlockManager : NetworkBehaviour
             else StopPlacing();
         }
 
-        //if isPlacing
-        if (isPlacing && currPlaceMode > -1)
+        if (isPlacing)
         {
-            //gets mouse position
-            Vector3 mousePos = Input.mousePosition;
-            mousePos.z = topViewCamObj.transform.position.y;
-            mousePos = topViewCam.ScreenToWorldPoint(mousePos);
-            mousePos.y = 0;
+            //check if an entrance was hit
+            if (Input.GetMouseButtonUp(0))
+            {
+                RaycastHit hitInfo;
+                Ray ray = topViewCam.ScreenPointToRay(Input.mousePosition);
+                LayerMask mask = LayerMask.NameToLayer("Entrance");
 
-            //sets the position of the placement sample
-            placementSampleObj.transform.position = mousePos;
+                if (Physics.Raycast(ray, out hitInfo, 2000f, mask))
+                {
+                    //set position to entrance
+
+
+                    StopPlacing();
+                }
+            }
         }
+
+        //if (isPlacing && currPlaceMode > -1)
+        //{
+        //    //gets mouse position
+        //    Vector3 mousePos = Input.mousePosition;
+        //    mousePos.z = topViewCamObj.transform.position.y;
+        //    mousePos = topViewCam.ScreenToWorldPoint(mousePos);
+        //    mousePos.y = 0;
+
+        //    //sets the position of the placement sample
+        //    placementSampleObj.transform.position = mousePos;
+        //}
     }
 
     #region Helper Functions
@@ -222,7 +240,7 @@ public class BlockManager : NetworkBehaviour
 
         StopAllCoroutines();
         switching = true;
-        if (movement) 
+        if (movement)
             movement.SwitchOutOfPlaying();
 
         IEnumerator fadeOut = FadeOut(vrCamera, topViewCam, true);
