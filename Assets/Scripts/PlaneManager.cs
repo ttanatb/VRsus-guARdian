@@ -73,9 +73,9 @@ public class PlaneManager : NetworkBehaviour
             if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.D))
             {
                 //ServerAddPlane("dfdf",
-                 //   new Vector3(Random.Range(-5f, 5f), Random.Range(-3f, 1f), Random.Range(-6f, 4f)),
-                 //   Random.Range(0f, 360f),
-                 //   new Vector3(Random.Range(3f, 6f), Random.Range(3f, 6f), Random.Range(3f, 6f)));
+                //   new Vector3(Random.Range(-5f, 5f), Random.Range(-3f, 1f), Random.Range(-6f, 4f)),
+                //   Random.Range(0f, 360f),
+                //   new Vector3(Random.Range(3f, 6f), Random.Range(3f, 6f), Random.Range(3f, 6f)));
             }
         }
     }
@@ -101,28 +101,27 @@ public class PlaneManager : NetworkBehaviour
                 }
             }
 
+            float area = 0;
             foreach (string s in UnityARAnchorManager.Instance.planeAnchorMap.Keys)
             {
+                Transform plane = UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0);
+
                 if (CheckIfContains(s))
                 {
                     int index = GetIndexOf(s);
                     if (index != -1)
                     {
-                        ServerUpdatePlane(index,
-                            UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).position,
-                            UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).rotation.eulerAngles.y,
-                            UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).localScale * 10);
+                        area += plane.localScale.x * plane.localScale.y;
+                        ServerUpdatePlane(index, plane.position, plane.rotation.eulerAngles.y, plane.localScale * 10);
                     }
                 }
-
                 else
                 {
-                    ServerAddPlane(s,
-                        UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).position,
-                        UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).rotation.eulerAngles.y,
-                        UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).localScale * 10);
+                    ServerAddPlane(s, plane.position, plane.rotation.eulerAngles.y, plane.localScale * 10);
                 }
             }
+            CanvasManager.Instance.UpdateTotalPlaneArea(area);
+
             yield return new WaitForSeconds(1f);
         }
     }
@@ -131,6 +130,7 @@ public class PlaneManager : NetworkBehaviour
     private void ServerAddPlane(string s, Vector3 pos, float rot, Vector3 scale)
     {
         m_ARPlane.Add(new ARPlane(s, pos, rot, scale));
+        CanvasManager.Instance.UpdatePlaneCount(m_ARPlane.Count);
     }
 
     [Server]
@@ -147,6 +147,7 @@ public class PlaneManager : NetworkBehaviour
     private void ServerRemovePlane(int index)
     {
         m_ARPlane.RemoveAt(index);
+        CanvasManager.Instance.UpdatePlaneCount(m_ARPlane.Count);
     }
 
     #endregion
@@ -184,5 +185,5 @@ public class PlaneManager : NetworkBehaviour
 
         return -1;
     }
-#endregion
+    #endregion
 }

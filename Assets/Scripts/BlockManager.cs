@@ -225,7 +225,6 @@ public class BlockManager : NetworkBehaviour
         if (movement) 
             movement.SwitchOutOfPlaying();
 
-        Debug.Log(vrCamera);
         IEnumerator fadeOut = FadeOut(vrCamera, topViewCam, true);
         IEnumerator fadeIn = FadeIn(topViewCam, vrCamera);
 

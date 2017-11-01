@@ -18,6 +18,9 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     public GameObject ARUI;
     private GameObject[] arUIbuttons;
 
+    public Text planeCountText;
+    public Text planeAreaText;
+
     public void SetUpBlockPlacingUI(BlockManager blockPlacer, int count)
     {
         placementButton.gameObject.SetActive(true);
@@ -30,7 +33,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
 
         Button[] btns = new Button[count];
 
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             GameObject buttonObj = Instantiate(buttonPrefab, blockPlacingUI.transform);
             Vector2 pos = new Vector2((15 * (i + 1)) + (120 * i), 0f);
@@ -67,7 +70,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
 
     public void SetUI(GameManager manager)
     {
-        switch(manager.CurrGamePhase)
+        switch (manager.CurrGamePhase)
         {
             case GamePhase.Scanning:
                 ARUI.SetActive(true);
@@ -77,31 +80,43 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
                     {
                         b.onClick.AddListener(() =>
                         {
-                            GamePhase nextLvl = (GamePhase)((int)manager.CurrGamePhase + 1);
-                            manager.SetPhaseTo(nextLvl);
+                            if (manager.CheckAggregrateArea())
+                            {
+                                GamePhase nextLvl = (GamePhase)((int)manager.CurrGamePhase + 1);
+                                manager.SetPhaseTo(nextLvl);
+                            }
+                            else
+                            {
+                                Debug.Log("Not enough play area");
+                                //Add something to a text box
+                            }
                         });
                         break;
                     }
                 }
                 break;
             case GamePhase.Placing:
+                manager.SetPhaseTo(GamePhase.Playing);
+                break;
+
                 List<GameObject> buttons = new List<GameObject>();
-                for(int i = 0; i < manager.trapList.Length; i++)
+                for (int i = 0; i < manager.trapList.Length; i++)
                 {
                     buttons.Add(Instantiate(buttonPrefab, ARUI.transform));
                     buttons[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(-20, -70 - i * 50);
                 }
                 arUIbuttons = buttons.ToArray();
 
-                for(int i = 0; i < arUIbuttons.Length; i++)
+                for (int i = 0; i < arUIbuttons.Length; i++)
                 {
                     int num = i;
                     int count = arUIbuttons.Length;
                     GameObject[] arbuttons = arUIbuttons;
-                    UnityAction action = () => {
+                    UnityAction action = () =>
+                    {
                         manager.SetCurrTrapSelection(num);
 
-                        for(int j = 0; j < count; j++)
+                        for (int j = 0; j < count; j++)
                         {
                             if (j == num)
                             {
@@ -132,7 +147,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
                 break;
         }
 
-        foreach(Text t in ARUI.GetComponentsInChildren<Text>())
+        foreach (Text t in ARUI.GetComponentsInChildren<Text>())
         {
             if (t.name == "Phase")
             {
@@ -144,7 +159,8 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
 
     public void ClearSelection(GameManager manager)
     {
-        for (int i = 0; i < arUIbuttons.Length; i++) {
+        for (int i = 0; i < arUIbuttons.Length; i++)
+        {
             if (manager.trapList[i].count > 0)
             {
                 arUIbuttons[i].GetComponent<Button>().interactable = true;
@@ -158,5 +174,15 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
         {
             arUIbuttons[i].GetComponentInChildren<Text>().text = manager.trapList[i].trap.name + ": (" + manager.trapList[i].count + ")";
         }
+    }
+
+    public void UpdatePlaneCount(int newCount)
+    {
+        planeCountText.text = "Plane Count: " + newCount;
+    }
+
+    public void UpdateTotalPlaneArea(float newArea)
+    {
+        planeAreaText.text = "Total Plane Area: " + newArea;
     }
 }
