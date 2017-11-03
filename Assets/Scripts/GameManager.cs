@@ -182,7 +182,6 @@ public class GameManager : NetworkBehaviour
         currTrapSelection = toSelect;
     }
 
-    [Command]
     private void CmdSpawnRelics()
     {
         //know the floor plane
@@ -328,7 +327,6 @@ public class GameManager : NetworkBehaviour
     }
 
 
-    [Command]
     private void CmdSpawnEntrances()
     {
         LocalPlane[] objects = FindObjectsOfType<LocalPlane>();
