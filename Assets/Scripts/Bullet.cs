@@ -19,10 +19,11 @@ public class Bullet : NetworkBehaviour
     }
 
     private void OnCollisionEnter(Collision collision)
-
     {
         if (!isServer)
             return;
+
+        Debug.Log(collision.gameObject);
 
         if (collision.gameObject.tag == tag || collision.gameObject.tag == "Platform")
         {

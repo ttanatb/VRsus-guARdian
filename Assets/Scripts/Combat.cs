@@ -61,20 +61,19 @@ public class Combat : NetworkBehaviour
         else
         {
             avatar = player.VRAvatar.transform;
-        }
+            if (!isLocalPlayer)
+            {
+                healthBar = Instantiate(healthBarPrefab).GetComponent<HealthBar>();
+                healthBar.Init(this, player.PlayerType, avatar);
+            }
+            else
+            {
+                healthBarUI = Instantiate(healthBarUIPrefab, canvas).GetComponent<HealthBarUI>();
+                healthBarUI.Init(this);
 
-        if (!isLocalPlayer)
-        {
-            healthBar = Instantiate(healthBarPrefab).GetComponent<HealthBar>();
-            healthBar.Init(this, player.PlayerType, avatar);
-        }
-        else
-        {
-            healthBarUI = Instantiate(healthBarUIPrefab, canvas).GetComponent<HealthBarUI>();
-            healthBarUI.Init(this);
-
-            if (player.PlayerType == PlayerType.AR)
-                CanvasManager.Instance.SetUpGoalPlacingUI(this);
+                //if (player.PlayerType == PlayerType.AR)
+                //    CanvasManager.Instance.SetUpGoalPlacingUI(this);
+            }
         }
 
         prevPos = avatar.position;
