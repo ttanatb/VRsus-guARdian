@@ -59,12 +59,14 @@ public class PlaneManager : NetworkBehaviour
                 StartCoroutine("UpdateARPlanes");
             }
 #endif
+        if (LocalObjectBuilder.Instance)
+            LocalObjectBuilder.Instance.SetPlaneManager(this);
 
-            if (LocalObjectBuilder.Instance)
-                LocalObjectBuilder.Instance.SetPlaneManager(this);
         }
     }
 
+
+#if UNITY_IOS
 
     private void Update()
     {
@@ -72,16 +74,35 @@ public class PlaneManager : NetworkBehaviour
         {
             if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.D))
             {
-                //ServerAddPlane("dfdf",
-                //   new Vector3(Random.Range(-5f, 5f), Random.Range(-3f, 1f), Random.Range(-6f, 4f)),
-                //   Random.Range(0f, 360f),
-                //   new Vector3(Random.Range(3f, 6f), Random.Range(3f, 6f), Random.Range(3f, 6f)));
+                ServerAddPlane("floor",
+                   new Vector3(Random.Range(-2f, 2f), -3f, Random.Range(-2f, 2f)),
+                   Random.Range(0f, 360f),
+                   new Vector3(Random.Range(4f, 6f), 1f, Random.Range(4f, 6f)));
+
+                ServerAddPlane("table",
+                   new Vector3(Random.Range(1f, 4f), Random.Range(-1f, 2f), Random.Range(1f, 4f)),
+                   Random.Range(0f, 360f),
+                   new Vector3(Random.Range(3f, 1f), 1f, Random.Range(3f, 1f)));
+
+                ServerAddPlane("table",
+                   new Vector3(-Random.Range(1f, 4f), Random.Range(-1f, 2f), -Random.Range(1f, 4f)),
+                   Random.Range(0f, 360f),
+                   new Vector3(Random.Range(3f, 1f), 1f, Random.Range(3f, 1f)));
+
+                ServerAddPlane("table",
+                   new Vector3(-Random.Range(1f, 4f), Random.Range(-1f, 2f), Random.Range(1f, 4f)),
+                   Random.Range(0f, 360f),
+                   new Vector3(Random.Range(3f, 1f), 1f, Random.Range(3f, 1f)));
+
+                ServerAddPlane("table",
+                   new Vector3(Random.Range(1f, 4f), Random.Range(-1f, 2f), -Random.Range(1f, 4f)),
+                   Random.Range(0f, 360f),
+                   new Vector3(Random.Range(3f, 1f), 1f, Random.Range(3f, 1f)));
             }
         }
     }
 
-#if UNITY_IOS
-    #region Server Functions
+#region Server Functions
     [Server]
     IEnumerator UpdateARPlanes()
     {
@@ -150,10 +171,10 @@ public class PlaneManager : NetworkBehaviour
         CanvasManager.Instance.UpdatePlaneCount(m_ARPlane.Count);
     }
 
-    #endregion
+#endregion
 #endif
 
-    #region Helper Functions
+#region Helper Functions
     /// <summary>
     /// Checks if m_ARPlane contains a plane with the string identifier
     /// </summary>
@@ -185,5 +206,5 @@ public class PlaneManager : NetworkBehaviour
 
         return -1;
     }
-    #endregion
+#endregion
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.XR.iOS;
 
@@ -65,6 +63,9 @@ public class GameManager : NetworkBehaviour
             default:
                 break;
         }
+
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.S))
+            CmdSpawnRelics();
     }
 
 
@@ -122,15 +123,26 @@ public class GameManager : NetworkBehaviour
     public bool CheckAggregrateArea()
     {
         float area = 0;
-        foreach (string key in UnityARAnchorManager.Instance.planeAnchorMap.Keys)
+        if (UnityARAnchorManager.Instance == null)
         {
-            float planeArea = UnityARAnchorManager.Instance.planeAnchorMap[key].gameObject.transform.GetChild(0).localScale.x *
-                UnityARAnchorManager.Instance.planeAnchorMap[key].gameObject.transform.GetChild(0).localScale.z;
+            foreach (LocalPlane obj in FindObjectsOfType<LocalPlane>())
+            {
+                float planeArea = obj.transform.localScale.x * obj.transform.localScale.z;
+                area += planeArea;
+            }
+        }
+        else
+        {
+            foreach (string key in UnityARAnchorManager.Instance.planeAnchorMap.Keys)
+            {
+                float planeArea = UnityARAnchorManager.Instance.planeAnchorMap[key].gameObject.transform.GetChild(0).localScale.x *
+                    UnityARAnchorManager.Instance.planeAnchorMap[key].gameObject.transform.GetChild(0).localScale.z;
 
-            area += planeArea;
+                area += planeArea;
+            }
         }
 
-		area *= 100f;
+        area *= 100f;
 
         Debug.Log("Total plane area: " + area);
 
@@ -141,8 +153,6 @@ public class GameManager : NetworkBehaviour
 
     public void SetPhaseTo(GamePhase newPhase)
     {
-        currGamePhase = (int)newPhase;
-        CanvasManager.Instance.SetUI(this);
 
         switch (newPhase)
         {
@@ -154,6 +164,9 @@ public class GameManager : NetworkBehaviour
                 CmdSpawnEntrances();
                 break;
         }
+
+        currGamePhase = (int)newPhase;
+        CanvasManager.Instance.SetUI(this);
     }
 
     public void SetCurrTrapSelection(int toSelect)
@@ -165,21 +178,36 @@ public class GameManager : NetworkBehaviour
     private void CmdSpawnRelics()
     {
         //know the floor plane
-        float x = 0f;
-        float z = 0f;
+        Vector2 center = new Vector2(0, 0);
+
         float totalXScale = 0f;
         float totalZScale = 0f;
 
-        foreach (string key in UnityARAnchorManager.Instance.planeAnchorMap.Keys)
+        if (UnityARAnchorManager.Instance == null)
         {
-            x += UnityARAnchorManager.Instance.planeAnchorMap[key].gameObject.transform.GetChild(0).localScale.x *
-                UnityARAnchorManager.Instance.planeAnchorMap[key].gameObject.transform.GetChild(0).position.x;
-            z += UnityARAnchorManager.Instance.planeAnchorMap[key].gameObject.transform.GetChild(0).localScale.z *
-                UnityARAnchorManager.Instance.planeAnchorMap[key].gameObject.transform.GetChild(0).position.z;
+            foreach (LocalPlane plane in FindObjectsOfType<LocalPlane>())
+            {
+                center.x += plane.transform.localScale.x * plane.transform.position.x;
+                center.y += plane.transform.localScale.z * plane.transform.position.z;
 
-            totalXScale += UnityARAnchorManager.Instance.planeAnchorMap[key].gameObject.transform.GetChild(0).localScale.x;
-            totalZScale += UnityARAnchorManager.Instance.planeAnchorMap[key].gameObject.transform.GetChild(0).localScale.z;
+                totalXScale += plane.transform.localScale.x;
+                totalZScale += plane.transform.localScale.z;
+            }
         }
+        else
+        {
+            foreach (string key in UnityARAnchorManager.Instance.planeAnchorMap.Keys)
+            {
+                Transform plane = UnityARAnchorManager.Instance.planeAnchorMap[key].gameObject.transform.GetChild(0);
+
+                center.x += plane.localScale.x * plane.position.x;
+                center.y += plane.localScale.z * plane.position.z;
+
+                totalXScale += plane.localScale.x;
+                totalZScale += plane.localScale.z;
+            }
+        }
+
 
         if (totalXScale < 0.01f)
             totalXScale = 1;
@@ -187,10 +215,86 @@ public class GameManager : NetworkBehaviour
         if (totalZScale < 0.01f)
             totalZScale = 1;
 
-        x /= totalXScale;
-        z /= totalZScale;
+        center.x /= totalXScale;
+        center.y /= totalZScale;
 
-        GameObject obj = Instantiate(relicPrefab, new Vector3(x, 0f, z), Quaternion.identity);
+        Transform centerPlane = null;
+        Transform closestPlane = null;
+
+        if (UnityARAnchorManager.Instance == null)
+        {
+            LocalPlane[] objects = FindObjectsOfType<LocalPlane>();
+            centerPlane = objects[0].transform;
+            closestPlane = objects[0].transform;
+
+            for (int i = 1; i < objects.Length; i++)
+            {
+                Vector2 pos = new Vector2(objects[i].transform.position.x, objects[i].transform.position.z);
+                if ((new Vector2(centerPlane.position.x, centerPlane.position.z) - center).sqrMagnitude > (pos - center).sqrMagnitude)
+                {
+                    closestPlane = centerPlane;
+                    centerPlane = objects[i].transform;
+                }
+                else if ((new Vector2(closestPlane.position.x, closestPlane.position.z) - center).sqrMagnitude > (pos - center).sqrMagnitude)
+                {
+                    closestPlane = objects[i].transform;
+                }
+            }
+        }
+        else
+        {
+            //Re do this part later
+            LocalPlane[] objects = FindObjectsOfType<LocalPlane>();
+            centerPlane = objects[0].transform;
+            closestPlane = objects[0].transform;
+
+            for (int i = 1; i < objects.Length; i++)
+            {
+                Vector2 pos = new Vector2(objects[i].transform.position.x, objects[i].transform.position.z);
+                if ((new Vector2(centerPlane.position.x, centerPlane.position.z) - center).sqrMagnitude > (pos - center).sqrMagnitude)
+                {
+                    closestPlane = centerPlane;
+                    centerPlane = objects[i].transform;
+                }
+                else if ((new Vector2(closestPlane.position.x, closestPlane.position.z) - center).sqrMagnitude > (pos - center).sqrMagnitude)
+                {
+                    closestPlane = objects[i].transform;
+                }
+            }
+        }
+
+        closestPlane.name = "Closest Plane";
+        centerPlane.name = "Center Plane";
+
+        if (closestPlane.localScale.x * closestPlane.localScale.z > centerPlane.localScale.x * centerPlane.localScale.z)
+        {
+            Transform temp = closestPlane;
+            closestPlane = centerPlane;
+            centerPlane = temp;
+        }
+
+        GameObject obj = Instantiate(relicPrefab,
+            new Vector3(Random.Range(centerPlane.position.x - centerPlane.localScale.x / 2, 0),
+            centerPlane.localScale.y / 2 + centerPlane.position.y + relicPrefab.transform.localScale.y / 2,
+            Random.Range(centerPlane.position.z - centerPlane.localScale.z / 2, 0)),
+            Quaternion.identity);
+
+        NetworkServer.Spawn(obj);
+
+        obj = Instantiate(relicPrefab,
+            new Vector3(Random.Range(centerPlane.position.x + centerPlane.localScale.x / 2, 0),
+            centerPlane.localScale.y / 2 + centerPlane.position.y + relicPrefab.transform.localScale.y / 2,
+            Random.Range(centerPlane.position.z + centerPlane.localScale.z / 2, 0)),
+            Quaternion.identity);
+
+        NetworkServer.Spawn(obj);
+
+        obj = Instantiate(relicPrefab,
+            new Vector3(Random.Range(closestPlane.position.x - closestPlane.localScale.x / 2, closestPlane.position.x + closestPlane.localScale.x / 2),
+            closestPlane.localScale.y / 2 + closestPlane.position.y + relicPrefab.transform.localScale.y / 2,
+            Random.Range(closestPlane.position.z - closestPlane.localScale.z / 2, closestPlane.position.z + closestPlane.localScale.z / 2)),
+            Quaternion.identity);
+
         NetworkServer.Spawn(obj);
     }
 
@@ -198,7 +302,83 @@ public class GameManager : NetworkBehaviour
     [Command]
     private void CmdSpawnEntrances()
     {
+        LocalPlane[] objects = FindObjectsOfType<LocalPlane>();
+
+        for (int i = 0; i < objects.Length; i++)
+        {
+            Debug.Log(objects[i].name);
+            if (objects[i].name == "Closest Plane" || objects[i].name == "Center Plane")
+                continue;
+
+            GameObject obj = Instantiate(entrancePrefab,
+                new Vector3(Random.Range(objects[i].transform.position.x - objects[i].transform.localScale.x / 4, objects[i].transform.position.x + objects[i].transform.localScale.x / 4),
+                objects[i].transform.position.y + objects[i].transform.localScale.y / 2 + entrancePrefab.transform.localScale.y / 2,
+                Random.Range(objects[i].transform.position.z - objects[i].transform.localScale.z / 4, objects[i].transform.position.z + objects[i].transform.localScale.z / 4)),
+                Quaternion.identity);
+            NetworkServer.Spawn(obj);
+        }
+
+        /*
+        //know the floor plane
+        float minX = float.MinValue;
+        float maxX = float.MaxValue;
+
+        float minZ = float.MinValue;
+        float maxZ = float.MaxValue;
+
+        if (UnityARAnchorManager.Instance == null)
+        {
+            foreach (LocalPlane plane in FindObjectsOfType<LocalPlane>())
+            {
+                float x = plane.transform.position.x;
+                float z = plane.transform.position.z;
+
+
+                if (x - plane.transform.localScale.x < minX)
+                    minX = x - plane.transform.localScale.x;
+
+                if (x + plane.transform.localScale.x > maxX)
+                    maxX = x + plane.transform.localScale.x;
+
+
+                if (z - plane.transform.localScale.z < minZ)
+                    minZ = z - plane.transform.localScale.z;
+
+                if (z + plane.transform.localScale.z > maxZ)
+                    maxZ = z + plane.transform.localScale.z;
+            }
+        }
+        else
+        {
+            foreach (string key in UnityARAnchorManager.Instance.planeAnchorMap.Keys)
+            {
+                Transform plane = UnityARAnchorManager.Instance.planeAnchorMap[key].gameObject.transform.GetChild(0);
+
+                float x = plane.position.x;
+                float z = plane.position.z;
+
+
+                if (x - plane.localScale.x < minX)
+                    minX = x - plane.localScale.x;
+
+                if (x + plane.localScale.x > maxX)
+                    maxX = x + plane.localScale.x;
+
+
+                if (z - plane.localScale.z < minZ)
+                    minZ = z - plane.localScale.z;
+
+                if (z + plane.localScale.z > maxZ)
+                    maxZ = z + plane.localScale.z;
+            }
+        }
+
+        Vector3 centerPos = new Vector3((minX + maxX) / 2f, 0, (minZ + maxZ) / 2f);
+
+        //loop through every plane and create one that's away from the center
+
         GameObject obj = Instantiate(entrancePrefab);
         NetworkServer.Spawn(obj);
+        */
     }
 }

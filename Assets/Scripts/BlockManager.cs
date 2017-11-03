@@ -61,6 +61,8 @@ public class BlockManager : NetworkBehaviour
 
     private Movement movement;
 
+    public LayerMask mask;
+
     /// <summary>
     /// Initialization
     /// </summary>
@@ -193,16 +195,27 @@ public class BlockManager : NetworkBehaviour
             {
                 RaycastHit hitInfo;
                 Ray ray = topViewCam.ScreenPointToRay(Input.mousePosition);
-                LayerMask mask = LayerMask.NameToLayer("Entrance");
 
                 if (Physics.Raycast(ray, out hitInfo, 2000f, mask))
                 {
-                    //set position to entrance
-
-
+                    Debug.Log(hitInfo.collider.name);
                     StopPlacing();
+                    transform.position = hitInfo.point;
                 }
             }
+
+            float zoom = -Input.GetAxis("Mouse ScrollWheel");
+            float horizontal = Input.GetAxis("Mouse X");
+            float vertical = Input.GetAxis("Mouse Y");
+
+            horizontal *= 0.02f;
+            vertical *= 0.02f;
+
+
+            topViewCam.transform.position = topViewCam.transform.position +
+                horizontal * topViewCam.transform.right +
+                vertical * topViewCam.transform.up;
+            topViewCam.orthographicSize += zoom;
         }
 
         //if (isPlacing && currPlaceMode > -1)
@@ -342,7 +355,8 @@ public class BlockManager : NetworkBehaviour
         }
         else
         {
-            movement.SwitchToPlaying();
+            if (movement)
+                movement.SwitchToPlaying();
 
         }
     }
