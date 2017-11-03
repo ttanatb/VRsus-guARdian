@@ -73,16 +73,25 @@ public class Combat : NetworkBehaviour
         if (player.PlayerType == PlayerType.AR)
             return;
 
-        if (!isLocalPlayer)
+        CmdCreateHealthBar();
+
+        healthBarUI = Instantiate(healthBarUIPrefab, canvas).GetComponent<HealthBarUI>();
+        healthBarUI.Init(this);
+    }
+
+    [Command]
+    private void CmdCreateHealthBar()
+    {
+        if (isLocalPlayer)
         {
-            healthBar = Instantiate(healthBarPrefab).GetComponent<HealthBar>();
-            healthBar.Init(this, player.PlayerType, avatar);
+            player.ARAvatar.GetComponent<Collider>().enabled = true;
+            return;
         }
-        else
-        {
-            healthBarUI = Instantiate(healthBarUIPrefab, canvas).GetComponent<HealthBarUI>();
-            healthBarUI.Init(this);
-        }
+
+        //maybe this won't work?
+        healthBar = Instantiate(healthBarPrefab).GetComponent<HealthBar>();
+        healthBar.Init(this, player.PlayerType, avatar);
+        GetComponent<Player>().EnableVRPlayerRenderers();
     }
 
     public override void OnStartLocalPlayer()
@@ -118,25 +127,22 @@ public class Combat : NetworkBehaviour
         if (player.PlayerType == PlayerType.VR)
             avatar.forward = transform.forward;
 
-        if (!isLocalPlayer)
+        if (!isLocalPlayer || (player.PlayerType == PlayerType.AR  && Utility.IsPointerOverUIObject()))
             return;
 
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.E))
-        {
-            TakeDamage();
-        }
-
-        if (Utility.IsPointerOverUIObject())
-            return;
+        //if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.E))
+        //{
+        //    TakeDamage();
+        //}
 
         if (CheckTap())
         {
             CmdFire(avatar.position, avatar.forward);
         }
-        else if ((Input.GetMouseButtonDown(0)))
-        {
-            //CmdCreateJumpPad(transform.position + Vector3.down * 0.01f);
-        }
+        //else if ((Input.GetMouseButtonDown(0)))
+        //{
+        //    CmdCreateJumpPad(transform.position + Vector3.down * 0.01f);
+        //}
 
         if (prevHealth != health)
         {
@@ -165,8 +171,6 @@ public class Combat : NetworkBehaviour
         return false;
     }
 
-
-
     public UnityAction GetActionToSwitchToPlacingMode()
     {
         UnityAction action = () =>
@@ -181,7 +185,7 @@ public class Combat : NetworkBehaviour
     {
         if (!canShoot)
             return;
-        
+
         GameObject bulletObj = null;
         if (player.PlayerType == PlayerType.AR)
         {
@@ -224,19 +228,13 @@ public class Combat : NetworkBehaviour
 
         if (health < 1)
         {
-            //health = maxHealth;
-            //isDead = true;
-            //RpcRespawn();
+            RpcDie();
         }
     }
 
     [ClientRpc]
-    void RpcRespawn()
+    void RpcDie()
     {
-        if (isLocalPlayer)
-        {
-            if (GetComponent<Player>().PlayerType == PlayerType.VR)
-                transform.position = Vector3.zero;
-        }
+        CanvasManager.Instance.SetMessage("AR player wins!");
     }
 }

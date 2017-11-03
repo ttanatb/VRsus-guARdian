@@ -21,6 +21,8 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     public Text planeCountText;
     public Text planeAreaText;
 
+    public Message message;
+
     public void SetUpBlockPlacingUI(BlockManager blockPlacer, int count)
     {
         placementButton.gameObject.SetActive(true);
@@ -87,8 +89,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
                             }
                             else
                             {
-                                Debug.Log("Not enough play area");
-                                //Add something to a text box
+                                message.SetMessage("Not enough play area! (Get over a");
                             }
                         });
                         break;
@@ -183,6 +184,11 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
 
     public void UpdateTotalPlaneArea(float newArea)
     {
-		planeAreaText.text = "Total Plane Area: " + newArea;
+        planeAreaText.text = "Total Plane Area: " + newArea;
+    }
+
+    public void SetMessage(string msg)
+    {
+        message.SetMessage(msg);
     }
 }

@@ -96,7 +96,7 @@ public class GameManager : NetworkBehaviour
         }
 
         //Testing for PC
-        if (Input.GetKeyDown(KeyCode.S) &&
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.B) &&
          (currTrapSelection >= 0 && currTrapSelection < trapList.Length && trapList[currTrapSelection].count > 0))
         {
             trapList[currTrapSelection].count -= 1;
@@ -144,7 +144,7 @@ public class GameManager : NetworkBehaviour
 
         area *= 100f;
 
-        Debug.Log("Total plane area: " + area);
+        //Debug.Log("Total plane area: " + area);
 
         if (area > minPlayArea)
             return true;

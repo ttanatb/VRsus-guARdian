@@ -58,15 +58,27 @@ public class Player : NetworkBehaviour
 #endif
         }
 
-        if (playerType == PlayerType.AR)
+        if (isLocalPlayer)
         {
-            VRAvatar.GetComponent<Collider>().enabled = false;
+            if (playerType == PlayerType.VR)
+            {
+                //VRAvatar.GetComponent<Collider>().enabled = true;
+            }
+            else
+            {
+                ARAvatar.GetComponent<Collider>().enabled = true;
+            }
         }
-
         else
         {
-            ARAvatar.GetComponent<Collider>().enabled = false;
-
+            if (playerType == PlayerType.AR)
+            {
+                //VRAvatar.GetComponent<Collider>().enabled = true;
+            }
+            else
+            {
+                ARAvatar.GetComponent<Collider>().enabled = true;
+            }
         }
 
         //Enable objects or scripts of the other player
@@ -87,6 +99,7 @@ public class Player : NetworkBehaviour
             }
             else
             {
+                /*
                 VRAvatar.GetComponent<Renderer>().enabled = true;
 
                 foreach (Object o in ObjsForVRAvatarThatARPlayerCanSee)
@@ -96,6 +109,7 @@ public class Player : NetworkBehaviour
                     else if (o is MonoBehaviour)
                         ((MonoBehaviour)o).enabled = true;
                 }
+                */
             }
         }
 
@@ -151,5 +165,19 @@ public class Player : NetworkBehaviour
 
         if (GetComponent<Combat>())
             GetComponent<Combat>().enabled = true;
+    }
+
+    public void EnableVRPlayerRenderers()
+    {
+        VRAvatar.GetComponent<Renderer>().enabled = true;
+        VRAvatar.GetComponent<Collider>().enabled = true;
+
+        foreach (Object o in ObjsForVRAvatarThatARPlayerCanSee)
+        {
+            if (o is GameObject)
+                ((GameObject)o).SetActive(true);
+            else if (o is MonoBehaviour)
+                ((MonoBehaviour)o).enabled = true;
+        }
     }
 }

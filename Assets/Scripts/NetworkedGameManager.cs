@@ -9,13 +9,13 @@ public class NetworkedGameManager : NetworkManager
 
     public override void OnServerConnect(NetworkConnection conn)
     {
-        Debug.Log("Player number " + (numPlayers + 1) + " has connected to the server");
+        //Debug.Log("Player number " + (numPlayers + 1) + " has connected to the server");
         base.OnServerConnect(conn);
     }
 
     public override void OnServerDisconnect(NetworkConnection conn)
     {
-        Debug.Log("Someone disconnected. " + numPlayers + " players are left ");
+        //Debug.Log("Someone disconnected. " + numPlayers + " players are left ");
         base.OnServerDisconnect(conn);
     }
 }
