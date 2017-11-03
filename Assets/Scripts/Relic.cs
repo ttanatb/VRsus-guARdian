@@ -19,6 +19,7 @@ public class Relic : NetworkBehaviour
 
         for (int i = 0; i < lerpPos.Length; i++)
         {
+            walls[i].GetComponent<Renderer>().enabled = false;
             lerpPos[i] = new Vector3(walls[i].transform.position.x,
                 associatedTower.transform.position.y + associatedTower.transform.localScale.y / 2 + Random.Range(walls[i].transform.localScale.y / 16, walls[i].transform.localScale.y / 2),
                 walls[i].transform.position.z);
@@ -43,6 +44,10 @@ public class Relic : NetworkBehaviour
                 combat.GainRelic();
                 isErecting = true;
                 AlertRelicStolen();
+                for (int i = 0; i < lerpPos.Length; i++)
+                {
+                    walls[i].GetComponent<Renderer>().enabled = true;
+                }
             }
         }
     }
