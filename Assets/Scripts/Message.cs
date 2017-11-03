@@ -60,6 +60,17 @@ public class Message : MonoBehaviour
         }
     }
 
+    public void SetPermanentMessage(string msg)
+    {
+        timer = float.MinValue;
+        text.text = msg;
+        alpha = 1f;
+        foreach (CanvasRenderer r in renderers)
+        {
+            r.SetAlpha(1f);
+        }
+    }
+
     IEnumerator FadeOut()
     {
         for(; alpha > 0f; alpha -= fadeSpeed)

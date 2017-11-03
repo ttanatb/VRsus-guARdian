@@ -46,6 +46,10 @@ public class Combat : NetworkBehaviour
     private HealthBarUI healthBarUI;
 
     public bool canShoot = false;
+    private bool isInvulnerable = false;
+    private float invulTimer = 0f;
+
+    public const float MAX_INVUL_TIME = 1.5f;
 
     private void Awake()
     {
@@ -127,18 +131,34 @@ public class Combat : NetworkBehaviour
         if (player.PlayerType == PlayerType.VR)
             avatar.forward = transform.forward;
 
-        if (!isLocalPlayer || (player.PlayerType == PlayerType.AR  && Utility.IsPointerOverUIObject()))
+        if (!isLocalPlayer || (player.PlayerType == PlayerType.AR && Utility.IsPointerOverUIObject()))
             return;
 
         //if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.E))
         //{
         //    TakeDamage();
         //}
+        if (isInvulnerable)
+        {
+            if (invulTimer > MAX_INVUL_TIME)
+            {
+                isInvulnerable = false;
+                foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
+                {
+                    r.enabled = true;
+                }
+                healthBar.GetComponent<Renderer>().enabled = true;
+            }
+            else invulTimer += Time.deltaTime;
+        }
+
 
         if (CheckTap())
         {
             CmdFire(avatar.position, avatar.forward);
         }
+
+
         //else if ((Input.GetMouseButtonDown(0)))
         //{
         //    CmdCreateJumpPad(transform.position + Vector3.down * 0.01f);
@@ -220,7 +240,7 @@ public class Combat : NetworkBehaviour
     [Server]
     public void TakeDamage()
     {
-        if (!isServer)
+        if (!isServer || isInvulnerable)
             return;
 
         health--;
@@ -229,6 +249,15 @@ public class Combat : NetworkBehaviour
         if (health < 1)
         {
             RpcDie();
+        }
+        else
+        {
+            isInvulnerable = true;
+            foreach(Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
+            {
+                r.enabled = false;
+            }
+            healthBar.GetComponent<Renderer>().enabled = false;
         }
     }
 

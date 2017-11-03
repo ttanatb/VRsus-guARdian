@@ -191,4 +191,9 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     {
         message.SetMessage(msg);
     }
+
+    public void SetPermanentMessage(string msg)
+    {
+        message.SetPermanentMessage(msg);
+    }
 }
