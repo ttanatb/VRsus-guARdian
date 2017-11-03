@@ -33,8 +33,9 @@ public class Player : NetworkBehaviour
 
     private void Update()
     {
-        isThisALocalPlayer = isLocalPlayer;
-        isThisAServer = isServer;
+#if UNITY_IOS
+    Debug.Log("VR ColliderPos: " + VRAvatar.transform.position);
+#endif
     }
 
     // Use this for initialization
