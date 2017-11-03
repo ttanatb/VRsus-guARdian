@@ -293,7 +293,7 @@ public class GameManager : NetworkBehaviour
             walls[i] = Instantiate(wallPrefab,
                     new Vector3(Random.Range(centerPlane.position.x - centerPlane.localScale.x / 4, centerPlane.position.x + centerPlane.localScale.x / 4),
                     centerPlane.position.y + centerPlane.localScale.y / 2 - wallPrefab.transform.localScale.y / 2,
-                    Random.Range(centerPlane.position.x - centerPlane.localScale.x / 4, centerPlane.position.x + centerPlane.localScale.x / 4)),
+                    Random.Range(centerPlane.position.z - centerPlane.localScale.z / 4, centerPlane.position.z + centerPlane.localScale.z / 4)),
                     Quaternion.identity);
         }
 
@@ -320,7 +320,7 @@ public class GameManager : NetworkBehaviour
             walls[i] = Instantiate(wallPrefab,
                     new Vector3(Random.Range(closestPlane.position.x - closestPlane.localScale.x / 4, closestPlane.position.x + closestPlane.localScale.x / 4),
                     closestPlane.position.y + closestPlane.localScale.y / 2 - wallPrefab.transform.localScale.y / 2,
-                    Random.Range(closestPlane.position.x - closestPlane.localScale.x / 4, closestPlane.position.x + closestPlane.localScale.x / 4)),
+                    Random.Range(closestPlane.position.z - closestPlane.localScale.z / 4, closestPlane.position.z + closestPlane.localScale.z / 4)),
                     Quaternion.identity);
         }
         obj.GetComponent<Relic>().Init(walls, closestPlane.gameObject);
