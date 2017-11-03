@@ -61,7 +61,7 @@ public class Relic : NetworkBehaviour
         {
             for (int i = 0; i < walls.Length; i++)
             {
-                walls[i].transform.position = Vector3.Lerp(walls[i].transform.position, lerpPos[i], Time.deltaTime);
+                walls[i].transform.position = Vector3.Lerp(walls[i].transform.position, lerpPos[i], Time.deltaTime * 5f);
             }
 
             transform.position = Vector3.Lerp(transform.position, transform.position - Vector3.up * 2f, Time.deltaTime);
