@@ -18,4 +18,9 @@ public class Entrance : NetworkBehaviour
     {
 
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        
+    }
 }

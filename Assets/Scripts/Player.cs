@@ -31,6 +31,9 @@ public class Player : NetworkBehaviour
 
     public PlayerType PlayerType { get { return playerType; } }
 
+    //[SyncVar]
+    //private int relicCount = 0;
+
     private void Update()
     {
 #if UNITY_IOS
@@ -180,5 +183,10 @@ public class Player : NetworkBehaviour
             else if (o is MonoBehaviour)
                 ((MonoBehaviour)o).enabled = true;
         }
+    }
+
+    public void GainRelic()
+    {
+        //srelicCount += 1;
     }
 }

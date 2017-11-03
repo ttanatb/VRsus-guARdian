@@ -66,7 +66,7 @@ public class GameManager : NetworkBehaviour
         }
 
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.S))
-            RpcSpawnRelics();
+            SpawnRelics();
     }
 
 
@@ -161,11 +161,11 @@ public class GameManager : NetworkBehaviour
         switch (newPhase)
         {
             case GamePhase.Placing:
-                RpcSpawnRelics();
+                SpawnRelics();
                 break;
 
             case GamePhase.Playing:
-                RpcSpawnEntrances();
+                SpawnEntrances();
                 Combat combat = GetComponent<Combat>();
                 if (combat != null)
                     combat.canShoot = true;
@@ -182,8 +182,8 @@ public class GameManager : NetworkBehaviour
         currTrapSelection = toSelect;
     }
 
-    [ClientRpc]
-    private void RpcSpawnRelics()
+    [Server]
+    private void SpawnRelics()
     {
         //know the floor plane
         Vector2 center = new Vector2(0, 0);
@@ -292,7 +292,7 @@ public class GameManager : NetworkBehaviour
         {
             walls[i] = Instantiate(wallPrefab,
                     new Vector3(Random.Range(centerPlane.position.x - centerPlane.localScale.x / 4, centerPlane.position.x + centerPlane.localScale.x / 4),
-                    centerPlane.position.y + centerPlane.localScale.y / 2 - wallPrefab.transform.localScale.y / 2,
+                    centerPlane.position.y + centerPlane.localScale.y / 2 - wallPrefab.transform.localScale.y / 2.1f,
                     Random.Range(centerPlane.position.z - centerPlane.localScale.z / 4, centerPlane.position.z + centerPlane.localScale.z / 4)),
                     Quaternion.Euler(0, Random.Range(0f, 360f), 0f));
         }
@@ -319,7 +319,7 @@ public class GameManager : NetworkBehaviour
         {
             walls[i] = Instantiate(wallPrefab,
                     new Vector3(Random.Range(closestPlane.position.x - closestPlane.localScale.x / 4, closestPlane.position.x + closestPlane.localScale.x / 4),
-                    closestPlane.position.y + closestPlane.localScale.y / 2 - wallPrefab.transform.localScale.y / 2,
+                    closestPlane.position.y + closestPlane.localScale.y / 2 - wallPrefab.transform.localScale.y / 2.1f,
                     Random.Range(closestPlane.position.z - closestPlane.localScale.z / 4, closestPlane.position.z + closestPlane.localScale.z / 4)),
                     Quaternion.identity);
         }
@@ -328,8 +328,8 @@ public class GameManager : NetworkBehaviour
     }
 
 
-    [ClientRpc]
-    private void RpcSpawnEntrances()
+    [Server]
+    private void SpawnEntrances()
     {
         LocalPlane[] objects = FindObjectsOfType<LocalPlane>();
 
