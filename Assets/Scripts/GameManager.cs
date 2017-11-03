@@ -162,6 +162,10 @@ public class GameManager : NetworkBehaviour
 
             case GamePhase.Playing:
                 CmdSpawnEntrances();
+                Combat combat = GetComponent<Combat>();
+                if (combat != null)
+                    combat.canShoot = true;
+
                 break;
         }
 

@@ -45,6 +45,8 @@ public class Combat : NetworkBehaviour
     private HealthBar healthBar;
     private HealthBarUI healthBarUI;
 
+    public bool canShoot = false;
+
     private void Awake()
     {
         if (!canvas)
@@ -61,22 +63,26 @@ public class Combat : NetworkBehaviour
         else
         {
             avatar = player.VRAvatar.transform;
-            if (!isLocalPlayer)
-            {
-                healthBar = Instantiate(healthBarPrefab).GetComponent<HealthBar>();
-                healthBar.Init(this, player.PlayerType, avatar);
-            }
-            else
-            {
-                healthBarUI = Instantiate(healthBarUIPrefab, canvas).GetComponent<HealthBarUI>();
-                healthBarUI.Init(this);
-
-                //if (player.PlayerType == PlayerType.AR)
-                //    CanvasManager.Instance.SetUpGoalPlacingUI(this);
-            }
         }
 
         prevPos = avatar.position;
+    }
+
+    public void InitHealthBar()
+    {
+        if (player.PlayerType == PlayerType.AR)
+            return;
+
+        if (!isLocalPlayer)
+        {
+            healthBar = Instantiate(healthBarPrefab).GetComponent<HealthBar>();
+            healthBar.Init(this, player.PlayerType, avatar);
+        }
+        else
+        {
+            healthBarUI = Instantiate(healthBarUIPrefab, canvas).GetComponent<HealthBarUI>();
+            healthBarUI.Init(this);
+        }
     }
 
     public override void OnStartLocalPlayer()
@@ -173,6 +179,9 @@ public class Combat : NetworkBehaviour
     [Command]
     void CmdFire(Vector3 pos, Vector3 forward)
     {
+        if (!canShoot)
+            return;
+        
         GameObject bulletObj = null;
         if (player.PlayerType == PlayerType.AR)
         {

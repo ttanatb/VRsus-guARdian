@@ -358,6 +358,11 @@ public class BlockManager : NetworkBehaviour
             if (movement)
                 movement.SwitchToPlaying();
 
+            Combat combat = GetComponent<Combat>();
+            if (combat)
+            {
+                combat.InitHealthBar();
+            }
         }
     }
 
