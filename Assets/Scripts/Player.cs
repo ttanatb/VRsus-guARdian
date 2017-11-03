@@ -34,7 +34,7 @@ public class Player : NetworkBehaviour
     private void Update()
     {
 #if UNITY_IOS
-    Debug.Log("VR ColliderPos: " + VRAvatar.transform.position);
+    //Debug.Log("VR ColliderPos: " + VRAvatar.transform.position);
 #endif
     }
 

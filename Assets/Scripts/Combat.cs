@@ -79,6 +79,7 @@ public class Combat : NetworkBehaviour
 
         CmdCreateHealthBar();
 
+        player.VRAvatar.GetComponent<Collider>().enabled = true;
         healthBarUI = Instantiate(healthBarUIPrefab, canvas).GetComponent<HealthBarUI>();
         healthBarUI.Init(this);
     }
@@ -88,7 +89,6 @@ public class Combat : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            player.VRAvatar.GetComponent<Collider>().enabled = true;
             return;
         }
 
