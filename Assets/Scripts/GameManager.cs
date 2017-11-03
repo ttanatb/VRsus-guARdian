@@ -182,7 +182,7 @@ public class GameManager : NetworkBehaviour
         currTrapSelection = toSelect;
     }
 
-    [Command]
+    [ClientRpc]
     private void CmdSpawnRelics()
     {
         //know the floor plane
@@ -294,7 +294,7 @@ public class GameManager : NetworkBehaviour
                     new Vector3(Random.Range(centerPlane.position.x - centerPlane.localScale.x / 4, centerPlane.position.x + centerPlane.localScale.x / 4),
                     centerPlane.position.y + centerPlane.localScale.y / 2 - wallPrefab.transform.localScale.y / 2,
                     Random.Range(centerPlane.position.z - centerPlane.localScale.z / 4, centerPlane.position.z + centerPlane.localScale.z / 4)),
-                    Quaternion.identity);
+                    Quaternion.Euler(0, Random.Range(0f, 360f), 0f));
         }
 
         obj.GetComponent<Relic>().Init(walls, centerPlane.gameObject);
@@ -312,7 +312,7 @@ public class GameManager : NetworkBehaviour
             new Vector3(Random.Range(closestPlane.position.x - closestPlane.localScale.x / 2, closestPlane.position.x + closestPlane.localScale.x / 2),
             closestPlane.localScale.y / 2 + closestPlane.position.y + relicPrefab.transform.localScale.y / 2,
             Random.Range(closestPlane.position.z - closestPlane.localScale.z / 2, closestPlane.position.z + closestPlane.localScale.z / 2)),
-            Quaternion.identity);
+            Quaternion.Euler(0, Random.Range(0f, 360f), 0f));
 
         walls = new GameObject[4];
         for (int i = 0; i < walls.Length; i++)
@@ -328,7 +328,7 @@ public class GameManager : NetworkBehaviour
     }
 
 
-    [Command]
+    [ClientRpc]
     private void CmdSpawnEntrances()
     {
         LocalPlane[] objects = FindObjectsOfType<LocalPlane>();
