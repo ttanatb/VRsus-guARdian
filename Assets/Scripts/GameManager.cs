@@ -281,13 +281,13 @@ public class GameManager : NetworkBehaviour
 
         NetworkServer.Spawn(obj);
 
-        obj = Instantiate(relicPrefab,
-            new Vector3(Random.Range(centerPlane.position.x + centerPlane.localScale.x / 2, 0),
-            centerPlane.localScale.y / 2 + centerPlane.position.y + relicPrefab.transform.localScale.y / 2,
-            Random.Range(centerPlane.position.z + centerPlane.localScale.z / 2, 0)),
-            Quaternion.identity);
+        //obj = Instantiate(relicPrefab,
+        //    new Vector3(Random.Range(centerPlane.position.x + centerPlane.localScale.x / 2, 0),
+        //    centerPlane.localScale.y / 2 + centerPlane.position.y + relicPrefab.transform.localScale.y / 2,
+        //    Random.Range(centerPlane.position.z + centerPlane.localScale.z / 2, 0)),
+        //    Quaternion.identity);
 
-        NetworkServer.Spawn(obj);
+        //NetworkServer.Spawn(obj);
 
         obj = Instantiate(relicPrefab,
             new Vector3(Random.Range(closestPlane.position.x - closestPlane.localScale.x / 2, closestPlane.position.x + closestPlane.localScale.x / 2),

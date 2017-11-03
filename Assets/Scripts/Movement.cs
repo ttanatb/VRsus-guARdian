@@ -8,9 +8,6 @@ public class Movement : MonoBehaviour
 {
     private Rigidbody rigidBody;
 
-    private float jumpValue = 0;
-    private float lerpTarget = 0;
-
     public uint jumpCount = 4;
     private uint currJumps = 0;
 
@@ -56,7 +53,7 @@ public class Movement : MonoBehaviour
 #if !UNITY_IOS
         rigidBody = gameObject.AddComponent<Rigidbody>();
         rigidBody.mass = 1;
-        rigidBody.drag = 3;
+        rigidBody.drag = 5;
         rigidBody.useGravity = false;
         rigidBody.isKinematic = false;
         rigidBody.constraints = RigidbodyConstraints.FreezeRotation;

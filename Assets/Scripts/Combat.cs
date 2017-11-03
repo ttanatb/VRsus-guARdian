@@ -127,7 +127,7 @@ public class Combat : NetworkBehaviour
         }
         else if ((Input.GetMouseButtonDown(0)))
         {
-            CmdCreateJumpPad(transform.position + Vector3.down * 0.01f);
+            //CmdCreateJumpPad(transform.position + Vector3.down * 0.01f);
         }
 
         if (prevHealth != health)
