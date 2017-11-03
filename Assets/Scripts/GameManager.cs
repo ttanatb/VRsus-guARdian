@@ -134,6 +134,9 @@ public class GameManager : NetworkBehaviour
         }
         else
         {
+            if (UnityARAnchorManager.Instance.planeAnchorMap.Count < 3)
+                return false;
+
             foreach (string key in UnityARAnchorManager.Instance.planeAnchorMap.Keys)
             {
                 float planeArea = UnityARAnchorManager.Instance.planeAnchorMap[key].gameObject.transform.GetChild(0).localScale.x *
