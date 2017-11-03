@@ -153,16 +153,19 @@ public class Player : NetworkBehaviour
         }
         else
         {
+            //GetComponent<PlaneManager>().enabled = true;
+            //GetComponent<GameManager>().enabled = true;
+
             if (GetComponent<PlaneManager>())
                 Destroy(GetComponent<PlaneManager>());
+            if (GetComponent<GameManager>())
+                Destroy(GetComponent<GameManager>());
             if (GetComponent<Movement>())
                 GetComponent<Movement>().enabled = true;
             if (GetComponent<BlockManager>())
                 GetComponent<BlockManager>().enabled = true;
 
 
-            if (GetComponent<GameManager>())
-                Destroy(GetComponent<GameManager>());
         }
 
         if (GetComponent<Combat>())

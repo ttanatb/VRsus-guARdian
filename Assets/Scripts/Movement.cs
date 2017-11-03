@@ -53,7 +53,7 @@ public class Movement : MonoBehaviour
 #if !UNITY_IOS
         rigidBody = gameObject.AddComponent<Rigidbody>();
         rigidBody.mass = 1;
-        rigidBody.drag = 5;
+        rigidBody.drag = 3;
         rigidBody.useGravity = false;
         rigidBody.isKinematic = false;
         rigidBody.constraints = RigidbodyConstraints.FreezeRotation;

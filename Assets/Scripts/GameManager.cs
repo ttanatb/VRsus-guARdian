@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+
 using UnityEngine.Networking;
 using UnityEngine.XR.iOS;
 
@@ -66,7 +68,7 @@ public class GameManager : NetworkBehaviour
         }
 
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.S))
-            RpcSpawnRelics();
+            CmdSpawnRelics();
     }
 
 
@@ -161,7 +163,7 @@ public class GameManager : NetworkBehaviour
         switch (newPhase)
         {
             case GamePhase.Placing:
-                RpcSpawnRelics();
+                CmdSpawnRelics();
                 break;
 
             case GamePhase.Playing:
@@ -182,11 +184,37 @@ public class GameManager : NetworkBehaviour
         currTrapSelection = toSelect;
     }
 
-    [ClientRpc]
-    private void RpcSpawnRelics()
-    {
-        if (!isServer) return;
 
+
+    [Command]
+    private void CmdSpawnRelic(GameObject plane, GameObject[] walls)
+    {
+        GameObject obj = Instantiate(relicPrefab,
+            new Vector3(Random.Range(plane.transform.position.x - plane.transform.localScale.x / 3, 0),
+            plane.transform.localScale.y / 2 + plane.transform.position.y + relicPrefab.transform.localScale.y / 2,
+            Random.Range(plane.transform.position.z - plane.transform.localScale.z / 3, 0)),
+            Quaternion.identity);
+        obj.GetComponent<Relic>().Init(walls, plane);
+        NetworkServer.Spawn(obj);
+    }
+
+    [Command]
+    private void CmdSpawnWall(GameObject plane)
+    {
+        GameObject wall = Instantiate(wallPrefab,
+            new Vector3(Random.Range(plane.transform.position.x - plane.transform.localScale.x / 3, plane.transform.position.x + plane.transform.localScale.x / 3),
+            plane.transform.position.y + plane.transform.localScale.y / 2 - wallPrefab.transform.localScale.y / 1.9f,
+            Random.Range(plane.transform.position.z - plane.transform.localScale.z / 3, plane.transform.position.z + plane.transform.localScale.z / 3)),
+            Quaternion.Euler(0, Random.Range(0f, 360f), 0f));
+        NetworkServer.Spawn(wall);
+        walls.Add(wall);
+    }
+
+    List<GameObject> walls = new List<GameObject>();
+
+    [Command]
+    private void CmdSpawnRelics()
+    {
         //know the floor plane
         Vector2 center = new Vector2(0, 0);
 
@@ -283,24 +311,13 @@ public class GameManager : NetworkBehaviour
             centerPlane = temp;
         }
 
-        GameObject obj = Instantiate(relicPrefab,
-            new Vector3(Random.Range(centerPlane.position.x - centerPlane.localScale.x / 2, 0),
-            centerPlane.localScale.y / 2 + centerPlane.position.y + relicPrefab.transform.localScale.y / 2,
-            Random.Range(centerPlane.position.z - centerPlane.localScale.z / 2, 0)),
-            Quaternion.identity);
-
-        GameObject[] walls = new GameObject[4];
-        for (int i = 0; i < walls.Length; i++)
+        walls.Clear();
+        for (int i = 0; i < 4; i++)
         {
-            walls[i] = Instantiate(wallPrefab,
-                    new Vector3(Random.Range(centerPlane.position.x - centerPlane.localScale.x / 4, centerPlane.position.x + centerPlane.localScale.x / 4),
-                    centerPlane.position.y + centerPlane.localScale.y / 2 - wallPrefab.transform.localScale.y / 2.1f,
-                    Random.Range(centerPlane.position.z - centerPlane.localScale.z / 4, centerPlane.position.z + centerPlane.localScale.z / 4)),
-                    Quaternion.Euler(0, Random.Range(0f, 360f), 0f));
+            CmdSpawnWall(centerPlane.gameObject);
         }
+        CmdSpawnRelic(centerPlane.gameObject, walls.ToArray());
 
-        obj.GetComponent<Relic>().Init(walls, centerPlane.gameObject);
-        NetworkServer.Spawn(obj);
 
         //obj = Instantiate(relicPrefab,
         //    new Vector3(Random.Range(centerPlane.position.x + centerPlane.localScale.x / 2, 0),
@@ -310,23 +327,12 @@ public class GameManager : NetworkBehaviour
 
         //NetworkServer.Spawn(obj);
 
-        obj = Instantiate(relicPrefab,
-            new Vector3(Random.Range(closestPlane.position.x - closestPlane.localScale.x / 2, closestPlane.position.x + closestPlane.localScale.x / 2),
-            closestPlane.localScale.y / 2 + closestPlane.position.y + relicPrefab.transform.localScale.y / 2,
-            Random.Range(closestPlane.position.z - closestPlane.localScale.z / 2, closestPlane.position.z + closestPlane.localScale.z / 2)),
-            Quaternion.Euler(0, Random.Range(0f, 360f), 0f));
-
-        walls = new GameObject[4];
-        for (int i = 0; i < walls.Length; i++)
+        walls.Clear();
+        for (int i = 0; i < 4; i++)
         {
-            walls[i] = Instantiate(wallPrefab,
-                    new Vector3(Random.Range(closestPlane.position.x - closestPlane.localScale.x / 4, closestPlane.position.x + closestPlane.localScale.x / 4),
-                    closestPlane.position.y + closestPlane.localScale.y / 2 - wallPrefab.transform.localScale.y / 2.1f,
-                    Random.Range(closestPlane.position.z - closestPlane.localScale.z / 4, closestPlane.position.z + closestPlane.localScale.z / 4)),
-                    Quaternion.identity);
+            CmdSpawnWall(closestPlane.gameObject);
         }
-        obj.GetComponent<Relic>().Init(walls, closestPlane.gameObject);
-        NetworkServer.Spawn(obj);
+        CmdSpawnRelic(closestPlane.gameObject, walls.ToArray());
     }
 
     [ClientRpc]

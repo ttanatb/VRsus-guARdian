@@ -61,8 +61,8 @@ public class PlaneManager : NetworkBehaviour
 #endif
         if (LocalObjectBuilder.Instance)
             LocalObjectBuilder.Instance.SetPlaneManager(this);
-
         }
+
     }
 
 
@@ -102,7 +102,7 @@ public class PlaneManager : NetworkBehaviour
         }
     }
 
-#region Server Functions
+    #region Server Functions
     [Server]
     IEnumerator UpdateARPlanes()
     {
@@ -171,10 +171,10 @@ public class PlaneManager : NetworkBehaviour
         CanvasManager.Instance.UpdatePlaneCount(m_ARPlane.Count);
     }
 
-#endregion
+    #endregion
 #endif
 
-#region Helper Functions
+    #region Helper Functions
     /// <summary>
     /// Checks if m_ARPlane contains a plane with the string identifier
     /// </summary>

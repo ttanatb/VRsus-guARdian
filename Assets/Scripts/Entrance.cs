@@ -28,6 +28,6 @@ public class Entrance : NetworkBehaviour
     [ClientRpc]
     void RpcAlertVRWin(int relicCount)
     {
-        CanvasManager.Instance.SetPermanentMessage("VR player escaped with " + relicCount);
+        CanvasManager.Instance.SetPermanentMessage("VR player escaped with " + relicCount + " relic(s)");
     }
 }

@@ -20,7 +20,7 @@ public class Relic : NetworkBehaviour
         for (int i = 0; i < lerpPos.Length; i++)
         {
             lerpPos[i] = new Vector3(walls[i].transform.position.x,
-                associatedTower.transform.position.y + associatedTower.transform.localScale.y / 2 + Random.Range(walls[i].transform.localScale.y / 2, walls[i].transform.localScale.y),
+                associatedTower.transform.position.y + associatedTower.transform.localScale.y / 2 + Random.Range(walls[i].transform.localScale.y / 16, walls[i].transform.localScale.y / 2),
                 walls[i].transform.position.z);
         }
     }
@@ -56,10 +56,10 @@ public class Relic : NetworkBehaviour
         {
             for (int i = 0; i < walls.Length; i++)
             {
-                walls[i].GetComponent<Rigidbody>().MovePosition(Vector3.Lerp(walls[i].transform.position, lerpPos[i], Time.deltaTime * 20));
+                walls[i].transform.position = Vector3.Lerp(walls[i].transform.position, lerpPos[i], Time.deltaTime);
             }
 
-            GetComponent<Rigidbody>().MovePosition(Vector3.Lerp(transform.position, transform.position - Vector3.up * 2f, Time.deltaTime * 20));
+            transform.position = Vector3.Lerp(transform.position, transform.position - Vector3.up * 2f, Time.deltaTime);
         }
     }
 
