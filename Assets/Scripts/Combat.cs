@@ -287,41 +287,58 @@ public class Combat : NetworkBehaviour
     IEnumerator Flash(float waitTime)
     {
         //increases alpha
-        for (; alpha > 0f; alpha -= fadeSpeed)
+        //for (; alpha > 0f; alpha -= fadeSpeed)
+        //{
+        //    foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
+        //    {
+        //        Color c = r.material.color;
+        //        c.a = alpha;
+        //        r.material.color = c;
+        //    }
+        //    foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
+        //    {
+        //        Color c = r.material.color;
+        //        c.a = alpha;
+        //        r.material.color = c;
+        //    }
+        //    yield return null;
+        //}
+
+        foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
         {
-            foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
-            {
-                Color c = r.material.color;
-                c.a = alpha;
-                r.material.color = c;
-            }
-            foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
-            {
-                Color c = r.material.color;
-                c.a = alpha;
-                r.material.color = c;
-            }
-            yield return null;
+            r.enabled = false;
+        }
+        foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
+        {
+            r.enabled = false;
         }
 
         //starts the next coroutine
         yield return new WaitForSeconds(waitTime);
 
-        for (; alpha < 1f; alpha += fadeSpeed)
+        //for (; alpha < 1f; alpha += fadeSpeed)
+        //{
+        //    foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
+        //    {
+        //        Color c = r.material.color;
+        //        c.a = alpha;
+        //        r.material.color = c;
+        //    }
+        //    foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
+        //    {
+        //        Color c = r.material.color;
+        //        c.a = alpha;
+        //        r.material.color = c;
+        //    }
+        //    yield return null;
+        //}
+        foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
         {
-            foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
-            {
-                Color c = r.material.color;
-                c.a = alpha;
-                r.material.color = c;
-            }
-            foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
-            {
-                Color c = r.material.color;
-                c.a = alpha;
-                r.material.color = c;
-            }
-            yield return null;
+            r.enabled = true;
+        }
+        foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
+        {
+            r.enabled = true;
         }
 
         isInvulnerable = false;
