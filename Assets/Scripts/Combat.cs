@@ -90,10 +90,13 @@ public class Combat : NetworkBehaviour
 
     private void OnDestroy()
     {
-        for (int i = 0; i < hurtFlashCount; i++)
+        if (hurtFlashes != null)
         {
-            if (hurtFlashes[i])
-                Destroy(hurtFlashes[i].gameObject);
+            for (int i = 0; i < hurtFlashCount; i++)
+            {
+                if (hurtFlashes[i])
+                    Destroy(hurtFlashes[i].gameObject);
+            }
         }
 
         if (healthBar)
