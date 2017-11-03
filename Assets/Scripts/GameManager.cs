@@ -163,9 +163,9 @@ public class GameManager : NetworkBehaviour
             case GamePhase.Playing:
                 CmdSpawnEntrances();
                 Combat combat = GetComponent<Combat>();
-                if (combat != null)
+                if (combat != null) 
                     combat.canShoot = true;
-
+                CanvasManager.Instance.ToggleCrossHairUI();
                 break;
         }
 
