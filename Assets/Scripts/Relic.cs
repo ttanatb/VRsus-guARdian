@@ -27,7 +27,7 @@ public class Relic : NetworkBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        if (!isServer)
+        if (!isServer || isErecting)
             return;
 
         if (collision.gameObject.tag == "Player")
@@ -40,6 +40,7 @@ public class Relic : NetworkBehaviour
 
             if (!combat.IsInvulnerable)
             {
+                combat.GainRelic();
                 isErecting = true;
                 AlertRelicStolen();
             }

@@ -31,8 +31,6 @@ public class Player : NetworkBehaviour
 
     public PlayerType PlayerType { get { return playerType; } }
 
-    //[SyncVar]
-    //private int relicCount = 0;
 
     private void Update()
     {
@@ -185,8 +183,5 @@ public class Player : NetworkBehaviour
         }
     }
 
-    public void GainRelic()
-    {
-        //srelicCount += 1;
-    }
+
 }

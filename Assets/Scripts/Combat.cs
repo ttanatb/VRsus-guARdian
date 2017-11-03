@@ -53,6 +53,9 @@ public class Combat : NetworkBehaviour
 
     public const float MAX_INVUL_TIME = 1.5f;
 
+    [SyncVar]
+    private int relicCount = 0;
+
     public bool IsInvulnerable
     {
         get { return isInvulnerable; }
@@ -322,5 +325,15 @@ public class Combat : NetworkBehaviour
         }
 
         isInvulnerable = false;
+    }
+
+    public void GainRelic()
+    {
+        relicCount += 1;
+    }
+
+    public int GetRelicCount()
+    {
+        return relicCount;
     }
 }
