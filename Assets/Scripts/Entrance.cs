@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Entrance : MonoBehaviour
+
+public class Entrance : NetworkBehaviour
 {
 
     // Use this for initialization

@@ -53,6 +53,11 @@ public class Combat : NetworkBehaviour
 
     public const float MAX_INVUL_TIME = 1.5f;
 
+    public bool IsInvulnerable
+    {
+        get { return isInvulnerable; }
+    }
+
     private void Awake()
     {
         if (!canvas)
@@ -136,19 +141,19 @@ public class Combat : NetworkBehaviour
 
         if (isServer && isInvulnerable)
         {
-            if (invulTimer > MAX_INVUL_TIME)
-            {
-                isInvulnerable = false;
-                foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
-                {
-                    r.enabled = true;
-                }
-                foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
-                {
-                    r.enabled = true;
-                }
-            }
-            else invulTimer += Time.deltaTime;
+            //if (invulTimer > MAX_INVUL_TIME)
+            //{
+            //    isInvulnerable = false;
+            //    foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
+            //    {
+            //        r.enabled = true;
+            //    }
+            //    foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
+            //    {
+            //        r.enabled = true;
+            //    }
+            //}
+            //else invulTimer += Time.deltaTime;
         }
 
         if (!isLocalPlayer || (player.PlayerType == PlayerType.AR && Utility.IsPointerOverUIObject()))
@@ -253,20 +258,69 @@ public class Combat : NetworkBehaviour
         else
         {
             isInvulnerable = true;
-            foreach(Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
-            {
-                r.enabled = false;
-            }
-            foreach(Renderer r in healthBar.GetComponentsInChildren<Renderer>())
-            {
-                r.enabled = false;
-            }
+            IEnumerator flash = Flash(1.5f);
+            StartCoroutine(flash);
+            //invulTimer = 0f;
+            //foreach(Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
+            //{
+            //    r.enabled = false;
+            //}
+            //foreach(Renderer r in healthBar.GetComponentsInChildren<Renderer>())
+            //{
+            //    r.enabled = false;
+            //}
         }
     }
 
     [ClientRpc]
     void RpcDie()
     {
-        CanvasManager.Instance.SetMessage("AR player wins!");
+        CanvasManager.Instance.SetPermanentMessage("AR player wins!");
+    }
+
+    float alpha = 1f;
+    float fadeSpeed = 0.2f;
+
+    IEnumerator Flash(float waitTime)
+    {
+        //increases alpha
+        for (; alpha > 0f; alpha -= fadeSpeed)
+        {
+            foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
+            {
+                Color c = r.material.color;
+                c.a = alpha;
+                r.material.color = c;
+            }
+            foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
+            {
+                Color c = r.material.color;
+                c.a = alpha;
+                r.material.color = c;
+            }
+            yield return null;
+        }
+
+        //starts the next coroutine
+        yield return new WaitForSeconds(waitTime);
+
+        for (; alpha < 1f; alpha += fadeSpeed)
+        {
+            foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
+            {
+                Color c = r.material.color;
+                c.a = alpha;
+                r.material.color = c;
+            }
+            foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
+            {
+                Color c = r.material.color;
+                c.a = alpha;
+                r.material.color = c;
+            }
+            yield return null;
+        }
+
+        isInvulnerable = false;
     }
 }

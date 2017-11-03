@@ -29,6 +29,7 @@ public class GameManager : NetworkBehaviour
 
     public GameObject relicPrefab;
     public GameObject entrancePrefab;
+    public GameObject wallPrefab;
 
     private int currTrapSelection = -1;
 
@@ -163,7 +164,7 @@ public class GameManager : NetworkBehaviour
             case GamePhase.Playing:
                 CmdSpawnEntrances();
                 Combat combat = GetComponent<Combat>();
-                if (combat != null) 
+                if (combat != null)
                     combat.canShoot = true;
                 CanvasManager.Instance.ToggleCrossHairUI();
                 break;
@@ -283,6 +284,17 @@ public class GameManager : NetworkBehaviour
             Random.Range(centerPlane.position.z - centerPlane.localScale.z / 2, 0)),
             Quaternion.identity);
 
+        GameObject[] walls = new GameObject[4];
+        for (int i = 0; i < walls.Length; i++)
+        {
+            walls[i] = Instantiate(wallPrefab,
+                    new Vector3(Random.Range(centerPlane.position.x - centerPlane.localScale.x / 4, centerPlane.position.x + centerPlane.localScale.x / 4),
+                    centerPlane.position.y + centerPlane.localScale.y / 2 - wallPrefab.transform.localScale.y / 2,
+                    Random.Range(centerPlane.position.x - centerPlane.localScale.x / 4, centerPlane.position.x + centerPlane.localScale.x / 4)),
+                    Quaternion.identity);
+        }
+
+        obj.GetComponent<Relic>().Init(walls, centerPlane.gameObject);
         NetworkServer.Spawn(obj);
 
         //obj = Instantiate(relicPrefab,
@@ -299,6 +311,16 @@ public class GameManager : NetworkBehaviour
             Random.Range(closestPlane.position.z - closestPlane.localScale.z / 2, closestPlane.position.z + closestPlane.localScale.z / 2)),
             Quaternion.identity);
 
+        walls = new GameObject[4];
+        for (int i = 0; i < walls.Length; i++)
+        {
+            walls[i] = Instantiate(wallPrefab,
+                    new Vector3(Random.Range(closestPlane.position.x - closestPlane.localScale.x / 4, closestPlane.position.x + closestPlane.localScale.x / 4),
+                    closestPlane.position.y + closestPlane.localScale.y / 2 - wallPrefab.transform.localScale.y / 2,
+                    Random.Range(closestPlane.position.x - closestPlane.localScale.x / 4, closestPlane.position.x + closestPlane.localScale.x / 4)),
+                    Quaternion.identity);
+        }
+        obj.GetComponent<Relic>().Init(walls, closestPlane.gameObject);
         NetworkServer.Spawn(obj);
     }
 

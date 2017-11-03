@@ -6,24 +6,65 @@ using UnityEngine.Networking;
 
 public class Relic : NetworkBehaviour
 {
+    private GameObject[] walls;
+    private Vector3[] lerpPos;
+    private GameObject associatedTower;
+    private bool isErecting = false;
 
-    // Use this for initialization
-    void Start()
+    public void Init(GameObject[] walls, GameObject tower)
     {
+        this.walls = walls;
+        lerpPos = new Vector3[walls.Length];
+        associatedTower = tower;
 
+        for (int i = 0; i < lerpPos.Length; i++)
+        {
+            lerpPos[i] = new Vector3(walls[i].transform.position.x,
+                associatedTower.transform.position.y + associatedTower.transform.localScale.y / 2 + Random.Range(walls[i].transform.localScale.y / 2, walls[i].transform.localScale.y),
+                walls[i].transform.position.z);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnCollisionStay(Collision collision)
     {
+        if (!isServer)
+            return;
 
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
         if (collision.gameObject.tag == "Player")
         {
-            Debug.Log("Player collided!");
+            Combat combat = collision.gameObject.GetComponent<Combat>();
+            if (!combat)
+            {
+                combat = collision.gameObject.GetComponent<CameraAvatar>().rootPlayer.GetComponent<Combat>();
+            }
+
+            if (!combat.IsInvulnerable)
+            {
+                isErecting = true;
+                AlertRelicStolen();
+            }
         }
+    }
+
+    private void Update()
+    {
+        if (!isServer)
+            return;
+
+        if (isErecting)
+        {
+            for (int i = 0; i < walls.Length; i++)
+            {
+                walls[i].GetComponent<Rigidbody>().MovePosition(Vector3.Lerp(walls[i].transform.position, lerpPos[i], Time.deltaTime * 20));
+            }
+
+            GetComponent<Rigidbody>().MovePosition(Vector3.Lerp(transform.position, transform.position - Vector3.up * 2f, Time.deltaTime * 20));
+        }
+    }
+
+    [Server]
+    private void AlertRelicStolen()
+    {
+        CanvasManager.Instance.SetMessage("A relic was stolen!");
     }
 }

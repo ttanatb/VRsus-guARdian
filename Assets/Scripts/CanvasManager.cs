@@ -89,7 +89,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
                             }
                             else
                             {
-                                message.SetMessage("Not enough play area! (Get over a");
+                                message.SetMessage("Not enough play area! (Recommended: 3+ planes and over 4 units of play area)");
                             }
                         });
                         break;
