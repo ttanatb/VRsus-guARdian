@@ -46,6 +46,8 @@ public class Combat : NetworkBehaviour
     private HealthBarUI healthBarUI;
 
     public bool canShoot = false;
+
+    [SyncVar]
     private bool isInvulnerable = false;
     private float invulTimer = 0f;
 
@@ -131,14 +133,8 @@ public class Combat : NetworkBehaviour
         if (player.PlayerType == PlayerType.VR)
             avatar.forward = transform.forward;
 
-        if (!isLocalPlayer || (player.PlayerType == PlayerType.AR && Utility.IsPointerOverUIObject()))
-            return;
 
-        //if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.E))
-        //{
-        //    TakeDamage();
-        //}
-        if (isInvulnerable)
+        if (isServer && isInvulnerable)
         {
             if (invulTimer > MAX_INVUL_TIME)
             {
@@ -147,11 +143,16 @@ public class Combat : NetworkBehaviour
                 {
                     r.enabled = true;
                 }
-                healthBar.GetComponent<Renderer>().enabled = true;
+                foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
+                {
+                    r.enabled = true;
+                }
             }
             else invulTimer += Time.deltaTime;
         }
 
+        if (!isLocalPlayer || (player.PlayerType == PlayerType.AR && Utility.IsPointerOverUIObject()))
+            return;
 
         if (CheckTap())
         {
@@ -245,7 +246,6 @@ public class Combat : NetworkBehaviour
 
         health--;
 
-
         if (health < 1)
         {
             RpcDie();
@@ -257,7 +257,10 @@ public class Combat : NetworkBehaviour
             {
                 r.enabled = false;
             }
-            healthBar.GetComponent<Renderer>().enabled = false;
+            foreach(Renderer r in healthBar.GetComponentsInChildren<Renderer>())
+            {
+                r.enabled = false;
+            }
         }
     }
 
