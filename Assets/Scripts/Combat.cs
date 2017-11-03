@@ -88,7 +88,7 @@ public class Combat : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            player.ARAvatar.GetComponent<Collider>().enabled = true;
+            player.VRAvatar.GetComponent<Collider>().enabled = true;
             return;
         }
 
