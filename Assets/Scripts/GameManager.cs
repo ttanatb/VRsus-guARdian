@@ -66,7 +66,7 @@ public class GameManager : NetworkBehaviour
         }
 
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.S))
-            CmdSpawnRelics();
+            RpcSpawnRelics();
     }
 
 
@@ -161,11 +161,11 @@ public class GameManager : NetworkBehaviour
         switch (newPhase)
         {
             case GamePhase.Placing:
-                CmdSpawnRelics();
+                RpcSpawnRelics();
                 break;
 
             case GamePhase.Playing:
-                CmdSpawnEntrances();
+                RpcSpawnEntrances();
                 Combat combat = GetComponent<Combat>();
                 if (combat != null)
                     combat.canShoot = true;
@@ -183,7 +183,7 @@ public class GameManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void CmdSpawnRelics()
+    private void RpcSpawnRelics()
     {
         //know the floor plane
         Vector2 center = new Vector2(0, 0);
@@ -329,7 +329,7 @@ public class GameManager : NetworkBehaviour
 
 
     [ClientRpc]
-    private void CmdSpawnEntrances()
+    private void RpcSpawnEntrances()
     {
         LocalPlane[] objects = FindObjectsOfType<LocalPlane>();
 
