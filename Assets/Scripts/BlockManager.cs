@@ -50,8 +50,8 @@ public class BlockManager : NetworkBehaviour
     public float waitTime = 1.2f;
 
     //prefab for placement visualization
-    public GameObject placementSamplePrefab;
-    private GameObject placementSampleObj;
+    //public GameObject placementSamplePrefab;
+    //private GameObject placementSampleObj;
 
     //mesh for placement visualization
     private Mesh[] blockMeshes;
@@ -83,8 +83,8 @@ public class BlockManager : NetworkBehaviour
             c.a = 1f;
             topViewCamObj.transform.GetChild(0).GetComponent<Renderer>().material.color = c;
 
-            placementSampleObj = Instantiate(placementSamplePrefab);
-            blockMeshes = LocalObjectBuilder.Instance.blockMeshes;
+            //placementSampleObj = Instantiate(placementSamplePrefab);
+            //blockMeshes = LocalObjectBuilder.Instance.blockMeshes;
             vrPlayerRenderer = GetComponent<Player>().VRAvatar.GetComponent<Renderer>();
 
             movement = GetComponent<Movement>();
@@ -93,7 +93,7 @@ public class BlockManager : NetworkBehaviour
             StartPlacing();
         }
 
-        LocalObjectBuilder.Instance.SetBlockManager(this);
+        //LocalObjectBuilder.Instance.SetBlockManager(this);
     }
 
     private void OnDestroy()
@@ -103,13 +103,14 @@ public class BlockManager : NetworkBehaviour
             Destroy(topViewCamObj);
         }
 
-        if (placementSampleObj)
-        {
-            Destroy(placementSampleObj);
-        }
+        //if (placementSampleObj)
+        //{
+        //    Destroy(placementSampleObj);
+        //}
     }
 
     #region Getter For Unity Actions
+    /*
     /// <summary>
     /// Gets an action to attach to a button
     /// </summary>
@@ -166,6 +167,7 @@ public class BlockManager : NetworkBehaviour
 
         return action;
     }
+    */
     #endregion
 
     // Update is called once per frame

@@ -23,11 +23,13 @@ public class Player : NetworkBehaviour
     [SerializeField]
     private PlayerType playerType;
 
+    /*
     [SerializeField]
     private bool isThisALocalPlayer;
 
     [SerializeField]
     private bool isThisAServer;
+    */
 
     public PlayerType PlayerType { get { return playerType; } }
 
@@ -58,6 +60,15 @@ public class Player : NetworkBehaviour
 #else
             playerType = PlayerType.AR;
 #endif
+        }
+
+        if (playerType == PlayerType.AR)
+        {
+            GetComponent<NetworkTransformChild>().target = ARCamera.transform;
+        }
+        else
+        {
+            GetComponent<NetworkTransformChild>().target = VRAvatar.transform;
         }
 
         if (isLocalPlayer)

@@ -7,14 +7,14 @@ using UnityEngine.UI;
 
 public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
 {
-    public GameObject blockPlacingUI;
-    public GameObject buttonPrefab;
-    public GameObject exitButtonPrefab;
-    public Button placementButton;
+    //public GameObject blockPlacingUI;
+    //public GameObject exitButtonPrefab;
+    //public Button placementButton;
 
     public GameObject crossHairUI;
-    public GameObject goalPlacingUI;
+    //public GameObject goalPlacingUI;
 
+    public GameObject buttonPrefab;
     public GameObject ARUI;
     private GameObject[] arUIbuttons;
 
@@ -23,6 +23,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
 
     public Message message;
 
+    /*
     public void SetUpBlockPlacingUI(BlockManager blockPlacer, int count)
     {
         placementButton.gameObject.SetActive(true);
@@ -57,18 +58,21 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
         blockPlacingUI.SetActive(false);
         placementButton.gameObject.SetActive(false);
     }
+    */
 
     public void ToggleCrossHairUI()
     {
         crossHairUI.SetActive(!crossHairUI.activeSelf);
     }
 
+    /*
     public void SetUpGoalPlacingUI(Combat combat)
     {
         goalPlacingUI.SetActive(true);
         goalPlacingUI.GetComponent<Button>().onClick.AddListener(combat.GetActionToSwitchToPlacingMode());
         goalPlacingUI.GetComponent<Button>().onClick.AddListener(() => { goalPlacingUI.SetActive(false); });
     }
+    */
 
     public void SetUI(GameManager manager)
     {
