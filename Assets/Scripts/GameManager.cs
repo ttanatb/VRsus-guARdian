@@ -92,20 +92,25 @@ public class GameManager : NetworkBehaviour
         LayerMask layer = LayerMask.NameToLayer("Trap");
         if (Input.touchCount > 0)
         {
-            foreach (Touch t in Input.touches)
+            Touch t = Input.GetTouch(0);
+            if (t.phase == TouchPhase.Began &&
+                Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
             {
-                if (t.phase == TouchPhase.Began &&
-                    Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
+                currentlySelectedTrap = hit.collider.GetComponent<TrapDefense>();
+                if (currentlySelectedTrap)
                 {
-                    currentlySelectedTrap = hit.collider.GetComponent<TrapDefense>();
                     currentlySelectedTrap.ToggleSelected();
-                    TogglePreviouslySelectedTrap();
                 }
                 else
                 {
-                    currentlySelectedTrap = null;
-                    TogglePreviouslySelectedTrap();
+                    Debug.Log("Did not tap on a trap?");
                 }
+                TogglePreviouslySelectedTrap();
+            }
+            else
+            {
+                currentlySelectedTrap = null;
+                TogglePreviouslySelectedTrap();
             }
         }
     }
