@@ -178,8 +178,8 @@ public class GameManager : NetworkBehaviour
                 RpcSpawnEntrances();
                 Combat combat = GetComponent<Combat>();
                 if (combat != null)
-                    combat.canShoot = true;
-                CanvasManager.Instance.ToggleCrossHairUI();
+                    combat.CanShoot = true;
+                //CanvasManager.Instance.ToggleCrossHairUI();
                 UnityARAnchorManager.Instance.TogglePlaneMaterial();
                 break;
         }

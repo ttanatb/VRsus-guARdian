@@ -45,7 +45,16 @@ public class Combat : NetworkBehaviour
     private HealthBar healthBar;
     private HealthBarUI healthBarUI;
 
-    public bool canShoot = false;
+    private bool canShoot = false;
+
+    public bool CanShoot
+    {
+        set
+        {
+            crosshairObj.SetActive(value);
+            canShoot = value;
+        }
+    }
 
     [SyncVar]
     private bool isInvulnerable = false;
@@ -55,6 +64,9 @@ public class Combat : NetworkBehaviour
 
     [SyncVar]
     private int relicCount = 0;
+
+    public GameObject crosshairObj;
+    private LayerMask shootLayer;
 
     public bool IsInvulnerable
     {
@@ -80,6 +92,7 @@ public class Combat : NetworkBehaviour
         }
 
         prevPos = avatar.position;
+        shootLayer = crosshairObj.layer;
     }
 
     public void InitHealthBar()
@@ -141,7 +154,6 @@ public class Combat : NetworkBehaviour
         if (player.PlayerType == PlayerType.VR)
             avatar.forward = transform.forward;
 
-
         if (isServer && isInvulnerable)
         {
             //if (invulTimer > MAX_INVUL_TIME)
@@ -187,15 +199,22 @@ public class Combat : NetworkBehaviour
 
     bool CheckTap()
     {
-#if UNITY_IOS
         if (Input.touchCount > 0)
         {
             for (int i = 0; i < Input.touchCount; i++)
             {
-                if (Input.GetTouch(i).phase == TouchPhase.Began)
-                    return true;
+                Touch t = Input.GetTouch(i);
+                if (t.phase == TouchPhase.Began)
+                {
+                    RaycastHit hit;
+                    if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, shootLayer))
+                    {
+                        return true;
+                    }
+                }
             }
         }
+#if UNITY_IOS
 #endif
         return false;
     }
