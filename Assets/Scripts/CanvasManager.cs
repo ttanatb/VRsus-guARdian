@@ -107,7 +107,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
                 for (int i = 0; i < manager.trapList.Length; i++)
                 {
                     buttons.Add(Instantiate(buttonPrefab, ARUI.transform));
-                    buttons[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(-20, -70 - i * 50);
+                    buttons[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(-20, -70 - i * (buttonPrefab.GetComponent<RectTransform>().sizeDelta.y + 20));
                 }
                 arUIbuttons = buttons.ToArray();
 
