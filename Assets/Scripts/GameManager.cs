@@ -71,6 +71,7 @@ public class GameManager : NetworkBehaviour
                 else
                 {
                     CheckTapOnSecurityScreen();
+                    CheckTapOnTraps();
                     MoveTrap();
                 }
                 break;
@@ -99,19 +100,6 @@ public class GameManager : NetworkBehaviour
                     currentlySelectedTrap = hit.collider.GetComponent<TrapDefense>();
                     currentlySelectedTrap.ToggleSelected();
                     TogglePreviouslySelectedTrap();
-
-                    switch (t.phase)
-                    {
-                        case TouchPhase.Began:
-                            break;
-                        case TouchPhase.Moved:
-                            break;
-                        case TouchPhase.Canceled:
-                            goto case TouchPhase.Ended;
-                        case TouchPhase.Ended:
-                            break;
-
-                    }
                 }
             }
         }
@@ -119,7 +107,7 @@ public class GameManager : NetworkBehaviour
 
     void MoveTrap()
     {
-        if (currentlySelectedTrap)
+        if (currentlySelectedTrap != null)
         {
             RaycastHit hit;
             LayerMask layer = LayerMask.NameToLayer("Tower");
@@ -142,15 +130,13 @@ public class GameManager : NetworkBehaviour
         LayerMask layer = LayerMask.NameToLayer("UI");
         if (Input.touchCount > 0)
         {
-            foreach (Touch t in Input.touches)
+            Touch t = Input.GetTouch(0);
+            if (t.phase == TouchPhase.Began &&
+                Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
             {
-                if (t.phase == TouchPhase.Began &&
-                    Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
-                {
-                    currentlySelectedTrap = hit.collider.GetComponent<SecurityScreen>().associatedCamera;
-                    currentlySelectedTrap.ToggleSelected();
-                    TogglePreviouslySelectedTrap();
-                }
+                currentlySelectedTrap = hit.collider.GetComponent<SecurityScreen>().associatedCamera;
+                currentlySelectedTrap.ToggleSelected();
+                TogglePreviouslySelectedTrap();
             }
         }
     }
