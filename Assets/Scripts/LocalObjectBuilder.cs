@@ -13,11 +13,11 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
     private float floorPos;
 
     [SerializeField]
-    List<GameObject> localBlocks;
-    int prevBlocksListCount = 0;
-    public Mesh[] blockMeshes;
-    public GameObject blockPrefab;
-    private BlockManager blockManager;
+    //List<GameObject> localBlocks;
+    //int prevBlocksListCount = 0;
+    //public Mesh[] blockMeshes;
+    //public GameObject blockPrefab;
+    //private BlockManager blockManager;
 
     public float FloorPos { get { return floorPos; } }
 
@@ -68,6 +68,7 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
         StartCoroutine("UpdateLocalPlanes");
     }
 
+    /*
     public void SetBlockManager(BlockManager blockManager)
     {
         this.blockManager = blockManager;
@@ -85,6 +86,7 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
 
         StartCoroutine("UpdateLocalBlocks");
     }
+    */
 
     IEnumerator UpdateLocalPlanes()
     {
@@ -127,7 +129,7 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
             yield return new WaitForSeconds(.1f);
         }
     }
-
+    /*
     IEnumerator UpdateLocalBlocks()
     {
         //endless loop
@@ -171,4 +173,5 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
             yield return new WaitForSeconds(.1f);
         }
     }
+    */
 }

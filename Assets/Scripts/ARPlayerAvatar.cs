@@ -61,7 +61,8 @@ public class ARPlayerAvatar : MonoBehaviour
 
     private void Update()
     {
-        floorYPos = LocalObjectBuilder.Instance.FloorPos;
+        if (LocalObjectBuilder.Instance)
+            floorYPos = LocalObjectBuilder.Instance.FloorPos;
 
         Vector3 floorVec = transform.position;
         floorVec.y = floorYPos;

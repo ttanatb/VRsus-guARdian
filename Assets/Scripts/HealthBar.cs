@@ -46,7 +46,7 @@ public class HealthBar : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Missing Avatar for " + gameObject.name);
+            //Debug.LogError("Missing Avatar for " + gameObject.name);
             Destroy(gameObject);
         }
 
@@ -63,7 +63,7 @@ public class HealthBar : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Missing Player combat for " + gameObject.name);
+            //Debug.LogError("Missing Player combat for " + gameObject.name);
             Destroy(gameObject);
         }
 
@@ -73,7 +73,7 @@ public class HealthBar : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Missing Main Camera for " + gameObject.name);
+            //Debug.LogError("Missing Main Camera for " + gameObject.name);
             Destroy(gameObject);
         }
     }

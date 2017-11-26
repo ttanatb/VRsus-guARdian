@@ -59,10 +59,14 @@ public class PlaneManager : NetworkBehaviour
                 StartCoroutine("UpdateARPlanes");
             }
 #endif
+        if (LocalObjectBuilder.Instance)
             LocalObjectBuilder.Instance.SetPlaneManager(this);
         }
+
     }
 
+
+#if UNITY_IOS
 
     private void Update()
     {
@@ -70,15 +74,34 @@ public class PlaneManager : NetworkBehaviour
         {
             if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.D))
             {
-                //ServerAddPlane("dfdf",
-                 //   new Vector3(Random.Range(-5f, 5f), Random.Range(-3f, 1f), Random.Range(-6f, 4f)),
-                 //   Random.Range(0f, 360f),
-                 //   new Vector3(Random.Range(3f, 6f), Random.Range(3f, 6f), Random.Range(3f, 6f)));
+                ServerAddPlane("floor",
+                   new Vector3(Random.Range(-2f, 2f), -3f, Random.Range(-2f, 2f)),
+                   Random.Range(0f, 360f),
+                   new Vector3(Random.Range(4f, 6f), 1f, Random.Range(4f, 6f)));
+
+                ServerAddPlane("table",
+                   new Vector3(Random.Range(1f, 4f), Random.Range(-1f, 2f), Random.Range(1f, 4f)),
+                   Random.Range(0f, 360f),
+                   new Vector3(Random.Range(3f, 1f), 1f, Random.Range(3f, 1f)));
+
+                ServerAddPlane("table",
+                   new Vector3(-Random.Range(1f, 4f), Random.Range(-1f, 2f), -Random.Range(1f, 4f)),
+                   Random.Range(0f, 360f),
+                   new Vector3(Random.Range(3f, 1f), 1f, Random.Range(3f, 1f)));
+
+                ServerAddPlane("table",
+                   new Vector3(-Random.Range(1f, 4f), Random.Range(-1f, 2f), Random.Range(1f, 4f)),
+                   Random.Range(0f, 360f),
+                   new Vector3(Random.Range(3f, 1f), 1f, Random.Range(3f, 1f)));
+
+                ServerAddPlane("table",
+                   new Vector3(Random.Range(1f, 4f), Random.Range(-1f, 2f), -Random.Range(1f, 4f)),
+                   Random.Range(0f, 360f),
+                   new Vector3(Random.Range(3f, 1f), 1f, Random.Range(3f, 1f)));
             }
         }
     }
 
-#if UNITY_IOS
     #region Server Functions
     [Server]
     IEnumerator UpdateARPlanes()
@@ -99,28 +122,27 @@ public class PlaneManager : NetworkBehaviour
                 }
             }
 
+            float area = 0;
             foreach (string s in UnityARAnchorManager.Instance.planeAnchorMap.Keys)
             {
+                Transform plane = UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0);
+
                 if (CheckIfContains(s))
                 {
                     int index = GetIndexOf(s);
                     if (index != -1)
                     {
-                        ServerUpdatePlane(index,
-                            UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).position,
-                            UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).rotation.eulerAngles.y,
-                            UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).localScale * 10);
+                        area += plane.localScale.x * plane.localScale.z;
+                        ServerUpdatePlane(index, plane.position, plane.rotation.eulerAngles.y, plane.localScale * 10);
                     }
                 }
-
                 else
                 {
-                    ServerAddPlane(s,
-                        UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).position,
-                        UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).rotation.eulerAngles.y,
-                        UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0).localScale * 10);
+                    ServerAddPlane(s, plane.position, plane.rotation.eulerAngles.y, plane.localScale * 10);
                 }
             }
+            CanvasManager.Instance.UpdateTotalPlaneArea(area * 100f);
+
             yield return new WaitForSeconds(1f);
         }
     }
@@ -129,6 +151,7 @@ public class PlaneManager : NetworkBehaviour
     private void ServerAddPlane(string s, Vector3 pos, float rot, Vector3 scale)
     {
         m_ARPlane.Add(new ARPlane(s, pos, rot, scale));
+        CanvasManager.Instance.UpdatePlaneCount(m_ARPlane.Count);
     }
 
     [Server]
@@ -145,6 +168,7 @@ public class PlaneManager : NetworkBehaviour
     private void ServerRemovePlane(int index)
     {
         m_ARPlane.RemoveAt(index);
+        CanvasManager.Instance.UpdatePlaneCount(m_ARPlane.Count);
     }
 
     #endregion

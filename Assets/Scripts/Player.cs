@@ -23,18 +23,22 @@ public class Player : NetworkBehaviour
     [SerializeField]
     private PlayerType playerType;
 
+    /*
     [SerializeField]
     private bool isThisALocalPlayer;
 
     [SerializeField]
     private bool isThisAServer;
+    */
 
     public PlayerType PlayerType { get { return playerType; } }
 
+
     private void Update()
     {
-        isThisALocalPlayer = isLocalPlayer;
-        isThisAServer = isServer;
+#if UNITY_IOS
+    //Debug.Log("VR ColliderPos: " + VRAvatar.transform.position);
+#endif
     }
 
     // Use this for initialization
@@ -60,13 +64,34 @@ public class Player : NetworkBehaviour
 
         if (playerType == PlayerType.AR)
         {
-            VRAvatar.GetComponent<Collider>().enabled = false;
+            GetComponent<NetworkTransformChild>().target = ARCamera.transform;
         }
-
         else
         {
-            ARAvatar.GetComponent<Collider>().enabled = false;
+            GetComponent<NetworkTransformChild>().target = VRAvatar.transform;
+        }
 
+        if (isLocalPlayer)
+        {
+            if (playerType == PlayerType.VR)
+            {
+                //VRAvatar.GetComponent<Collider>().enabled = true;
+            }
+            else
+            {
+                ARAvatar.GetComponent<Collider>().enabled = true;
+            }
+        }
+        else
+        {
+            if (playerType == PlayerType.AR)
+            {
+                //VRAvatar.GetComponent<Collider>().enabled = true;
+            }
+            else
+            {
+                ARAvatar.GetComponent<Collider>().enabled = true;
+            }
         }
 
         //Enable objects or scripts of the other player
@@ -87,6 +112,7 @@ public class Player : NetworkBehaviour
             }
             else
             {
+                /*
                 VRAvatar.GetComponent<Renderer>().enabled = true;
 
                 foreach (Object o in ObjsForVRAvatarThatARPlayerCanSee)
@@ -96,6 +122,7 @@ public class Player : NetworkBehaviour
                     else if (o is MonoBehaviour)
                         ((MonoBehaviour)o).enabled = true;
                 }
+                */
             }
         }
 
@@ -106,6 +133,8 @@ public class Player : NetworkBehaviour
             {
                 ARCamera.GetComponent<Camera>().enabled = true;
                 ARCamera.GetComponent<AudioListener>().enabled = true;
+
+
 
 #if UNITY_IOS
             UnityARCameraManager.Instance.SetCamera(Camera.main);
@@ -123,17 +152,50 @@ public class Player : NetworkBehaviour
 
         if (playerType == PlayerType.AR)
         {
-            GetComponent<PlaneManager>().enabled = true;
-            Destroy(GetComponent<Movement>());
-            Destroy(GetComponent<BlockManager>());
+            if (GetComponent<PlaneManager>())
+                GetComponent<PlaneManager>().enabled = true;
+            if (GetComponent<Movement>())
+                Destroy(GetComponent<Movement>());
+            if (GetComponent<BlockManager>())
+                Destroy(GetComponent<BlockManager>());
+
+            if (GetComponent<GameManager>())
+                GetComponent<GameManager>().enabled = true;
         }
         else
         {
-            Destroy(GetComponent<PlaneManager>());
-            GetComponent<Movement>().enabled = true;
-            GetComponent<BlockManager>().enabled = true;
+            //GetComponent<PlaneManager>().enabled = true;
+            //GetComponent<GameManager>().enabled = true;
+
+            if (GetComponent<PlaneManager>())
+                Destroy(GetComponent<PlaneManager>());
+            if (GetComponent<GameManager>())
+                Destroy(GetComponent<GameManager>());
+            if (GetComponent<Movement>())
+                GetComponent<Movement>().enabled = true;
+            if (GetComponent<BlockManager>())
+                GetComponent<BlockManager>().enabled = true;
+
+
         }
 
-        GetComponent<Combat>().enabled = true;
+        if (GetComponent<Combat>())
+            GetComponent<Combat>().enabled = true;
     }
+
+    public void EnableVRPlayerRenderers()
+    {
+        VRAvatar.GetComponent<Renderer>().enabled = true;
+        VRAvatar.GetComponent<Collider>().enabled = true;
+
+        foreach (Object o in ObjsForVRAvatarThatARPlayerCanSee)
+        {
+            if (o is GameObject)
+                ((GameObject)o).SetActive(true);
+            else if (o is MonoBehaviour)
+                ((MonoBehaviour)o).enabled = true;
+        }
+    }
+
+
 }

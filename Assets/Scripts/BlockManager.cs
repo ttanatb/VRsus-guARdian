@@ -50,8 +50,8 @@ public class BlockManager : NetworkBehaviour
     public float waitTime = 1.2f;
 
     //prefab for placement visualization
-    public GameObject placementSamplePrefab;
-    private GameObject placementSampleObj;
+    //public GameObject placementSamplePrefab;
+    //private GameObject placementSampleObj;
 
     //mesh for placement visualization
     private Mesh[] blockMeshes;
@@ -60,6 +60,8 @@ public class BlockManager : NetworkBehaviour
     public Renderer vrPlayerRenderer;
 
     private Movement movement;
+
+    public LayerMask mask;
 
     /// <summary>
     /// Initialization
@@ -74,23 +76,24 @@ public class BlockManager : NetworkBehaviour
             //creates top-view camera
             topViewCamObj = Instantiate(topViewCamPrefab);
             topViewCam = topViewCamObj.GetComponent<Camera>();
-            vrCamera = Camera.main;
+            vrCamera = GetComponent<Player>().VRCamera.GetComponent<Camera>();
 
             //adjusts the black plane
             Color c = topViewCamObj.transform.GetChild(0).GetComponent<Renderer>().material.color;
             c.a = 1f;
             topViewCamObj.transform.GetChild(0).GetComponent<Renderer>().material.color = c;
 
-            placementSampleObj = Instantiate(placementSamplePrefab);
-            blockMeshes = LocalObjectBuilder.Instance.blockMeshes;
+            //placementSampleObj = Instantiate(placementSamplePrefab);
+            //blockMeshes = LocalObjectBuilder.Instance.blockMeshes;
             vrPlayerRenderer = GetComponent<Player>().VRAvatar.GetComponent<Renderer>();
 
             movement = GetComponent<Movement>();
 
-            CanvasManager.Instance.ToggleCrossHairUI();
+            //CanvasManager.Instance.ToggleCrossHairUI();
+            StartPlacing();
         }
 
-        LocalObjectBuilder.Instance.SetBlockManager(this);
+        //LocalObjectBuilder.Instance.SetBlockManager(this);
     }
 
     private void OnDestroy()
@@ -100,13 +103,14 @@ public class BlockManager : NetworkBehaviour
             Destroy(topViewCamObj);
         }
 
-        if (placementSampleObj)
-        {
-            Destroy(placementSampleObj);
-        }
+        //if (placementSampleObj)
+        //{
+        //    Destroy(placementSampleObj);
+        //}
     }
 
     #region Getter For Unity Actions
+    /*
     /// <summary>
     /// Gets an action to attach to a button
     /// </summary>
@@ -163,6 +167,7 @@ public class BlockManager : NetworkBehaviour
 
         return action;
     }
+    */
     #endregion
 
     // Update is called once per frame
@@ -185,18 +190,47 @@ public class BlockManager : NetworkBehaviour
             else StopPlacing();
         }
 
-        //if isPlacing
-        if (isPlacing && currPlaceMode > -1)
+        if (isPlacing)
         {
-            //gets mouse position
-            Vector3 mousePos = Input.mousePosition;
-            mousePos.z = topViewCamObj.transform.position.y;
-            mousePos = topViewCam.ScreenToWorldPoint(mousePos);
-            mousePos.y = 0;
+            //check if an entrance was hit
+            if (Input.GetMouseButtonUp(0))
+            {
+                RaycastHit hitInfo;
+                Ray ray = topViewCam.ScreenPointToRay(Input.mousePosition);
 
-            //sets the position of the placement sample
-            placementSampleObj.transform.position = mousePos;
+                if (Physics.Raycast(ray, out hitInfo, 2000f, mask))
+                {
+                    Debug.Log(hitInfo.collider.name);
+                    StopPlacing();
+                    transform.position = hitInfo.point;
+                }
+            }
+
+            float zoom = -Input.GetAxis("Mouse ScrollWheel");
+            float horizontal = Input.GetAxis("Mouse X");
+            float vertical = Input.GetAxis("Mouse Y");
+
+            horizontal *= 0.02f;
+            vertical *= 0.02f;
+
+
+            topViewCam.transform.position = topViewCam.transform.position +
+                horizontal * topViewCam.transform.right +
+                vertical * topViewCam.transform.up;
+            topViewCam.orthographicSize += zoom;
         }
+
+        //if (isPlacing && currPlaceMode > -1)
+        //{
+        //    //gets mouse position
+        //    Vector3 mousePos = Input.mousePosition;
+        //    mousePos.z = topViewCamObj.transform.position.y;
+        //    mousePos = topViewCam.ScreenToWorldPoint(mousePos);
+        //    mousePos.y = 0;
+
+        //    //sets the position of the placement sample
+        //    placementSampleObj.transform.position = mousePos;
+        //}
     }
 
     #region Helper Functions
@@ -221,7 +255,8 @@ public class BlockManager : NetworkBehaviour
 
         StopAllCoroutines();
         switching = true;
-        movement.SwitchOutOfPlaying();
+        if (movement)
+            movement.SwitchOutOfPlaying();
 
         IEnumerator fadeOut = FadeOut(vrCamera, topViewCam, true);
         IEnumerator fadeIn = FadeIn(topViewCam, vrCamera);
@@ -286,8 +321,8 @@ public class BlockManager : NetworkBehaviour
 
         if (isPlacing)
         {
-            vrPlayerRenderer.enabled = false;
-            CanvasManager.Instance.DisableBlockPlacingUI();
+            //vrPlayerRenderer.enabled = false;
+            //CanvasManager.Instance.DisableBlockPlacingUI();
             //CanvasManager.Instance.ToggleCrossHairUI();
         }
     }
@@ -317,13 +352,19 @@ public class BlockManager : NetworkBehaviour
         isPlacing = !isPlacing;
         if (isPlacing)
         {
-            vrPlayerRenderer.enabled = true;
+            //vrPlayerRenderer.enabled = true;
             SetUpUI();
         }
         else
         {
-            movement.SwitchToPlaying();
+            if (movement)
+                movement.SwitchToPlaying();
 
+            Combat combat = GetComponent<Combat>();
+            if (combat)
+            {
+                combat.InitHealthBar();
+            }
         }
     }
 
@@ -332,7 +373,7 @@ public class BlockManager : NetworkBehaviour
     /// </summary>
     void SetUpUI()
     {
-        CanvasManager.Instance.SetUpBlockPlacingUI(this, blockMeshes.Length);
+        //CanvasManager.Instance.SetUpBlockPlacingUI(this, blockMeshes.Length);
         //CanvasManager.Instance.ToggleCrossHairUI();
     }
     #endregion

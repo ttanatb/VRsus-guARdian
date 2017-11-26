@@ -47,12 +47,19 @@ public class PlaneRecognizer : MonoBehaviour
             texts[counter].text = m_ARPlane[key].ToString();
             counter++;
         }
+
+        while (texts.Count >= counter)
+            texts.RemoveAt(texts.Count - 1);
+
     }
 
     Text CreateTextUI(int count)
     {
-        GameObject obj = new GameObject();
-        obj.name = "Text : " + count;
+        GameObject obj = new GameObject
+        {
+            name = "Text: " + count
+        };
+
         obj.transform.SetParent(GameObject.Find("Canvas").transform, false);
         RectTransform rect = obj.AddComponent<RectTransform>();
 
@@ -81,6 +88,18 @@ public class PlaneRecognizer : MonoBehaviour
         return text;
     }
 
+    bool ComparePlane(Vector2 dimensions, ARPlaneAnchorGameObject planeObj)
+    {
+        Transform obj = planeObj.gameObject.transform.GetChild(0);
+        float diffThreshold = 0.3f;
+
+        if (Mathf.Abs(obj.localScale.x - dimensions.x) + Mathf.Abs(obj.localScale.z - dimensions.y) < diffThreshold ||
+            Mathf.Abs(obj.localScale.z - dimensions.x) + Mathf.Abs(obj.localScale.x - dimensions.y) < diffThreshold)
+            return true;
+
+        return false;
+    }
+
     IEnumerator UpdateARPlanes()
     {
         for (; ; )
@@ -99,7 +118,6 @@ public class PlaneRecognizer : MonoBehaviour
                         RemovePlane(key);
                         break;
                     }
-
                 }
             }
 

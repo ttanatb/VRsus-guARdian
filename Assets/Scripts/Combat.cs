@@ -17,7 +17,6 @@ public class Combat : NetworkBehaviour
     public int health = maxHealth;
 
     public GameObject springPadPrefab;
-    public GameObject winAreaPrefab;
 
     public GameObject bulletPrefab;
     public float bulletSpeed = 1f;
@@ -46,8 +45,21 @@ public class Combat : NetworkBehaviour
     private HealthBar healthBar;
     private HealthBarUI healthBarUI;
 
+    public bool canShoot = false;
 
-    private bool isPlacing = false;
+    [SyncVar]
+    private bool isInvulnerable = false;
+    private float invulTimer = 0f;
+
+    public const float MAX_INVUL_TIME = 1.5f;
+
+    [SyncVar]
+    private int relicCount = 0;
+
+    public bool IsInvulnerable
+    {
+        get { return isInvulnerable; }
+    }
 
     private void Awake()
     {
@@ -67,21 +79,33 @@ public class Combat : NetworkBehaviour
             avatar = player.VRAvatar.transform;
         }
 
-        if (!isLocalPlayer)
-        {
-            healthBar = Instantiate(healthBarPrefab).GetComponent<HealthBar>();
-            healthBar.Init(this, player.PlayerType, avatar);
-        }
-        else
-        {
-            healthBarUI = Instantiate(healthBarUIPrefab, canvas).GetComponent<HealthBarUI>();
-            healthBarUI.Init(this);
-
-            if (player.PlayerType == PlayerType.AR)
-                CanvasManager.Instance.SetUpGoalPlacingUI(this);
-        }
-
         prevPos = avatar.position;
+    }
+
+    public void InitHealthBar()
+    {
+        if (player.PlayerType == PlayerType.AR)
+            return;
+
+        CmdCreateHealthBar();
+
+        player.VRAvatar.GetComponent<Collider>().enabled = true;
+        healthBarUI = Instantiate(healthBarUIPrefab, canvas).GetComponent<HealthBarUI>();
+        healthBarUI.Init(this);
+    }
+
+    [Command]
+    private void CmdCreateHealthBar()
+    {
+        if (isLocalPlayer)
+        {
+            return;
+        }
+
+        //maybe this won't work?
+        healthBar = Instantiate(healthBarPrefab).GetComponent<HealthBar>();
+        healthBar.Init(this, player.PlayerType, avatar);
+        GetComponent<Player>().EnableVRPlayerRenderers();
     }
 
     public override void OnStartLocalPlayer()
@@ -95,10 +119,13 @@ public class Combat : NetworkBehaviour
 
     private void OnDestroy()
     {
-        for (int i = 0; i < hurtFlashCount; i++)
+        if (hurtFlashes != null)
         {
-            if (hurtFlashes[i])
-                Destroy(hurtFlashes[i].gameObject);
+            for (int i = 0; i < hurtFlashCount; i++)
+            {
+                if (hurtFlashes[i])
+                    Destroy(hurtFlashes[i].gameObject);
+            }
         }
 
         if (healthBar)
@@ -114,32 +141,37 @@ public class Combat : NetworkBehaviour
         if (player.PlayerType == PlayerType.VR)
             avatar.forward = transform.forward;
 
-        if (!isLocalPlayer)
+
+        if (isServer && isInvulnerable)
+        {
+            //if (invulTimer > MAX_INVUL_TIME)
+            //{
+            //    isInvulnerable = false;
+            //    foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
+            //    {
+            //        r.enabled = true;
+            //    }
+            //    foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
+            //    {
+            //        r.enabled = true;
+            //    }
+            //}
+            //else invulTimer += Time.deltaTime;
+        }
+
+        if (!isLocalPlayer || (player.PlayerType == PlayerType.AR && Utility.IsPointerOverUIObject()))
             return;
 
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.E))
+        if (CheckTap())
         {
-            TakeDamage();
+            CmdFire(avatar.position, avatar.forward);
         }
 
-        if (!IsPointerOverUIObject())
-        {
-            if (CheckTap())
-            {
-                if (isPlacing)
-                {
-                    CheckTapOnARPlane();
-                }
-                else
-                {
-                    CmdFire(avatar.position, avatar.forward);
-                }
-            }
-            else if ((Input.GetMouseButtonDown(0)))
-            {
-                CmdCreateJumpPad(transform.position + Vector3.down * 0.01f);
-            }
-        }
+
+        //else if ((Input.GetMouseButtonDown(0)))
+        //{
+        //    CmdCreateJumpPad(transform.position + Vector3.down * 0.01f);
+        //}
 
         if (prevHealth != health)
         {
@@ -168,51 +200,21 @@ public class Combat : NetworkBehaviour
         return false;
     }
 
-    void CheckTapOnARPlane()
-    {
-        RaycastHit hit;
-        int layer = LayerMask.NameToLayer("Tower");
-
-        if (Input.touchCount > 0)
-        {
-            foreach (Touch t in Input.touches)
-            {
-                if (t.phase == TouchPhase.Began && Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
-                {
-                    GameObject obj = Instantiate(winAreaPrefab, hit.point + Vector3.up * 0.1f, Quaternion.identity);
-                    NetworkServer.Spawn(obj);
-
-                    isPlacing = false;
-                    return;
-                }
-            }
-
-        }
-        return;
-    }
-
     public UnityAction GetActionToSwitchToPlacingMode()
     {
         UnityAction action = () =>
         {
-            isPlacing = true;
         };
 
         return action;
     }
 
-    private bool IsPointerOverUIObject()
-    {
-        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-        return results.Count > 0;
-    }
-
     [Command]
     void CmdFire(Vector3 pos, Vector3 forward)
     {
+        if (!canShoot)
+            return;
+
         GameObject bulletObj = null;
         if (player.PlayerType == PlayerType.AR)
         {
@@ -247,27 +249,108 @@ public class Combat : NetworkBehaviour
     [Server]
     public void TakeDamage()
     {
-        if (!isServer)
+        if (!isServer || isInvulnerable)
             return;
 
         health--;
 
-
         if (health < 1)
         {
-            //health = maxHealth;
-            //isDead = true;
-            //RpcRespawn();
+            RpcDie();
+        }
+        else
+        {
+            isInvulnerable = true;
+            IEnumerator flash = Flash(1.5f);
+            StartCoroutine(flash);
+            //invulTimer = 0f;
+            //foreach(Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
+            //{
+            //    r.enabled = false;
+            //}
+            //foreach(Renderer r in healthBar.GetComponentsInChildren<Renderer>())
+            //{
+            //    r.enabled = false;
+            //}
         }
     }
 
     [ClientRpc]
-    void RpcRespawn()
+    void RpcDie()
     {
-        if (isLocalPlayer)
+        CanvasManager.Instance.SetPermanentMessage("AR player wins!");
+    }
+
+    float alpha = 1f;
+    float fadeSpeed = 0.2f;
+
+    IEnumerator Flash(float waitTime)
+    {
+        //increases alpha
+        //for (; alpha > 0f; alpha -= fadeSpeed)
+        //{
+        //    foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
+        //    {
+        //        Color c = r.material.color;
+        //        c.a = alpha;
+        //        r.material.color = c;
+        //    }
+        //    foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
+        //    {
+        //        Color c = r.material.color;
+        //        c.a = alpha;
+        //        r.material.color = c;
+        //    }
+        //    yield return null;
+        //}
+
+        foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
         {
-            if (GetComponent<Player>().PlayerType == PlayerType.VR)
-                transform.position = Vector3.zero;
+            r.enabled = false;
         }
+        foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
+        {
+            r.enabled = false;
+        }
+
+        //starts the next coroutine
+        yield return new WaitForSeconds(waitTime);
+
+        //for (; alpha < 1f; alpha += fadeSpeed)
+        //{
+        //    foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
+        //    {
+        //        Color c = r.material.color;
+        //        c.a = alpha;
+        //        r.material.color = c;
+        //    }
+        //    foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
+        //    {
+        //        Color c = r.material.color;
+        //        c.a = alpha;
+        //        r.material.color = c;
+        //    }
+        //    yield return null;
+        //}
+        foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
+        {
+            r.enabled = true;
+        }
+        foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
+        {
+            r.enabled = true;
+        }
+
+        isInvulnerable = false;
+    }
+
+    public void GainRelic()
+    {
+        relicCount += 1;
+    }
+
+    public int GetRelicCount()
+    {
+        return relicCount;
     }
 }
