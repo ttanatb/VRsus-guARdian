@@ -177,6 +177,8 @@ public class Player : NetworkBehaviour
                 if (GetComponent<GameManager>())
                     Destroy(GetComponent<GameManager>());
             }
+            gameObject.layer = LayerMask.NameToLayer("VRPlayer");
+
             if (GetComponent<Movement>())
                 GetComponent<Movement>().enabled = true;
             if (GetComponent<BlockManager>())
