@@ -50,6 +50,7 @@ public class PlaneRecognizer : MonoBehaviour
 
         while (texts.Count >= counter)
             texts.RemoveAt(texts.Count - 1);
+
     }
 
     Text CreateTextUI(int count)
