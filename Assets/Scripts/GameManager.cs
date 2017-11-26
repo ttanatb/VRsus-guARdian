@@ -36,8 +36,9 @@ public class GameManager : NetworkBehaviour
     private int currTrapSelection = -1;
 
     public float minPlayArea = 1f;
-    private TrapDefense previouslySelectedTrap;
-    private TrapDefense currentlySelectedTrap;
+
+    private TrapDefense previouslySelectedTrap = null;
+    private TrapDefense currentlySelectedTrap = null;
 
     public override void OnStartLocalPlayer()
     {
@@ -92,11 +93,19 @@ public class GameManager : NetworkBehaviour
         LayerMask layer = LayerMask.NameToLayer("Trap");
         if (Input.touchCount > 0)
         {
+            Debug.Log("Checking Tap");
             Touch t = Input.GetTouch(0);
+            if (t.phase != TouchPhase.Began)
+            {
+                Debug.Log("Tap wasn't a begin");
+                return;
+            }
+
             if (t.phase == TouchPhase.Began &&
                 Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
             {
-                currentlySelectedTrap = hit.collider.GetComponent<TrapDefense>();
+                Debug.Log("Raycast hit the trap");
+                currentlySelectedTrap = hit.transform.GetComponent<TrapDefense>();
                 if (currentlySelectedTrap)
                 {
                     currentlySelectedTrap.ToggleSelected();
@@ -109,6 +118,7 @@ public class GameManager : NetworkBehaviour
             }
             else
             {
+                Debug.Log("Raycast did not hit a trap");
                 currentlySelectedTrap = null;
                 TogglePreviouslySelectedTrap();
             }
@@ -203,10 +213,8 @@ public class GameManager : NetworkBehaviour
             CanvasManager.Instance.UpdateTrapCount(this);
 
             currTrapSelection = -1;
-            return;
         }
 #endif
-        return;
     }
 
     [Command]
