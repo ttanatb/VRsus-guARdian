@@ -11,8 +11,6 @@ public class ProximitySensor : TrapDefense
     private float nearRangeSqr;
     private float farRangeSqr;
 
-    private bool isShowingRadius = false;
-
     static Transform[] players;
 
     public override string TrapName
@@ -86,20 +84,11 @@ public class ProximitySensor : TrapDefense
 
     public override void ToggleSelected()
     {
-        isShowingRadius = !isShowingRadius;
+        base.ToggleSelected();
 
         for (int i = 0; i < transform.childCount; i++)
         {
-            transform.GetChild(i).gameObject.SetActive(isShowingRadius);
-        }
-
-        if (isShowingRadius)
-        {
-
-        }
-        else
-        {
-
+            transform.GetChild(i).gameObject.SetActive(selected);
         }
     }
 

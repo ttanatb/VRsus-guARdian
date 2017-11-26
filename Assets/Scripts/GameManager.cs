@@ -36,6 +36,8 @@ public class GameManager : NetworkBehaviour
     private int currTrapSelection = -1;
 
     public float minPlayArea = 1f;
+    private TrapDefense previouslySelectedTrap;
+    private TrapDefense currentlySelectedTrap;
 
     public override void OnStartLocalPlayer()
     {
@@ -68,8 +70,12 @@ public class GameManager : NetworkBehaviour
                     CheckTapOnARPlane();
                 else
                 {
-                    //move traps around??
+                    CheckTapOnSecurityScreen();
+                    MoveTrap();
                 }
+                break;
+            case 2:
+                CheckTapOnSecurityScreen();
                 break;
             default:
                 break;
@@ -79,33 +85,111 @@ public class GameManager : NetworkBehaviour
             CmdSpawnRelics();
     }
 
-
-    void CheckTapOnARPlane()
+    void CheckTapOnTraps()
     {
         RaycastHit hit;
-        int layer = LayerMask.NameToLayer("Tower");
-
+        LayerMask layer = LayerMask.NameToLayer("Trap");
         if (Input.touchCount > 0)
         {
             foreach (Touch t in Input.touches)
             {
                 if (t.phase == TouchPhase.Began &&
-                    (currTrapSelection >= 0 && currTrapSelection < trapList.Length && trapList[currTrapSelection].count > 0) &&
                     Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
                 {
-                    trapList[currTrapSelection].count -= 1;
+                    currentlySelectedTrap = hit.collider.GetComponent<TrapDefense>();
+                    currentlySelectedTrap.ToggleSelected();
+                    TogglePreviouslySelectedTrap();
 
-                    CmdSpawnTrap(currTrapSelection, hit.point);
+                    switch (t.phase)
+                    {
+                        case TouchPhase.Began:
+                            break;
+                        case TouchPhase.Moved:
+                            break;
+                        case TouchPhase.Canceled:
+                            goto case TouchPhase.Ended;
+                        case TouchPhase.Ended:
+                            break;
 
-                    CanvasManager.Instance.ClearSelection(this);
-                    CanvasManager.Instance.UpdateTrapCount(this);
-
-                    currTrapSelection = -1;
-                    return;
+                    }
                 }
             }
         }
+    }
 
+    void MoveTrap()
+    {
+        if (currentlySelectedTrap)
+        {
+            RaycastHit hit;
+            LayerMask layer = LayerMask.NameToLayer("Tower");
+            if (Input.touchCount > 0)
+            {
+                Touch t = Input.GetTouch(0);
+                if (t.phase != TouchPhase.Stationary &&
+                    Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
+                {
+                    currentlySelectedTrap.transform.position = t.position;
+                }
+            }
+        }
+    }
+
+
+    void CheckTapOnSecurityScreen()
+    {
+        RaycastHit hit;
+        LayerMask layer = LayerMask.NameToLayer("UI");
+        if (Input.touchCount > 0)
+        {
+            foreach (Touch t in Input.touches)
+            {
+                if (t.phase == TouchPhase.Began &&
+                    Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
+                {
+                    currentlySelectedTrap = hit.collider.GetComponent<SecurityScreen>().associatedCamera;
+                    currentlySelectedTrap.ToggleSelected();
+                    TogglePreviouslySelectedTrap();
+                }
+            }
+        }
+    }
+
+    void TogglePreviouslySelectedTrap()
+    {
+        if (previouslySelectedTrap)
+            previouslySelectedTrap.ToggleSelected();
+
+        if (previouslySelectedTrap == currentlySelectedTrap)
+            previouslySelectedTrap = null;
+        else previouslySelectedTrap = currentlySelectedTrap;
+    }
+
+    void CheckTapOnARPlane()
+    {
+        RaycastHit hit;
+        LayerMask layer = LayerMask.NameToLayer("Tower");
+
+        if (Input.touchCount > 0)
+        {
+            Touch t = Input.GetTouch(0);
+            if (t.phase == TouchPhase.Began &&
+                (currTrapSelection >= 0 && currTrapSelection < trapList.Length && trapList[currTrapSelection].count > 0) &&
+                Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
+            {
+                trapList[currTrapSelection].count -= 1;
+
+                CmdSpawnTrap(currTrapSelection, hit.point);
+
+                CanvasManager.Instance.ClearSelection(this);
+                CanvasManager.Instance.UpdateTrapCount(this);
+
+                currTrapSelection = -1;
+                return;
+            }
+        }
+
+#if !UNITY_IOS
         //Testing for PC
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.B) &&
          (currTrapSelection >= 0 && currTrapSelection < trapList.Length && trapList[currTrapSelection].count > 0))
@@ -120,7 +204,7 @@ public class GameManager : NetworkBehaviour
             currTrapSelection = -1;
             return;
         }
-
+#endif
         return;
     }
 

@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 
 public class TrapDefense : NetworkBehaviour
 {
+    protected bool selected = false;
 
     [ClientRpc]
     public virtual void RpcDisable()
@@ -14,7 +15,7 @@ public class TrapDefense : NetworkBehaviour
 
     public virtual void ToggleSelected()
     {
-
+        selected = !selected;
     }
 
     public virtual string TrapName

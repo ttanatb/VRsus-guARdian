@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class SecurityCamera : TrapDefense
 {
     public RenderTexture[] renderTextures;
+    public Renderer areaOfEffectRenderer;
 
     static int count;
     static Transform securityScreens;
@@ -54,12 +55,21 @@ public class SecurityCamera : TrapDefense
 
         if (securityScreens)
         {
-            securityScreens.GetChild(count - 1).gameObject.SetActive(true);
+            GameObject screen = securityScreens.GetChild(count - 1).gameObject;
+            screen.SetActive(true);
+            screen.GetComponent<SecurityScreen>().associatedCamera = this;
         }
         else
         {
             Debug.LogError("No security screen");
         }
+    }
+
+    public override void ToggleSelected()
+    {
+        base.ToggleSelected();
+        Debug.Log("Toggling this Camera");
+        areaOfEffectRenderer.enabled = selected;
     }
 
     public override void RpcDisable()
