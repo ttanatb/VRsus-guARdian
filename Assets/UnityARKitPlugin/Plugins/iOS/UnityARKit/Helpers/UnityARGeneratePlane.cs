@@ -5,14 +5,21 @@ namespace UnityEngine.XR.iOS
 {
     public class UnityARGeneratePlane : MonoBehaviour
     {
-        public GameObject planePrefab;
-#if UNITY_IOS
+        public GameObject debugPlanePrefab;
+        public GameObject occlusionPlanePrefab;
+
+        private GameObject planePrefab;
         private UnityARAnchorManager unityARAnchorManager;
 
+#if UNITY_IOS
         // Use this for initialization
         void Start()
         {
+            planePrefab = debugPlanePrefab;
+
             unityARAnchorManager = new UnityARAnchorManager();
+            UnityARAnchorManager.Instance.SetMaterial(debugPlanePrefab.GetComponentInChildren<Renderer>().material,
+                occlusionPlanePrefab.GetComponentInChildren<Renderer>().material);
             UnityARUtility.InitializePlanePrefab(planePrefab);
         }
 

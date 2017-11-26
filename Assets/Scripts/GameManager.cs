@@ -180,6 +180,7 @@ public class GameManager : NetworkBehaviour
                 if (combat != null)
                     combat.canShoot = true;
                 CanvasManager.Instance.ToggleCrossHairUI();
+                UnityARAnchorManager.Instance.TogglePlaneMaterial();
                 break;
         }
 
