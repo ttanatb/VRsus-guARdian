@@ -16,4 +16,9 @@ public class TrapDefense : NetworkBehaviour
     {
 
     }
+
+    public virtual string TrapName
+    {
+        get { return "Trap"; }
+    }
 }

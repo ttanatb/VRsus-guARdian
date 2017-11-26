@@ -10,6 +10,14 @@ public class SecurityCamera : TrapDefense
     static int count;
     static Transform securityScreens;
 
+    public override string TrapName
+    {
+        get
+        {
+            return "Security Camera";
+        }
+    }
+
     private void Start()
     {
         if (isServer)

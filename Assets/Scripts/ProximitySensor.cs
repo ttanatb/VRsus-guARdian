@@ -15,6 +15,14 @@ public class ProximitySensor : TrapDefense
 
     static Transform[] players;
 
+    public override string TrapName
+    {
+        get
+        {
+            return "Proximity Sensor";
+        }
+    }
+
     // Use this for initialization
     void Start()
     {

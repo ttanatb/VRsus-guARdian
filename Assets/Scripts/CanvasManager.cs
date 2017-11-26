@@ -176,7 +176,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     {
         for (int i = 0; i < arUIbuttons.Length; i++)
         {
-            arUIbuttons[i].GetComponentInChildren<Text>().text = manager.trapList[i].trap.name + ": (" + manager.trapList[i].count + ")";
+            arUIbuttons[i].GetComponentInChildren<Text>().text = manager.trapList[i].trap.GetComponent<TrapDefense>().TrapName + ": (" + manager.trapList[i].count + ")";
         }
     }
 

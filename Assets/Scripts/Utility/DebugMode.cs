@@ -6,6 +6,12 @@ public class DebugMode : SingletonMonoBehaviour<DebugMode>
 {
     public bool IsDebugging
     {
-        get { return true; }
+        get {
+#if UNITY_IOS
+        return false;
+#else
+        return true;
+#endif
+        }
     }
 }

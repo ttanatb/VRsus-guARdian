@@ -192,8 +192,6 @@ public class GameManager : NetworkBehaviour
         currTrapSelection = toSelect;
     }
 
-
-
     [Command]
     private void CmdSpawnRelic(GameObject plane, GameObject[] walls)
     {
