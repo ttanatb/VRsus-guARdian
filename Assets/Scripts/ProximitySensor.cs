@@ -51,6 +51,8 @@ public class ProximitySensor : TrapDefense
                 players[i] = playerScripts[i].transform;
             }
         }
+
+        Debug.Log(players.Length);
     }
 
     // Update is called once per frame
