@@ -101,6 +101,11 @@ public class GameManager : NetworkBehaviour
                     currentlySelectedTrap.ToggleSelected();
                     TogglePreviouslySelectedTrap();
                 }
+                else
+                {
+                    currentlySelectedTrap = null;
+                    TogglePreviouslySelectedTrap();
+                }
             }
         }
     }
@@ -136,6 +141,11 @@ public class GameManager : NetworkBehaviour
             {
                 currentlySelectedTrap = hit.collider.GetComponent<SecurityScreen>().associatedCamera;
                 currentlySelectedTrap.ToggleSelected();
+                TogglePreviouslySelectedTrap();
+            }
+            else
+            {
+                currentlySelectedTrap = null;
                 TogglePreviouslySelectedTrap();
             }
         }
