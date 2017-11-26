@@ -18,7 +18,7 @@ public class Singleton<T> where T : Singleton<T>
 	{
 		if (instance == null)
 		{
-			instance = (T)this;
+            instance = (T)this;
 		}
 
 		else

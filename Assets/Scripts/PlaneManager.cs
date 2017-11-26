@@ -59,14 +59,22 @@ public class PlaneManager : NetworkBehaviour
                 StartCoroutine("UpdateARPlanes");
             }
 #endif
-        if (LocalObjectBuilder.Instance)
-            LocalObjectBuilder.Instance.SetPlaneManager(this);
+            if (LocalObjectBuilder.Instance)
+                LocalObjectBuilder.Instance.SetPlaneManager(this);
+        }
+        else if (DebugMode.Instance.IsDebugging)
+        {
+            if (LocalObjectBuilder.Instance)
+                LocalObjectBuilder.Instance.SetPlaneManager(this);
         }
 
     }
 
-
-#if UNITY_IOS
+    public override void OnNetworkDestroy()
+    {
+        LocalObjectBuilder.Instance.Clear();
+        base.OnNetworkDestroy();
+    }
 
     private void Update()
     {
@@ -75,27 +83,27 @@ public class PlaneManager : NetworkBehaviour
             if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.D))
             {
                 ServerAddPlane("floor",
-                   new Vector3(Random.Range(-2f, 2f), -3f, Random.Range(-2f, 2f)),
+                   new Vector3(Random.Range(-2f, 2f), -2f, Random.Range(-2f, 2f)),
                    Random.Range(0f, 360f),
-                   new Vector3(Random.Range(4f, 6f), 1f, Random.Range(4f, 6f)));
+                   new Vector3(Random.Range(4f, 1f), 1f, Random.Range(4f, 1f)));
 
                 ServerAddPlane("table",
-                   new Vector3(Random.Range(1f, 4f), Random.Range(-1f, 2f), Random.Range(1f, 4f)),
-                   Random.Range(0f, 360f),
-                   new Vector3(Random.Range(3f, 1f), 1f, Random.Range(3f, 1f)));
-
-                ServerAddPlane("table",
-                   new Vector3(-Random.Range(1f, 4f), Random.Range(-1f, 2f), -Random.Range(1f, 4f)),
+                   new Vector3(Random.Range(1f, 2f), Random.Range(-1f, 1f), Random.Range(1f, 2f)),
                    Random.Range(0f, 360f),
                    new Vector3(Random.Range(3f, 1f), 1f, Random.Range(3f, 1f)));
 
                 ServerAddPlane("table",
-                   new Vector3(-Random.Range(1f, 4f), Random.Range(-1f, 2f), Random.Range(1f, 4f)),
+                   new Vector3(-Random.Range(1f, 2f), Random.Range(-1f, 1f), -Random.Range(1f, 2f)),
                    Random.Range(0f, 360f),
                    new Vector3(Random.Range(3f, 1f), 1f, Random.Range(3f, 1f)));
 
                 ServerAddPlane("table",
-                   new Vector3(Random.Range(1f, 4f), Random.Range(-1f, 2f), -Random.Range(1f, 4f)),
+                   new Vector3(-Random.Range(1f, 2f), Random.Range(-1f, 2f), Random.Range(1f, 2f)),
+                   Random.Range(0f, 360f),
+                   new Vector3(Random.Range(3f, 1f), 1f, Random.Range(3f, 1f)));
+
+                ServerAddPlane("table",
+                   new Vector3(Random.Range(1f, 2f), Random.Range(-1f, 2f), -Random.Range(1f, 2f)),
                    Random.Range(0f, 360f),
                    new Vector3(Random.Range(3f, 1f), 1f, Random.Range(3f, 1f)));
             }
@@ -172,6 +180,8 @@ public class PlaneManager : NetworkBehaviour
     }
 
     #endregion
+#if UNITY_IOS
+
 #endif
 
     #region Helper Functions
@@ -206,5 +216,5 @@ public class PlaneManager : NetworkBehaviour
 
         return -1;
     }
-#endregion
+    #endregion
 }

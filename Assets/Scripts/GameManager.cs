@@ -42,7 +42,15 @@ public class GameManager : NetworkBehaviour
 #if UNITY_IOS
         Instantiate(planeGeneratorPrefab);
         CanvasManager.Instance.SetUI(this);
+#else 
+        if (DebugMode.Instance.IsDebugging)
+        {
+            Instantiate(planeGeneratorPrefab);
+            CanvasManager.Instance.SetUI(this);
+        }
 #endif
+
+
     }
 
     // Update is called once per frame

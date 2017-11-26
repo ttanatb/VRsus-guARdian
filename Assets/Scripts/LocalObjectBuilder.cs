@@ -40,13 +40,19 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
         localPlanes = new List<GameObject>();
     }
 
-    protected override void OnDestroy()
+    public void Clear()
     {
+        StopAllCoroutines();
         for (int i = 0; i < localPlanes.Count; i++)
         {
             Destroy(localPlanes[i]);
         }
         localPlanes.Clear();
+    }
+
+    protected override void OnDestroy()
+    {
+        Clear();
         base.OnDestroy();
     }
 
