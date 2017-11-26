@@ -49,14 +49,16 @@ public class SecurityCamera : TrapDefense
                 Transform child = Camera.main.transform.GetChild(i);
                 if (child.name == "SecurityScreens")
                     securityScreens = child;
-
             }
         }
 
         if (securityScreens)
         {
             securityScreens.GetChild(count - 1).gameObject.SetActive(true);
-            return;
+        }
+        else
+        {
+            Debug.LogError("No security screen");
         }
     }
 
