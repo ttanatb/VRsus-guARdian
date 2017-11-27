@@ -9,7 +9,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class LocalPlane : MonoBehaviour
 {
-    private const float HEIGHT = 100f;
+    private const float HEIGHT = 1f;
 
     private Vector2 scale = Vector2.one;
     private Material m;

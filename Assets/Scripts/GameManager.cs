@@ -326,9 +326,9 @@ public class GameManager : NetworkBehaviour
     private void CmdSpawnRelic(GameObject plane, GameObject[] walls)
     {
         GameObject obj = Instantiate(relicPrefab,
-            new Vector3(Random.Range(plane.transform.position.x - plane.transform.localScale.x / 3, 0),
+            new Vector3(Random.Range(plane.transform.position.x - plane.transform.localScale.x / 4, plane.transform.position.x + plane.transform.localScale.x / 4),
             plane.transform.localScale.y / 2 + plane.transform.position.y + relicPrefab.transform.localScale.y / 2,
-            Random.Range(plane.transform.position.z - plane.transform.localScale.z / 3, 0)),
+            Random.Range(plane.transform.position.z - plane.transform.localScale.z / 4, plane.transform.position.z + plane.transform.localScale.z / 4)),
             Quaternion.identity);
         obj.GetComponent<Relic>().Init(walls, plane);
         NetworkServer.Spawn(obj);
@@ -453,15 +453,6 @@ public class GameManager : NetworkBehaviour
             CmdSpawnWall(centerPlane.gameObject);
         }
         CmdSpawnRelic(centerPlane.gameObject, walls.ToArray());
-
-
-        //obj = Instantiate(relicPrefab,
-        //    new Vector3(Random.Range(centerPlane.position.x + centerPlane.localScale.x / 2, 0),
-        //    centerPlane.localScale.y / 2 + centerPlane.position.y + relicPrefab.transform.localScale.y / 2,
-        //    Random.Range(centerPlane.position.z + centerPlane.localScale.z / 2, 0)),
-        //    Quaternion.identity);
-
-        //NetworkServer.Spawn(obj);
 
         walls.Clear();
         for (int i = 0; i < 4; i++)
