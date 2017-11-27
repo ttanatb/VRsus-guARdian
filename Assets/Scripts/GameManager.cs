@@ -68,7 +68,11 @@ public class GameManager : NetworkBehaviour
             case 1:
                 if (Utility.IsPointerOverUIObject()) return;
                 if (currTrapSelection != -1)
+                {
+                    currentlySelectedTrap = null;
+                    TogglePreviouslySelectedTrap();
                     CheckTapOnARPlane();
+                }
                 else
                 {
                     CheckTapOnSecurityScreen();
