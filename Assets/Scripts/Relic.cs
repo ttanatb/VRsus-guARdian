@@ -26,7 +26,7 @@ public class Relic : NetworkBehaviour
         }
     }
 
-    private void OnCollisionStay(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         if (!isServer || isErecting)
             return;
