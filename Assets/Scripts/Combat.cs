@@ -205,11 +205,9 @@ public class Combat : NetworkBehaviour
         {
             foreach(Touch t in Input.touches)
             {
-                if (t.phase == TouchPhase.Began)
-                {
-                    if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), 10f, shootLayer))
-                        return true;
-                }
+				if (t.phase == TouchPhase.Began && Physics.Raycast(Camera.main.ScreenPointToRay(t.position), float.MaxValue, 1 << shootLayer)) {
+					return true;
+				}
             }
         }
 #if UNITY_IOS
