@@ -107,7 +107,7 @@ public class GameManager : NetworkBehaviour
                 }
 
                 if (t.phase == TouchPhase.Began &&
-                    Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, 10f, 1 << layer))
+                    Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, float.MaxValue, 1 << layer))
                 {
                     //Debug.Log("Raycast hit the trap");
                     currentlySelectedTrap = hit.transform.GetComponent<TrapDefense>();
@@ -137,7 +137,7 @@ public class GameManager : NetworkBehaviour
                 {
                     if (t.phase == TouchPhase.Stationary || t.phase == TouchPhase.Began) continue;
 
-                    if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, 10f, 1 << layer))
+                    if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, float.MaxValue, 1 << layer))
                     {
                         currentlySelectedTrap.transform.position = hit.point;
                         return;
@@ -157,7 +157,7 @@ public class GameManager : NetworkBehaviour
             foreach (Touch t in Input.touches)
             {
                 if (t.phase != TouchPhase.Began) continue;
-                if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, 10f, 1 << layer))
+                if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, float.MaxValue, 1 << layer))
                 {
                     currentlySelectedTrap = hit.collider.GetComponent<SecurityScreen>().associatedCamera;
                     currentlySelectedTrap.ToggleSelected();
@@ -178,9 +178,7 @@ public class GameManager : NetworkBehaviour
         if (previouslySelectedTrap)
             previouslySelectedTrap.ToggleSelected();
 
-        if (previouslySelectedTrap == currentlySelectedTrap)
-            previouslySelectedTrap = null;
-        else previouslySelectedTrap = currentlySelectedTrap;
+        previouslySelectedTrap = currentlySelectedTrap;
     }
 
     void CheckTapOnARPlane()
