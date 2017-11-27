@@ -210,8 +210,6 @@ public class Combat : NetworkBehaviour
 				}
             }
         }
-#if UNITY_IOS
-#endif
         return false;
     }
 

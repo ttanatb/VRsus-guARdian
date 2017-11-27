@@ -131,11 +131,11 @@ public class GameManager : NetworkBehaviour
             {
                 foreach (Touch t in Input.touches)
                 {
-                    if (t.phase == TouchPhase.Stationary) continue;
+                    if (t.phase == TouchPhase.Stationary || t.phase == TouchPhase.Began) continue;
 
                     if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, 10f, 1 << layer))
                     {
-                        currentlySelectedTrap.transform.position = t.position;
+                        currentlySelectedTrap.transform.position = hit.point;
                         return;
                     }
                 }
