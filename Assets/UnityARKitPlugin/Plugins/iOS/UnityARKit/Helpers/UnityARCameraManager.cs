@@ -6,7 +6,7 @@ using UnityEngine.XR.iOS;
 public class UnityARCameraManager : SingletonMonoBehaviour<UnityARCameraManager> {
 
     public Material m_ClearMaterial;
-	#if UNITY_IOS
+#if UNITY_IOS
 	public Camera m_camera;
 
     private UnityARSessionNativeInterface m_session;
@@ -17,6 +17,17 @@ public class UnityARCameraManager : SingletonMonoBehaviour<UnityARCameraManager>
 	public UnityARPlaneDetection planeDetection = UnityARPlaneDetection.Horizontal;
 	public bool getPointCloud = true;
 	public bool enableLightEstimation = true;
+
+
+    public void StopTracking() {
+		m_session = UnityARSessionNativeInterface.GetARSessionNativeInterface();
+        ARKitWorldTrackingSessionConfiguration config = new ARKitWorldTrackingSessionConfiguration();
+    	config.planeDetection = UnityARPlaneDetection.None;
+		config.alignment = startAlignment;
+		config.getPointCloudData = getPointCloud;
+		config.enableLightEstimation = enableLightEstimation;
+        m_session.RunWithConfig(config);
+    }
 
 	// Use this for initialization
 	void Start () {

@@ -5,6 +5,13 @@ using UnityEngine.Networking;
 
 public class Entrance : NetworkBehaviour
 {
+    private GameManager manager;
+
+    public override void OnStartServer()
+    {
+        manager = FindObjectOfType<GameManager>();
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (!isServer)
@@ -18,8 +25,9 @@ public class Entrance : NetworkBehaviour
                 combat = collision.gameObject.GetComponent<CameraAvatar>().rootPlayer.GetComponent<Combat>();
             }
 
-            if (combat.GetRelicCount() > 0)
+            if (combat.GetRelicCount() > 0 && manager.CurrGamePhase != GamePhase.Over)
             {
+                manager.SetPhaseTo(GamePhase.Over);
                 RpcAlertVRWin(combat.GetRelicCount());
             }
         }

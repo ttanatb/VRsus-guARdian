@@ -23,7 +23,7 @@ public class Bullet : NetworkBehaviour
         if (!isServer)
             return;
 
-        Debug.Log(collision.gameObject);
+        //Debug.Log(collision.gameObject);
 
         if (collision.gameObject.tag == tag || collision.gameObject.tag == "Platform")
         {

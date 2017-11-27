@@ -47,6 +47,7 @@ public class Combat : NetworkBehaviour
 
     private bool canShoot = false;
 
+    private GameManager manager;
     public bool CanShoot
     {
         set
@@ -93,8 +94,9 @@ public class Combat : NetworkBehaviour
 
         prevPos = avatar.position;
         shootLayer = crosshairObj.layer;
-        //LayerMask layer = LayerMask.NameToLayer("Tower");
-        //Debug.Log(LayerMask.LayerToName(layer));
+
+        if (isServer)
+            manager = FindObjectOfType<GameManager>();
     }
 
     public void InitHealthBar()
@@ -291,6 +293,12 @@ public class Combat : NetworkBehaviour
     [ClientRpc]
     void RpcDie()
     {
+        if (isServer)
+        {
+            manager.SetPhaseTo(GamePhase.Over);
+            canShoot = false;
+        }
+
         CanvasManager.Instance.SetPermanentMessage("AR player wins!");
     }
 

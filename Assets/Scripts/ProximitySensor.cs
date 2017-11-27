@@ -11,7 +11,8 @@ public class ProximitySensor : TrapDefense
     private float nearRangeSqr;
     private float farRangeSqr;
 
-    static Transform[] players;
+    private static Transform[] players;
+    private static GameManager manager;
 
     public override string TrapName
     {
@@ -50,12 +51,17 @@ public class ProximitySensor : TrapDefense
                     players[0] = playerScripts[i].transform;
             }
         }
+
+        if (manager == null)
+        {
+            manager = FindObjectOfType<GameManager>();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!isServer)
+        if (!isServer || manager.CurrGamePhase != GamePhase.Playing)
             return;
         float closestDist = float.MaxValue;
 

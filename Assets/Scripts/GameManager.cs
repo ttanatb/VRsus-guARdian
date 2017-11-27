@@ -9,6 +9,7 @@ public enum GamePhase
     Scanning = 0,
     Placing = 1,
     Playing = 2,
+    Over = 3
 }
 
 [System.Serializable]
@@ -16,6 +17,7 @@ public class Trap
 {
     public GameObject trap;
     public int count;
+    public int maxCount;
 }
 
 public class GameManager : NetworkBehaviour
@@ -52,8 +54,14 @@ public class GameManager : NetworkBehaviour
             CanvasManager.Instance.SetUI(this);
         }
 #endif
+    }
 
-
+    public void Start()
+    {
+        foreach (Trap t in trapList)
+        {
+            t.maxCount = t.count;
+        }
     }
 
     // Update is called once per frame
@@ -265,12 +273,33 @@ public class GameManager : NetworkBehaviour
         else return false;
     }
 
+    public void ResetGame()
+    {
+        foreach (Wall w in FindObjectsOfType<Wall>())
+        {
+            Network.Destroy(w.gameObject);
+        }
+
+        foreach (TrapDefense t in FindObjectsOfType<TrapDefense>())
+        {
+            Network.Destroy(t.gameObject);
+        }
+
+        foreach (Trap t in trapList)
+        {
+            t.count = t.maxCount;
+        }
+    }
+
     public void SetPhaseTo(GamePhase newPhase)
     {
 
         switch (newPhase)
         {
             case GamePhase.Placing:
+#if UNITY_IOS
+                UnityARCameraManager.Instance.StopTracking();
+#endif
                 CmdSpawnRelics();
                 break;
 

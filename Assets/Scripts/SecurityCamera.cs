@@ -32,6 +32,11 @@ public class SecurityCamera : TrapDefense
 
             Init();
         }
+        else
+        {
+            foreach (Renderer r in GetComponentsInChildren<Renderer>())
+                r.enabled = false;
+        }
     }
 
     public void Init()
