@@ -57,6 +57,8 @@ public class Movement : MonoBehaviour
         rigidBody.useGravity = false;
         rigidBody.isKinematic = false;
         rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+
+        transform.Translate(Vector3.up * 200f);
 #endif
     }
 
