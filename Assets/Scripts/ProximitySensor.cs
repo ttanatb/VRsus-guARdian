@@ -43,14 +43,13 @@ public class ProximitySensor : TrapDefense
         if (players == null)
         {
             Player[] playerScripts = FindObjectsOfType<Player>();
-            players = new Transform[playerScripts.Length];
+            players = new Transform[1];
             for (int i = 0; i < players.Length; i++)
             {
-                players[i] = playerScripts[i].transform;
+                if (playerScripts[i].PlayerType == PlayerType.VR)
+                    players[0] = playerScripts[i].transform;
             }
         }
-
-        Debug.Log(players.Length);
     }
 
     // Update is called once per frame
@@ -88,7 +87,7 @@ public class ProximitySensor : TrapDefense
 
         for (int i = 0; i < transform.childCount; i++)
         {
-            transform.GetChild(i).gameObject.SetActive(selected);
+            transform.GetChild(i).gameObject.GetComponent<Renderer>().enabled = selected;
         }
     }
 
