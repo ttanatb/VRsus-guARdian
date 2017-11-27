@@ -183,8 +183,6 @@ public class Player : NetworkBehaviour
                 GetComponent<Movement>().enabled = true;
             if (GetComponent<BlockManager>())
                 GetComponent<BlockManager>().enabled = true;
-
-
         }
 
         if (GetComponent<Combat>())

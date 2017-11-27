@@ -10,7 +10,7 @@ public class DebugMode : SingletonMonoBehaviour<DebugMode>
 #if UNITY_IOS
         return false;
 #else
-        return true;
+        return false;
 #endif
         }
     }

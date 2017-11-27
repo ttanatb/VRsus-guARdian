@@ -94,33 +94,29 @@ public class GameManager : NetworkBehaviour
         if (Input.touchCount > 0)
         {
             Debug.Log("Checking Tap");
-            Touch t = Input.GetTouch(0);
-            if (t.phase != TouchPhase.Began)
+            foreach (Touch t in Input.touches)
             {
-                Debug.Log("Tap wasn't a begin");
-                return;
-            }
-
-            if (t.phase == TouchPhase.Began &&
-                Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
-            {
-                Debug.Log("Raycast hit the trap");
-                currentlySelectedTrap = hit.transform.GetComponent<TrapDefense>();
-                if (currentlySelectedTrap)
+                if (t.phase != TouchPhase.Began)
                 {
+                    Debug.Log("Tap wasn't a begin");
+                    continue;
+                }
+
+                if (t.phase == TouchPhase.Began &&
+                    Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, 10f, layer))
+                {
+                    Debug.Log("Raycast hit the trap");
+                    currentlySelectedTrap = hit.transform.GetComponent<TrapDefense>();
                     currentlySelectedTrap.ToggleSelected();
+                    TogglePreviouslySelectedTrap();
                 }
                 else
                 {
-                    Debug.Log("Did not tap on a trap?");
+                    Debug.Log("Raycast did not hit a trap");
+                    currentlySelectedTrap = null;
+                    TogglePreviouslySelectedTrap();
                 }
-                TogglePreviouslySelectedTrap();
-            }
-            else
-            {
-                Debug.Log("Raycast did not hit a trap");
-                currentlySelectedTrap = null;
-                TogglePreviouslySelectedTrap();
+                return;
             }
         }
     }
@@ -133,11 +129,15 @@ public class GameManager : NetworkBehaviour
             LayerMask layer = LayerMask.NameToLayer("Tower");
             if (Input.touchCount > 0)
             {
-                Touch t = Input.GetTouch(0);
-                if (t.phase != TouchPhase.Stationary &&
-                    Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
+                foreach (Touch t in Input.touches)
                 {
-                    currentlySelectedTrap.transform.position = t.position;
+                    if (t.phase == TouchPhase.Stationary) continue;
+
+                    if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, 10f, layer))
+                    {
+                        currentlySelectedTrap.transform.position = t.position;
+                        return;
+                    }
                 }
             }
         }
@@ -150,18 +150,21 @@ public class GameManager : NetworkBehaviour
         LayerMask layer = LayerMask.NameToLayer("UI");
         if (Input.touchCount > 0)
         {
-            Touch t = Input.GetTouch(0);
-            if (t.phase == TouchPhase.Began &&
-                Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
+            foreach (Touch t in Input.touches)
             {
-                currentlySelectedTrap = hit.collider.GetComponent<SecurityScreen>().associatedCamera;
-                currentlySelectedTrap.ToggleSelected();
-                TogglePreviouslySelectedTrap();
-            }
-            else
-            {
-                currentlySelectedTrap = null;
-                TogglePreviouslySelectedTrap();
+                if (t.phase != TouchPhase.Began) continue;
+                if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, 10f, layer))
+                {
+                    currentlySelectedTrap = hit.collider.GetComponent<SecurityScreen>().associatedCamera;
+                    currentlySelectedTrap.ToggleSelected();
+                    TogglePreviouslySelectedTrap();
+                }
+                else
+                {
+                    currentlySelectedTrap = null;
+                    TogglePreviouslySelectedTrap();
+                }
+                return;
             }
         }
     }
@@ -183,20 +186,24 @@ public class GameManager : NetworkBehaviour
 
         if (Input.touchCount > 0)
         {
-            Touch t = Input.GetTouch(0);
-            if (t.phase == TouchPhase.Began &&
-                (currTrapSelection >= 0 && currTrapSelection < trapList.Length && trapList[currTrapSelection].count > 0) &&
-                Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, layer))
+            foreach (Touch t in Input.touches)
             {
-                trapList[currTrapSelection].count -= 1;
+                if (t.phase != TouchPhase.Began || 
+                    !(currTrapSelection >= 0 && currTrapSelection < trapList.Length && trapList[currTrapSelection].count > 0))
+                    continue;
 
-                CmdSpawnTrap(currTrapSelection, hit.point);
+                if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, 10f, layer))
+                {
+                    trapList[currTrapSelection].count -= 1;
 
-                CanvasManager.Instance.ClearSelection(this);
-                CanvasManager.Instance.UpdateTrapCount(this);
+                    CmdSpawnTrap(currTrapSelection, hit.point);
 
-                currTrapSelection = -1;
-                return;
+                    CanvasManager.Instance.ClearSelection(this);
+                    CanvasManager.Instance.UpdateTrapCount(this);
+
+                    currTrapSelection = -1;
+                    return;
+                }
             }
         }
 

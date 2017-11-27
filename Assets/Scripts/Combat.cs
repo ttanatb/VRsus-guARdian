@@ -93,6 +93,7 @@ public class Combat : NetworkBehaviour
 
         prevPos = avatar.position;
         shootLayer = crosshairObj.layer;
+        Debug.Log(LayerMask.LayerToName(shootLayer));
     }
 
     public void InitHealthBar()
@@ -201,16 +202,12 @@ public class Combat : NetworkBehaviour
     {
         if (Input.touchCount > 0)
         {
-            for (int i = 0; i < Input.touchCount; i++)
+            foreach(Touch t in Input.touches)
             {
-                Touch t = Input.GetTouch(i);
                 if (t.phase == TouchPhase.Began)
                 {
-                    RaycastHit hit;
-                    if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, shootLayer))
-                    {
+                    if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), 10f, shootLayer))
                         return true;
-                    }
                 }
             }
         }
