@@ -93,7 +93,8 @@ public class Combat : NetworkBehaviour
 
         prevPos = avatar.position;
         shootLayer = crosshairObj.layer;
-        Debug.Log(LayerMask.LayerToName(shootLayer));
+        //LayerMask layer = LayerMask.NameToLayer("Tower");
+        //Debug.Log(LayerMask.LayerToName(layer));
     }
 
     public void InitHealthBar()

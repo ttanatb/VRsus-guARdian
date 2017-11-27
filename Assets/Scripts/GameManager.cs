@@ -183,13 +183,14 @@ public class GameManager : NetworkBehaviour
     {
         RaycastHit hit;
         LayerMask layer = LayerMask.NameToLayer("Tower");
-
         if (Input.touchCount > 0)
         {
             foreach (Touch t in Input.touches)
             {
-                if (t.phase != TouchPhase.Began || 
-                    !(currTrapSelection >= 0 && currTrapSelection < trapList.Length && trapList[currTrapSelection].count > 0))
+                if (t.phase != TouchPhase.Began)
+                    continue;
+                
+                if (currTrapSelection < 0 || currTrapSelection > trapList.Length - 1 || trapList[currTrapSelection].count < 1)
                     continue;
 
                 if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, 10f, layer))
