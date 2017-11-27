@@ -46,7 +46,7 @@ public class Relic : NetworkBehaviour
                 AlertRelicStolen();
                 for (int i = 0; i < lerpPos.Length; i++)
                 {
-                    walls[i].GetComponent<Renderer>().enabled = true;
+                    //walls[i].GetComponent<Renderer>().enabled = true;
                 }
             }
         }
@@ -72,7 +72,7 @@ public class Relic : NetworkBehaviour
                 AlertRelicStolen();
                 for (int i = 0; i < lerpPos.Length; i++)
                 {
-                    walls[i].GetComponent<Renderer>().enabled = true;
+                    //walls[i].GetComponent<Renderer>().enabled = true;
                 }
             }
         }
