@@ -203,24 +203,18 @@ public class Combat : NetworkBehaviour
         }
 
 
-		RaycastHit hit;
-		GameObject hitObj = null;
-        bool didHit = false;
         if (isShootingLaser)
         {
-            if (Physics.Raycast(avatar.position, avatar.forward, out hit, layerMaxDist, laserLayerMask))
+            if (isLocalPlayer)
             {
-                print(hit.transform.gameObject.name);
-                didHit = true;
-                laserPoint = hit.point;
-				hitObj = hit.transform.gameObject;
+                laser.SetPosition(0, avatar.position - Vector3.up * 0.01f);
+                laser.SetPosition(1, laserPoint);
             }
             else
             {
-                laserPoint = avatar.position + avatar.forward * layerMaxDist;
+                laser.SetPosition(0, avatar.position);
+                laser.SetPosition(1, laserPoint);
             }
-            laser.SetPosition(0, avatar.position);
-            laser.SetPosition(1, laserPoint);
         }
         else
         {
@@ -233,20 +227,26 @@ public class Combat : NetworkBehaviour
 
         if (isShootingLaser)
         {
+            RaycastHit hit;
+            if (Physics.Raycast(avatar.position, avatar.forward, out hit, layerMaxDist, laserLayerMask))
+            {
+                print(hit.transform.gameObject.name);
+                laserPoint = hit.point;
+                if (hit.transform.tag == "Player")
+                    hit.transform.GetComponent<Combat>().TakeDamage();
+
+            }
+            else
+            {
+                laserPoint = avatar.position + avatar.forward * layerMaxDist;
+            }
+
             laserTimer += Time.deltaTime;
             if (laserTimer > laserDuration)
             {
                 laserTimer = 0f;
                 isShootingLaser = false;
                 //laser.enabled = false;
-            }
-
-			if (hitObj != null)
-            {
-                if (hitObj.tag == "Player")
-                {
-                    GetComponent<Combat>().TakeDamage();
-                }
             }
         }
         else
