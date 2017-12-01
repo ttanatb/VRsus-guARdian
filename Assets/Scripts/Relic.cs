@@ -9,6 +9,8 @@ public class Relic : NetworkBehaviour
     private GameObject[] walls;
     private Vector3[] lerpPos;
     private GameObject associatedTower;
+
+    [SyncVar]
     private bool isErecting = false;
 
     public void Init(GameObject[] walls, GameObject tower)
@@ -82,9 +84,6 @@ public class Relic : NetworkBehaviour
 
     private void Update()
     {
-        if (!isLocalPlayer)
-            return;
-
         if (isErecting)
         {
             GetComponent<Renderer>().enabled = false;
