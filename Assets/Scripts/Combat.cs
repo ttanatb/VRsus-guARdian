@@ -106,7 +106,7 @@ public class Combat : NetworkBehaviour
         if (player.PlayerType == PlayerType.AR)
         {
             avatar = player.ARAvatar.transform;
-            lineRenderer.enabled = true;
+            laser.enabled = true;
         }
         else
         {
@@ -203,23 +203,27 @@ public class Combat : NetworkBehaviour
         }
 
 
+        RaycastHit hit = new RaycastHit();
+        bool didHit = false;
         if (isShootingLaser)
         {
-            RaycastHit hit;
             if (Physics.Raycast(avatar.position, avatar.forward, out hit, layerMaxDist, 1 << laserLayerMask))
             {
+                print(hit.transform.gameObject.name);
+                didHit = true;
                 laserPoint = hit.point;
-                if (hit.transform.tag == "Player")
-                {
-                    GetComponent<Combat>().TakeDamage();
-                }
             }
             else
             {
                 laserPoint = avatar.position + avatar.forward * layerMaxDist;
             }
             laser.SetPosition(0, avatar.position);
-            laser.SetPosition(0, laserPoint);
+            laser.SetPosition(1, laserPoint);
+        }
+        else
+        {
+            laser.SetPosition(0, avatar.position);
+            laser.SetPosition(1, avatar.position);
         }
 
         if (!isLocalPlayer || (player.PlayerType == PlayerType.AR && Utility.IsPointerOverUIObject()))
@@ -234,8 +238,16 @@ public class Combat : NetworkBehaviour
                 isShootingLaser = false;
                 laser.enabled = false;
             }
+
+            if (didHit)
+            {
+                if (hit.transform.tag == "Player")
+                {
+                    GetComponent<Combat>().TakeDamage();
+                }
+            }
         }
-        else 
+        else
         {
             laserTimer += Time.deltaTime;
             if (laserTimer > laserCoolDown)
@@ -303,7 +315,7 @@ public class Combat : NetworkBehaviour
         laser.enabled = true;
         isShootingLaser = true;
         laserTimer = 0f;
-        
+
         //GameObject bulletObj = null;
         //if (player.PlayerType == PlayerType.AR)
         //{
