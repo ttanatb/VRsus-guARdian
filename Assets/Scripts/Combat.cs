@@ -203,15 +203,17 @@ public class Combat : NetworkBehaviour
         }
 
 
-        RaycastHit hit = new RaycastHit();
+		RaycastHit hit;
+		GameObject hitObj = null;
         bool didHit = false;
         if (isShootingLaser)
         {
-            if (Physics.Raycast(avatar.position, avatar.forward, out hit, layerMaxDist, 1 << laserLayerMask))
+            if (Physics.Raycast(avatar.position, avatar.forward, out hit, layerMaxDist, laserLayerMask))
             {
                 print(hit.transform.gameObject.name);
                 didHit = true;
                 laserPoint = hit.point;
+				hitObj = hit.transform.gameObject;
             }
             else
             {
@@ -226,7 +228,7 @@ public class Combat : NetworkBehaviour
             laser.SetPosition(1, avatar.position);
         }
 
-        if (!isLocalPlayer || (player.PlayerType == PlayerType.AR && Utility.IsPointerOverUIObject()))
+        if (!isLocalPlayer)
             return;
 
         if (isShootingLaser)
@@ -236,12 +238,12 @@ public class Combat : NetworkBehaviour
             {
                 laserTimer = 0f;
                 isShootingLaser = false;
-                laser.enabled = false;
+                //laser.enabled = false;
             }
 
-            if (didHit)
+			if (hitObj != null)
             {
-                if (hit.transform.tag == "Player")
+                if (hitObj.tag == "Player")
                 {
                     GetComponent<Combat>().TakeDamage();
                 }
@@ -255,6 +257,8 @@ public class Combat : NetworkBehaviour
         }
 
 
+		if (player.PlayerType == PlayerType.AR && Utility.IsPointerOverUIObject())
+			return;
 
         if (isReadyToShoot)
         {
@@ -263,12 +267,6 @@ public class Combat : NetworkBehaviour
                 CmdFire(avatar.position, avatar.forward);
             }
         }
-
-
-        //else if ((Input.GetMouseButtonDown(0)))
-        //{
-        //    CmdCreateJumpPad(transform.position + Vector3.down * 0.01f);
-        //}
 
         if (prevHealth != health)
         {
@@ -312,7 +310,7 @@ public class Combat : NetworkBehaviour
         if (!canShoot)
             return;
 
-        laser.enabled = true;
+        //laser.enabled = true;
         isShootingLaser = true;
         laserTimer = 0f;
 
