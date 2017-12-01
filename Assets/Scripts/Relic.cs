@@ -53,6 +53,7 @@ public class Relic : NetworkBehaviour
         }
     }
 
+
     private void OnTriggerEnter(Collider other)
     {
         if (!isServer || isErecting)
@@ -81,17 +82,12 @@ public class Relic : NetworkBehaviour
 
     private void Update()
     {
-        if (!isServer)
+        if (!isLocalPlayer)
             return;
 
         if (isErecting)
         {
-            for (int i = 0; i < walls.Length; i++)
-            {
-                walls[i].transform.position = Vector3.Lerp(walls[i].transform.position, lerpPos[i], Time.deltaTime * 5f);
-            }
-
-            transform.position = Vector3.Lerp(transform.position, transform.position - Vector3.up * 2f, Time.deltaTime);
+            GetComponent<Renderer>().enabled = false;
         }
     }
 
