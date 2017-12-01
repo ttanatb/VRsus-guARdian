@@ -48,6 +48,23 @@ public class Combat : NetworkBehaviour
     private bool canShoot = false;
 
     private GameManager manager;
+
+    //shooting laser
+    private LineRenderer lineRenderer;
+    public LayerMask laserLayerMask;
+    public float layerMaxDist;
+
+    [SyncVar]
+    private Vector3 laserPoint;
+
+    [SyncVar]
+    private bool isShootingLaser;
+
+    private float laserTimer = 0f;
+    private bool isReadyToShoot = false;
+    public float laserDuration = 2f;
+    public float laserCoolDown = 1f;
+
     public bool CanShoot
     {
         set
@@ -68,6 +85,7 @@ public class Combat : NetworkBehaviour
 
     public GameObject crosshairObj;
     private LayerMask shootLayer;
+    LineRenderer laser;// = GetComponent<LineRenderer>();
 
     public bool IsInvulnerable
     {
@@ -83,9 +101,12 @@ public class Combat : NetworkBehaviour
     private void Start()
     {
         player = GetComponent<Player>();
+
+        laser = GetComponent<LineRenderer>();
         if (player.PlayerType == PlayerType.AR)
         {
             avatar = player.ARAvatar.transform;
+            lineRenderer.enabled = true;
         }
         else
         {
@@ -150,6 +171,12 @@ public class Combat : NetworkBehaviour
 
         if (healthBarUI)
             Destroy(healthBarUI.gameObject);
+
+        if (!lineRenderer)
+            lineRenderer = GetComponent<LineRenderer>();
+
+        if (lineRenderer)
+            Destroy(lineRenderer);
     }
 
     // Update is called once per frame
@@ -175,12 +202,50 @@ public class Combat : NetworkBehaviour
             //else invulTimer += Time.deltaTime;
         }
 
+
+        if (isShootingLaser)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(avatar.position, avatar.forward, out hit, layerMaxDist, laserLayerMask))
+            {
+                laserPoint = hit.point;
+            }
+            else
+            {
+                laserPoint = avatar.position + avatar.forward * layerMaxDist;
+            }
+            laser.SetPosition(0, avatar.position);
+            laser.SetPosition(0, laserPoint);
+        }
+
         if (!isLocalPlayer || (player.PlayerType == PlayerType.AR && Utility.IsPointerOverUIObject()))
             return;
 
-        if (CheckTap())
+        if (isShootingLaser)
         {
-            CmdFire(avatar.position, avatar.forward);
+            laserTimer += Time.deltaTime;
+            if (laserTimer > laserDuration)
+            {
+                laserTimer = 0f;
+                isShootingLaser = false;
+                laser.enabled = false;
+            }
+        }
+        else 
+        {
+            laserTimer += Time.deltaTime;
+            if (laserTimer > laserCoolDown)
+                isReadyToShoot = true;
+        }
+
+
+
+        if (isReadyToShoot)
+        {
+            if (CheckTap())
+            {
+                CmdFire(avatar.position, avatar.forward);
+            }
         }
 
 
@@ -205,11 +270,12 @@ public class Combat : NetworkBehaviour
     {
         if (Input.touchCount > 0)
         {
-            foreach(Touch t in Input.touches)
+            foreach (Touch t in Input.touches)
             {
-				if (t.phase == TouchPhase.Began && Physics.Raycast(Camera.main.ScreenPointToRay(t.position), float.MaxValue, 1 << shootLayer)) {
-					return true;
-				}
+                if (t.phase != TouchPhase.Canceled)
+                {
+                    return true;
+                }
             }
         }
         return false;
@@ -230,27 +296,31 @@ public class Combat : NetworkBehaviour
         if (!canShoot)
             return;
 
-        GameObject bulletObj = null;
-        if (player.PlayerType == PlayerType.AR)
-        {
-            bulletObj = Instantiate(bulletPrefab,
-            avatar.position + avatar.localScale.z * avatar.forward,
-            Quaternion.identity);
-            bulletObj.GetComponent<Rigidbody>().velocity = avatar.forward * bulletSpeed;// + (avatar.position - prevPos);		
-        }
-        else
-        {
-            bulletObj = Instantiate(bulletPrefab,
-            transform.position + avatar.localScale.z * transform.forward,
-            Quaternion.identity);
-            bulletObj.GetComponent<Rigidbody>().velocity = transform.forward * bulletSpeed;// + (avatar.position - prevPos);		
+        laser.enabled = true;
+        isShootingLaser = true;
+        laserTimer = 0f;
+        
+        //GameObject bulletObj = null;
+        //if (player.PlayerType == PlayerType.AR)
+        //{
+        //    bulletObj = Instantiate(bulletPrefab,
+        //    avatar.position + avatar.localScale.z * avatar.forward,
+        //    Quaternion.identity);
+        //    bulletObj.GetComponent<Rigidbody>().velocity = avatar.forward * bulletSpeed;// + (avatar.position - prevPos);		
+        //}
+        //else
+        //{
+        //    bulletObj = Instantiate(bulletPrefab,
+        //    transform.position + avatar.localScale.z * transform.forward,
+        //    Quaternion.identity);
+        //    bulletObj.GetComponent<Rigidbody>().velocity = transform.forward * bulletSpeed;// + (avatar.position - prevPos);		
 
-        }
-        //bulletObj = Instantiate(bulletPrefab, pos, Quaternion.identity);
-        //bulletObj.GetComponent<Rigidbody>().velocity = forward * bulletSpeed;
-        NetworkServer.Spawn(bulletObj);
-        bulletObj.GetComponent<Bullet>().Init(player.PlayerType, isLocalPlayer);
-        Destroy(bulletObj, bulletTimer);
+        //}
+        ////bulletObj = Instantiate(bulletPrefab, pos, Quaternion.identity);
+        ////bulletObj.GetComponent<Rigidbody>().velocity = forward * bulletSpeed;
+        //NetworkServer.Spawn(bulletObj);
+        //bulletObj.GetComponent<Bullet>().Init(player.PlayerType, isLocalPlayer);
+        //Destroy(bulletObj, bulletTimer);
     }
 
     [Command]

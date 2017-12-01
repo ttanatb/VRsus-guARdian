@@ -44,6 +44,7 @@ public class Relic : NetworkBehaviour
                 combat.GainRelic();
                 isErecting = true;
                 AlertRelicStolen();
+                GetComponent<Renderer>().enabled = false;
                 for (int i = 0; i < lerpPos.Length; i++)
                 {
                     //walls[i].GetComponent<Renderer>().enabled = true;

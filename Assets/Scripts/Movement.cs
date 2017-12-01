@@ -134,6 +134,12 @@ public class Movement : MonoBehaviour
             Quaternion xRot = Quaternion.AngleAxis(avgRotX, Vector3.up);
 
             transform.rotation = startingRot * xRot * yRot;
+
+            if (Input.GetKeyDown(KeyCode.Space) && currJumps < jumpCount)
+            {
+                Jump(jumpFactor);
+                currJumps++;
+            }
         }
     }
 
@@ -149,11 +155,7 @@ public class Movement : MonoBehaviour
 
             rigidBody.MovePosition(movement + transform.position);
 
-            if (Input.GetKeyDown(KeyCode.Space) && currJumps <= jumpCount)
-            {
-                Jump(jumpFactor);
-                currJumps++;
-            }
+
 
         }
     }
