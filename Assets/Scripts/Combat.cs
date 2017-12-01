@@ -207,7 +207,7 @@ public class Combat : NetworkBehaviour
         {
             if (isLocalPlayer)
             {
-                laser.SetPosition(0, avatar.position - Vector3.up * 0.01f);
+                laser.SetPosition(0, avatar.position);
                 laser.SetPosition(1, laserPoint);
             }
             else
