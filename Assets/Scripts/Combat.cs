@@ -206,9 +206,13 @@ public class Combat : NetworkBehaviour
         if (isShootingLaser)
         {
             RaycastHit hit;
-            if (Physics.Raycast(avatar.position, avatar.forward, out hit, layerMaxDist, laserLayerMask))
+            if (Physics.Raycast(avatar.position, avatar.forward, out hit, layerMaxDist, 1 << laserLayerMask))
             {
                 laserPoint = hit.point;
+                if (hit.transform.tag == "Player")
+                {
+                    GetComponent<Combat>().TakeDamage();
+                }
             }
             else
             {
