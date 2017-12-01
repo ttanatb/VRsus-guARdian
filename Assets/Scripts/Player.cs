@@ -86,6 +86,7 @@ public class Player : NetworkBehaviour
         {
             if (playerType == PlayerType.AR)
             {
+				ARAvatar.GetComponent<Renderer>().enabled = true;
                 //VRAvatar.GetComponent<Collider>().enabled = true;
             }
             else
@@ -183,6 +184,8 @@ public class Player : NetworkBehaviour
                 GetComponent<Movement>().enabled = true;
             if (GetComponent<BlockManager>())
                 GetComponent<BlockManager>().enabled = true;
+
+
         }
 
         if (GetComponent<Combat>())

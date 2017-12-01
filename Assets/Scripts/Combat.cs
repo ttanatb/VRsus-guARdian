@@ -207,7 +207,7 @@ public class Combat : NetworkBehaviour
         {
             if (isLocalPlayer)
             {
-                laser.SetPosition(0, avatar.position);
+				laser.SetPosition(0, avatar.position - avatar.up * 0.02f);
                 laser.SetPosition(1, laserPoint);
             }
             else
@@ -246,14 +246,15 @@ public class Combat : NetworkBehaviour
             {
                 laserTimer = 0f;
                 isShootingLaser = false;
-                //laser.enabled = false;
             }
         }
         else
         {
             laserTimer += Time.deltaTime;
-            if (laserTimer > laserCoolDown)
+			if (laserTimer > laserCoolDown) 
+			{
                 isReadyToShoot = true;
+			}
         }
 
 
@@ -312,6 +313,7 @@ public class Combat : NetworkBehaviour
 
         //laser.enabled = true;
         isShootingLaser = true;
+		isReadyToShoot = false;
         laserTimer = 0f;
 
         //GameObject bulletObj = null;
