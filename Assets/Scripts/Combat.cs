@@ -230,10 +230,10 @@ public class Combat : NetworkBehaviour
             RaycastHit hit;
             if (Physics.Raycast(avatar.position, avatar.forward, out hit, layerMaxDist, laserLayerMask))
             {
-                print(hit.transform.gameObject.name);
+                //print(hit.transform.gameObject.name);
                 laserPoint = hit.point;
                 if (hit.transform.tag == "Player")
-                    hit.transform.GetComponent<Combat>().TakeDamage();
+					hit.transform.GetComponent<CameraAvatar>().rootPlayer.GetComponent<Combat>().TakeDamage();
 
             }
             else
