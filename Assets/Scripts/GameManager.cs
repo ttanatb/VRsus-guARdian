@@ -252,7 +252,7 @@ public class GameManager : NetworkBehaviour
         }
         else
         {
-            if (UnityARAnchorManager.Instance.planeAnchorMap.Count < 3)
+            if (UnityARAnchorManager.Instance.planeAnchorMap.Count < 0)
                 return false;
 
             foreach (string key in UnityARAnchorManager.Instance.planeAnchorMap.Keys)
