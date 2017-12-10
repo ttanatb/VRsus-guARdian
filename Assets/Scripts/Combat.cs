@@ -54,6 +54,8 @@ public class Combat : NetworkBehaviour
     public LayerMask laserLayerMask;
     public float layerMaxDist;
 
+    private LaserParticle laserParticle;
+
     [SyncVar]
     private Vector3 laserPoint;
 
@@ -103,6 +105,7 @@ public class Combat : NetworkBehaviour
         player = GetComponent<Player>();
 
         laser = GetComponent<LineRenderer>();
+        laserParticle = FindObjectOfType<LaserParticle>();
         if (player.PlayerType == PlayerType.AR)
         {
             avatar = player.ARAvatar.transform;
@@ -205,6 +208,10 @@ public class Combat : NetworkBehaviour
 
         if (isShootingLaser)
         {
+            laserParticle.transform.position = laserPoint;
+            laserParticle.transform.up = Vector3.up;
+            laserParticle.Play();
+
             if (isLocalPlayer)
             {
 				laser.SetPosition(0, avatar.position - avatar.up * 0.02f);
@@ -218,6 +225,7 @@ public class Combat : NetworkBehaviour
         }
         else
         {
+            laserParticle.Stop();
             laser.SetPosition(0, avatar.position);
             laser.SetPosition(1, avatar.position);
         }
