@@ -58,10 +58,10 @@ public class BlockManager : NetworkBehaviour
 
     //player renderer
     public Renderer vrPlayerRenderer;
-
     private Movement movement;
-
     public LayerMask mask;
+
+    public Vector3 startingPos;
 
     /// <summary>
     /// Initialization
@@ -90,7 +90,8 @@ public class BlockManager : NetworkBehaviour
             movement = GetComponent<Movement>();
 
             //CanvasManager.Instance.ToggleCrossHairUI();
-            StartPlacing();
+            //StartPlacing();
+            transform.position = new Vector3(0.759f, 1001f, -0.659f);
         }
 
         //LocalObjectBuilder.Instance.SetBlockManager(this);
@@ -182,6 +183,12 @@ public class BlockManager : NetworkBehaviour
         if (switching)
             return;
 
+        if (transform.position.y < -3f)
+        {
+            GetComponent<Combat>().TakeDamage();
+            transform.position = startingPos;
+        }
+
         //Input to switch into or out of placing mode
         if (Input.GetKeyDown(KeyCode.T) && Input.GetKey(KeyCode.LeftShift))
         {
@@ -203,6 +210,7 @@ public class BlockManager : NetworkBehaviour
                     Debug.Log(hitInfo.collider.name);
                     StopPlacing();
                     transform.position = hitInfo.point;
+                    startingPos = hitInfo.point;
                 }
             }
 
@@ -383,6 +391,12 @@ public class BlockManager : NetworkBehaviour
     private void CmdAddBlock(Vector3 position, int type)
     {
         blockList.Add(new Block(position, type));
+    }
+
+    [ClientRpc]
+    public void RpcStartPlacing()
+    {
+        StartPlacing();
     }
     #endregion
 }

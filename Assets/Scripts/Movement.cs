@@ -41,7 +41,9 @@ public class Movement : NetworkBehaviour
     Quaternion startingRot;
     Vector3 startingPos;
 
+    [SyncVar]
     bool isSlowed = false;
+    public float slowFactor = 0.7f;
     TrailRenderer trailRenderer;
 
     public bool IsSlowed
@@ -162,7 +164,7 @@ public class Movement : NetworkBehaviour
 
             if (isSlowed)
             {
-
+                movement *= slowFactor;
             }
             else if (Input.GetKey(KeyCode.LeftShift))
             {

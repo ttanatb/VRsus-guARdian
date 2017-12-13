@@ -275,10 +275,12 @@ public class GameManager : NetworkBehaviour
 
     public void ResetGame()
     {
-        foreach (Wall w in FindObjectsOfType<Wall>())
-        {
-            Network.Destroy(w.gameObject);
-        }
+        //foreach (Wall w in FindObjectsOfType<Wall>())
+        //{
+        //    Network.Destroy(w.gameObject);
+        //}
+        currGamePhase = (int)GamePhase.Placing;
+
 
         foreach (TrapDefense t in FindObjectsOfType<TrapDefense>())
         {
@@ -300,6 +302,7 @@ public class GameManager : NetworkBehaviour
 #if UNITY_IOS
                 UnityARCameraManager.Instance.StopTracking();
 #endif
+                FindObjectOfType<BlockManager>().RpcStartPlacing();
                 CmdSpawnRelics();
                 break;
 

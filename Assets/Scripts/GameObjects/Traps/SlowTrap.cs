@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 public class SlowTrap : TrapDefense
 {
     [SyncVar]
-    bool isActive = false;
+    bool isActive = true;
 
     // Use this for initialization
     private void Start()
@@ -22,9 +22,12 @@ public class SlowTrap : TrapDefense
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!isServer) return;
+
         if (other.tag == "Player")
         {
-            CmdTriggerTrap();
+            if (!isActive)
+                CmdTriggerTrap();
 
             if (isActive)
             {
@@ -35,6 +38,8 @@ public class SlowTrap : TrapDefense
 
     private void OnTriggerExit(Collider other)
     {
+        if (!isServer) return;
+
         if (other.tag == "Player" && isActive)
         {
             other.GetComponent<Movement>().IsSlowed = false;

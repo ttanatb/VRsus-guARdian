@@ -25,7 +25,7 @@ public class Entrance : NetworkBehaviour
                 combat = collision.gameObject.GetComponent<CameraAvatar>().rootPlayer.GetComponent<Combat>();
             }
 
-            if (combat.GetRelicCount() > 0 && manager.CurrGamePhase != GamePhase.Over)
+            if (combat.GetRelicCount() == 2 && manager.CurrGamePhase != GamePhase.Over)
             {
                 manager.SetPhaseTo(GamePhase.Over);
                 RpcAlertVRWin(combat.GetRelicCount());
@@ -33,26 +33,26 @@ public class Entrance : NetworkBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!isServer)
-            return;
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (!isServer)
+    //        return;
 
-        if (other.gameObject.tag == "Player")
-        {
-            Combat combat = other.gameObject.GetComponent<Combat>();
-            if (!combat)
-            {
-                combat = other.gameObject.GetComponent<CameraAvatar>().rootPlayer.GetComponent<Combat>();
-            }
+    //    if (other.gameObject.tag == "Player")
+    //    {
+    //        Combat combat = other.gameObject.GetComponent<Combat>();
+    //        if (!combat)
+    //        {
+    //            combat = other.gameObject.GetComponent<CameraAvatar>().rootPlayer.GetComponent<Combat>();
+    //        }
 
-            if (combat.GetRelicCount() > 0 && manager.CurrGamePhase != GamePhase.Over)
-            {
-                manager.SetPhaseTo(GamePhase.Over);
-                RpcAlertVRWin(combat.GetRelicCount());
-            }
-        }
-    }
+    //        if (combat.GetRelicCount() > 0 && manager.CurrGamePhase != GamePhase.Over)
+    //        {
+    //            manager.SetPhaseTo(GamePhase.Over);
+    //            RpcAlertVRWin(combat.GetRelicCount());
+    //        }
+    //    }
+    //}
 
     [ClientRpc]
     void RpcAlertVRWin(int relicCount)
