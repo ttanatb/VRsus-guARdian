@@ -10,6 +10,8 @@ public class Relic : NetworkBehaviour
     private Vector3[] lerpPos;
     private GameObject associatedTower;
 
+    public Renderer relicRenderer;
+
     [SyncVar]
     private bool isErecting = false;
 
@@ -46,7 +48,7 @@ public class Relic : NetworkBehaviour
                 combat.GainRelic();
                 isErecting = true;
                 AlertRelicStolen();
-                GetComponent<Renderer>().enabled = false;
+                relicRenderer.enabled = false;
                 for (int i = 0; i < lerpPos.Length; i++)
                 {
                     //walls[i].GetComponent<Renderer>().enabled = true;

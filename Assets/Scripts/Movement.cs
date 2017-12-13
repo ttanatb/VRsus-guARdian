@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 //FPS camera movement adapted from: http://wiki.unity3d.com/index.php/SmoothMouseLook
-public class Movement : MonoBehaviour
+public class Movement : NetworkBehaviour
 {
     private Rigidbody rigidBody;
 
@@ -41,6 +41,15 @@ public class Movement : MonoBehaviour
     Quaternion startingRot;
     Vector3 startingPos;
 
+    bool isSlowed = false;
+    TrailRenderer trailRenderer;
+
+    public bool IsSlowed
+    {
+        get { return isSlowed; }
+        set { isSlowed = value; }
+    }
+
     // Use this for initialization
     void Awake()
     {
@@ -60,6 +69,8 @@ public class Movement : MonoBehaviour
 
         transform.Translate(Vector3.up * 200f);
 #endif
+
+        trailRenderer = GetComponentInChildren<TrailRenderer>();
     }
 
     public void SwitchToPlaying()
@@ -138,7 +149,6 @@ public class Movement : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space) && currJumps < jumpCount)
             {
                 Jump(jumpFactor);
-                currJumps++;
             }
         }
     }
@@ -150,19 +160,25 @@ public class Movement : MonoBehaviour
             Vector3 movement = (Vector3.ProjectOnPlane(transform.forward, Vector3.down) * Input.GetAxis("Vertical") +
                                 transform.right * Input.GetAxis("Horizontal")) * movementSpeed;
 
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (isSlowed)
+            {
+
+            }
+            else if (Input.GetKey(KeyCode.LeftShift))
+            {
                 movement *= sprintFactor;
+            }
 
             rigidBody.MovePosition(movement + transform.position);
-
-
-
         }
     }
 
     public void Jump(float jumpAmount)
     {
+        if (isSlowed) return;
+
         rigidBody.AddForce(jumpAmount * Vector3.up, ForceMode.VelocityChange);
+        currJumps++;
     }
 
     float ClampAngle(float angle, float min, float max)
@@ -190,5 +206,17 @@ public class Movement : MonoBehaviour
         {
             currJumps = 0;
         }
+    }
+
+    [Command]
+    private void CmdTurnOnTrailRenderer()
+    {
+        trailRenderer.enabled = true;
+    }
+
+    [Command]
+    private void CmdTurnOffTrailRenderer()
+    {
+        trailRenderer.enabled = false;
     }
 }
