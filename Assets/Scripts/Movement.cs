@@ -73,6 +73,7 @@ public class Movement : NetworkBehaviour
 #endif
 
         trailRenderer = GetComponentInChildren<TrailRenderer>();
+        CmdTurnOffTrailRenderer();
     }
 
     public void SwitchToPlaying()
@@ -222,12 +223,22 @@ public class Movement : NetworkBehaviour
     [Command]
     private void CmdTurnOnTrailRenderer()
     {
+        if(!trailRenderer)
+        {
+            trailRenderer = GetComponentInChildren<TrailRenderer>();
+        }
+
         trailRenderer.enabled = true;
     }
 
     [Command]
     private void CmdTurnOffTrailRenderer()
     {
+        if (!trailRenderer)
+        {
+            trailRenderer = GetComponentInChildren<TrailRenderer>();
+        }
+
         trailRenderer.enabled = false;
     }
 }
