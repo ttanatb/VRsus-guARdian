@@ -69,31 +69,35 @@ public class BlockManager : NetworkBehaviour
     void Start()
     {
         //only initializes if isLocalPlayer
-        if (isLocalPlayer)
-        {
-            prevIsPlacing = isPlacing;
+		if (isLocalPlayer) {
+			prevIsPlacing = isPlacing;
 
-            //creates top-view camera
-            topViewCamObj = Instantiate(topViewCamPrefab);
-            topViewCam = topViewCamObj.GetComponent<Camera>();
-            vrCamera = GetComponent<Player>().VRCamera.GetComponent<Camera>();
+			//creates top-view camera
+			topViewCamObj = Instantiate (topViewCamPrefab);
+			topViewCam = topViewCamObj.GetComponent<Camera> ();
+			vrCamera = GetComponent<Player> ().VRCamera.GetComponent<Camera> ();
 
-            //adjusts the black plane
-            Color c = topViewCamObj.transform.GetChild(0).GetComponent<Renderer>().material.color;
-            c.a = 1f;
-            topViewCamObj.transform.GetChild(0).GetComponent<Renderer>().material.color = c;
+			//adjusts the black plane
+			Color c = topViewCamObj.transform.GetChild (0).GetComponent<Renderer> ().material.color;
+			c.a = 1f;
+			topViewCamObj.transform.GetChild (0).GetComponent<Renderer> ().material.color = c;
 
-            //placementSampleObj = Instantiate(placementSamplePrefab);
-            //blockMeshes = LocalObjectBuilder.Instance.blockMeshes;
-            vrPlayerRenderer = GetComponent<Player>().VRAvatar.GetComponent<Renderer>();
+			//placementSampleObj = Instantiate(placementSamplePrefab);
+			//blockMeshes = LocalObjectBuilder.Instance.blockMeshes;
+			vrPlayerRenderer = GetComponent<Player> ().VRAvatar.GetComponent<Renderer> ();
 
-            movement = GetComponent<Movement>();
+			movement = GetComponent<Movement> ();
 
-            //CanvasManager.Instance.ToggleCrossHairUI();
-            //StartPlacing();
-            transform.position = new Vector3(0.759f, 1001f, -0.659f);
-            movement.SwitchToPlaying();
-        }
+			//CanvasManager.Instance.ToggleCrossHairUI();
+			//StartPlacing();
+			transform.position = new Vector3 (0.759f, 1001f, -0.659f);
+			GameManager gameManager = FindObjectOfType<GameManager> ();
+			if (gameManager && gameManager.CurrGamePhase == GamePhase.Playing) {
+				StartPlacing ();
+			} else {
+				movement.SwitchToPlaying ();
+			}
+		}
 
         //LocalObjectBuilder.Instance.SetBlockManager(this);
     }
