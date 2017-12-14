@@ -223,22 +223,28 @@ public class Movement : NetworkBehaviour
     [Command]
     private void CmdTurnOnTrailRenderer()
     {
+        if (isLocalPlayer) return;
+
         if(!trailRenderer)
         {
             trailRenderer = GetComponentInChildren<TrailRenderer>();
         }
 
-        trailRenderer.enabled = true;
+        if (trailRenderer)
+            trailRenderer.enabled = true;
     }
 
     [Command]
     private void CmdTurnOffTrailRenderer()
     {
+        if (isLocalPlayer) return;
+
         if (!trailRenderer)
         {
             trailRenderer = GetComponentInChildren<TrailRenderer>();
         }
 
-        trailRenderer.enabled = false;
+        if (trailRenderer)
+            trailRenderer.enabled = false;
     }
 }

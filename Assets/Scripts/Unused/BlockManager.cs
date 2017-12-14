@@ -88,25 +88,29 @@ public class BlockManager : NetworkBehaviour
 
 			movement = GetComponent<Movement> ();
 
-			//CanvasManager.Instance.ToggleCrossHairUI();
+            //CanvasManager.Instance.ToggleCrossHairUI();
+            StartPlacing();
+            Invoke("StopPlacing", 1.75f);
+            transform.position = new Vector3(0.759f, 1005f, -0.659f);
+            //StopPlacing();
+            movement.SwitchToPlaying();
 			//StartPlacing();
-			transform.position = new Vector3 (0.759f, 1001f, -0.659f);
 			GameManager gameManager = FindObjectOfType<GameManager> ();
-			if (gameManager && gameManager.CurrGamePhase == GamePhase.Playing) {
-				StartPlacing ();
-			} else {
-				movement.SwitchToPlaying ();
-			}
+			//if (gameManager && gameManager.CurrGamePhase == GamePhase.Playing) {
+			//	StartPlacing ();
+			//} else {
+			//	movement.SwitchToPlaying ();
+			//}
 		}
 
-        else if (isServer)
-        {
-            GameManager gameManager = FindObjectOfType<GameManager>();
-            if (gameManager && gameManager.CurrGamePhase == GamePhase.Playing)
-            {
-                RpcStartPlacing();
-            }
-        }
+        //else if (isServer)
+        //{
+        //    GameManager gameManager = FindObjectOfType<GameManager>();
+        //    if (gameManager && gameManager.CurrGamePhase == GamePhase.Playing)
+        //    {
+        //        RpcStartPlacing();
+        //    }
+        //}
 
         //LocalObjectBuilder.Instance.SetBlockManager(this);
     }
@@ -208,7 +212,11 @@ public class BlockManager : NetworkBehaviour
         {
             if (!isPlacing)
                 StartPlacing();
-            else StopPlacing();
+            else
+            {
+                StopPlacing();
+                transform.position = new Vector3(0.759f, 1001f, -0.659f);
+            }
         }
 
         if (isPlacing)
