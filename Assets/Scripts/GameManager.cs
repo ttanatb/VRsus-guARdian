@@ -105,7 +105,7 @@ public class GameManager : NetworkBehaviour
         LayerMask layer = LayerMask.NameToLayer("Trap");
         if (Input.touchCount > 0)
         {
-            Debug.Log("Checking Tap");
+            //Debug.Log("Checking Tap");
             foreach (Touch t in Input.touches)
             {
                 if (t.phase != TouchPhase.Began)
@@ -480,7 +480,7 @@ public class GameManager : NetworkBehaviour
 
         for (int i = 0; i < objects.Length; i++)
         {
-            Debug.Log(objects[i].name);
+            //Debug.Log(objects[i].name);
             if (objects[i].name == "Closest Plane" || objects[i].name == "Center Plane")
                 continue;
 

@@ -206,28 +206,31 @@ public class Combat : NetworkBehaviour
         }
 
 
-        if (isShootingLaser)
+        if (player.PlayerType == PlayerType.AR)
         {
-            laserParticle.transform.position = laserPoint;
-            laserParticle.transform.up = Vector3.up;
-            laserParticle.Play();
-
-            if (isLocalPlayer)
+            if (isShootingLaser)
             {
-				laser.SetPosition(0, avatar.position - avatar.up * 0.02f);
-                laser.SetPosition(1, laserPoint);
+                laserParticle.transform.position = laserPoint;
+                //laserParticle.transform.up = Vector3.up;
+                laserParticle.Play();
+
+                if (isLocalPlayer)
+                {
+                    laser.SetPosition(0, avatar.position - avatar.up * 0.02f);
+                    laser.SetPosition(1, laserPoint);
+                }
+                else
+                {
+                    laser.SetPosition(0, avatar.position);
+                    laser.SetPosition(1, laserPoint);
+                }
             }
             else
             {
+                laserParticle.Stop();
                 laser.SetPosition(0, avatar.position);
-                laser.SetPosition(1, laserPoint);
+                laser.SetPosition(1, avatar.position);
             }
-        }
-        else
-        {
-            laserParticle.Stop();
-            laser.SetPosition(0, avatar.position);
-            laser.SetPosition(1, avatar.position);
         }
 
         if (!isLocalPlayer)
@@ -241,7 +244,7 @@ public class Combat : NetworkBehaviour
                 //print(hit.transform.gameObject.name);
                 laserPoint = hit.point;
                 if (hit.transform.tag == "Player")
-					hit.transform.GetComponent<CameraAvatar>().rootPlayer.GetComponent<Combat>().TakeDamage();
+                    hit.transform.GetComponent<CameraAvatar>().rootPlayer.GetComponent<Combat>().TakeDamage();
 
             }
             else
@@ -259,15 +262,15 @@ public class Combat : NetworkBehaviour
         else
         {
             laserTimer += Time.deltaTime;
-			if (laserTimer > laserCoolDown) 
-			{
+            if (laserTimer > laserCoolDown)
+            {
                 isReadyToShoot = true;
-			}
+            }
         }
 
 
-		if (player.PlayerType == PlayerType.AR && Utility.IsPointerOverUIObject())
-			return;
+        if (player.PlayerType == PlayerType.AR && Utility.IsPointerOverUIObject())
+            return;
 
         if (isReadyToShoot)
         {
@@ -321,7 +324,7 @@ public class Combat : NetworkBehaviour
 
         //laser.enabled = true;
         isShootingLaser = true;
-		isReadyToShoot = false;
+        isReadyToShoot = false;
         laserTimer = 0f;
 
         //GameObject bulletObj = null;

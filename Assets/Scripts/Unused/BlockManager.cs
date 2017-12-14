@@ -99,6 +99,15 @@ public class BlockManager : NetworkBehaviour
 			}
 		}
 
+        else if (isServer)
+        {
+            GameManager gameManager = FindObjectOfType<GameManager>();
+            if (gameManager && gameManager.CurrGamePhase == GamePhase.Playing)
+            {
+                RpcStartPlacing();
+            }
+        }
+
         //LocalObjectBuilder.Instance.SetBlockManager(this);
     }
 
@@ -264,7 +273,7 @@ public class BlockManager : NetworkBehaviour
     /// </summary>
     void StartPlacing()
     {
-        if (isPlacing) return;
+        if (!isLocalPlayer || isPlacing) return;
 
         StopAllCoroutines();
         switching = true;
@@ -283,7 +292,7 @@ public class BlockManager : NetworkBehaviour
     /// </summary>
     void StopPlacing()
     {
-        if (!isPlacing) return;
+        if (!isLocalPlayer || !isPlacing) return;
 
         StopAllCoroutines();
         switching = true;
