@@ -19,7 +19,7 @@ public class LocalPlane : MonoBehaviour
 #if UNITY_IOS
         GetComponent<Renderer>().enabled = false;  
 #else
-        m = GetComponent<Renderer>().material;
+        m = GetComponent<Renderer>().sharedMaterial;
 #endif
     }
 
@@ -28,7 +28,7 @@ public class LocalPlane : MonoBehaviour
     {
         scale = new Vector2(transform.localScale.x, transform.localScale.z);
         if (!m)
-            m = GetComponent<Renderer>().material;
+            m = GetComponent<Renderer>().sharedMaterial;
         m.SetTextureScale("_MainTex", scale / 0.75f);
     }
 #endif

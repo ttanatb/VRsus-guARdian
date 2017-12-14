@@ -92,6 +92,7 @@ public class BlockManager : NetworkBehaviour
             //CanvasManager.Instance.ToggleCrossHairUI();
             //StartPlacing();
             transform.position = new Vector3(0.759f, 1001f, -0.659f);
+            movement.SwitchToPlaying();
         }
 
         //LocalObjectBuilder.Instance.SetBlockManager(this);
