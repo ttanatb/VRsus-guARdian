@@ -20,7 +20,7 @@ public class LaserParticle : MonoBehaviour
     {
         if (particles.isPlaying)
         {
-            Debug.Log("Stopping!");
+            //Debug.Log("Stopping!");
             particles.Stop();
         } 
     }
@@ -29,7 +29,7 @@ public class LaserParticle : MonoBehaviour
     {
         if (!particles.isPlaying)
         {
-            Debug.Log("Play!");
+            //Debug.Log("Play!");
             particles.Play();
         }
     }

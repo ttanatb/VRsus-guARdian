@@ -69,7 +69,7 @@ public class Movement : NetworkBehaviour
         rigidBody.isKinematic = false;
         rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
 
-        transform.Translate(Vector3.up * 200f);
+        //transform.Translate(Vector3.up * 200f);
 #endif
 
         trailRenderer = GetComponentInChildren<TrailRenderer>();
@@ -107,6 +107,15 @@ public class Movement : NetworkBehaviour
                     currJumps = 0;
                 }
                 else SwitchToPlaying();
+            }
+
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                CmdTurnOnTrailRenderer();
+            }
+            else if (Input.GetKeyUp(KeyCode.LeftShift))
+            {
+                CmdTurnOffTrailRenderer();
             }
 
             if (!isPlaying)
