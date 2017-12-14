@@ -113,7 +113,7 @@ public class Player : NetworkBehaviour
             }
             else
             {
-                /*
+                
                 VRAvatar.GetComponent<Renderer>().enabled = true;
 
                 foreach (Object o in ObjsForVRAvatarThatARPlayerCanSee)
@@ -123,7 +123,7 @@ public class Player : NetworkBehaviour
                     else if (o is MonoBehaviour)
                         ((MonoBehaviour)o).enabled = true;
                 }
-                */
+                
             }
         }
 
@@ -205,6 +205,4 @@ public class Player : NetworkBehaviour
                 ((MonoBehaviour)o).enabled = true;
         }
     }
-
-
 }
