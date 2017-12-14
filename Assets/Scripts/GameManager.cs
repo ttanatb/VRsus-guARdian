@@ -241,6 +241,7 @@ public class GameManager : NetworkBehaviour
 
     public bool CheckAggregrateArea()
     {
+		return true;
         float area = 0;
         if (UnityARAnchorManager.Instance == null)
         {
@@ -298,19 +299,24 @@ public class GameManager : NetworkBehaviour
 
         switch (newPhase)
         {
-            case GamePhase.Placing:
+		case GamePhase.Placing:
 #if UNITY_IOS
-                UnityARCameraManager.Instance.StopTracking();
+			UnityARCameraManager.Instance.StopTracking ();
 #endif
-                FindObjectOfType<BlockManager>().RpcStartPlacing();
                 CmdSpawnRelics();
                 break;
 
             case GamePhase.Playing:
                 RpcSpawnEntrances();
+
+				BlockManager blockManager = FindObjectOfType<BlockManager> ();
+				if (blockManager)
+					blockManager.RpcStartPlacing();
+			
                 Combat combat = GetComponent<Combat>();
                 if (combat != null)
                     combat.CanShoot = true;
+			
                 //CanvasManager.Instance.ToggleCrossHairUI();
                 UnityARAnchorManager.Instance.TogglePlaneMaterial();
                 break;

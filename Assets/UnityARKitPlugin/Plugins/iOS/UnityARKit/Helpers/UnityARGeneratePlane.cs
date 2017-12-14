@@ -18,8 +18,8 @@ namespace UnityEngine.XR.iOS
             planePrefab = debugPlanePrefab;
 
             unityARAnchorManager = new UnityARAnchorManager();
-            UnityARAnchorManager.Instance.SetMaterial(debugPlanePrefab.GetComponentInChildren<Renderer>().material,
-                occlusionPlanePrefab.GetComponentInChildren<Renderer>().material);
+            UnityARAnchorManager.Instance.SetMaterial(debugPlanePrefab.GetComponentInChildren<Renderer>().sharedMaterial,
+                occlusionPlanePrefab.GetComponentInChildren<Renderer>().sharedMaterial);
             UnityARUtility.InitializePlanePrefab(planePrefab);
         }
 
