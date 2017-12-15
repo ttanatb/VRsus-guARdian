@@ -81,10 +81,19 @@ public class SecurityCamera : TrapDefense
         }
     }
 
+    public override void OnNetworkDestroy()
+    {
+        if (!isServer) return;
+
+        foreach (GameObject screen in securityScreens)
+        {
+            screen.SetActive(false);
+        }
+    }
+
     public override void ToggleSelected()
     {
         base.ToggleSelected();
-        //Debug.Log("Toggling this Camera");
         areaOfEffectRenderer.enabled = selected;
     }
 

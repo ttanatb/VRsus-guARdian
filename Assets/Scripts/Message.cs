@@ -71,6 +71,12 @@ public class Message : MonoBehaviour
         }
     }
 
+    public void ClearMsg()
+    {
+        timer = timeToFade;
+        isDisplay = true;
+    }
+
     IEnumerator FadeOut()
     {
         for(; alpha > 0f; alpha -= fadeSpeed)

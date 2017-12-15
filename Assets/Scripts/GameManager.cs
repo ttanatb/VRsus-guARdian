@@ -306,6 +306,8 @@ public class GameManager : NetworkBehaviour
         }
 
         SetPhaseTo(GamePhase.Placing);
+        CanvasManager.Instance.SetUI(this);
+        UnityARAnchorManager.Instance.TogglePlaneMaterial();
     }
 
     public void SetPhaseTo(GamePhase newPhase)

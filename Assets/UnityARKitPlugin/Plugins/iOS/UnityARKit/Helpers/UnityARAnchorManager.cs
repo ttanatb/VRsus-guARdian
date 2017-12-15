@@ -27,6 +27,7 @@ namespace UnityEngine.XR.iOS
 
         public void TogglePlaneMaterial()
         {
+            return;
             if (debugMaterial == null || occlusionMaterial == null)
             {
                 Debug.LogError("ARAnchorManager does not have reference to debug/occlusion material");
