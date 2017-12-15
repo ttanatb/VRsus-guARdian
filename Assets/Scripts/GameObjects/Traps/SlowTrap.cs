@@ -8,6 +8,21 @@ public class SlowTrap : TrapDefense
     [SyncVar]
     bool isActive = false;
 
+    private void Start()
+    {
+#if !UNITY_IOS
+        GetComponent<Renderer>().enabled = false;
+
+#endif
+    }
+
+    public override void ToggleSelected()
+    {
+        Renderer childRenderer = GetComponentInChildren<Renderer>();
+        childRenderer.enabled = !childRenderer.enabled;
+        base.ToggleSelected();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (!isServer) return;
