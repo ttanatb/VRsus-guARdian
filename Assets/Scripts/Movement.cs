@@ -175,21 +175,18 @@ public class Movement : NetworkBehaviour
 
         }
 
-        if (!Input.GetKey(KeyCode.LeftShift))
+        if (isOnFloor && !Input.GetKey(KeyCode.LeftShift))
         {
-            if (isOnFloor)
-            {
-                currJumpEnergy += Time.deltaTime * energyRegainRate * 5f;
-            }
-            else
-            {
-                currJumpEnergy += Time.deltaTime * energyRegainRate / 2f;
-            }
+            currJumpEnergy += Time.deltaTime * energyRegainRate * 5f;
+        }
+        else
+        {
+            currJumpEnergy += Time.deltaTime * energyRegainRate / 2f;
+        }
 
-            if (currJumpEnergy > jumpEnergyMax)
-            {
-                currJumpEnergy = jumpEnergyMax;
-            }
+        if (currJumpEnergy > jumpEnergyMax)
+        {
+            currJumpEnergy = jumpEnergyMax;
         }
     }
 
@@ -200,14 +197,14 @@ public class Movement : NetworkBehaviour
             Vector3 movement = (Vector3.ProjectOnPlane(transform.forward, Vector3.down) * Input.GetAxis("Vertical") +
                                 transform.right * Input.GetAxis("Horizontal")) * movementSpeed;
 
-            if (isSlowed)
+            if (Input.GetKey(KeyCode.Space))
             {
                 movement *= slowFactor;
             }
             else if (Input.GetKey(KeyCode.LeftShift) && isOnFloor && currJumpEnergy > jumpCost * Time.deltaTime * 2f)
             {
                 movement *= sprintFactor;
-                currJumpEnergy -= jumpCost * Time.deltaTime;
+                currJumpEnergy -= jumpCost * Time.deltaTime * 1.5f;
             }
 
             rigidBody.MovePosition(movement + transform.position);
@@ -244,10 +241,20 @@ public class Movement : NetworkBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if ((collision.gameObject.tag == "Platform") &&
-            (transform.position.y > collision.transform.position.y + collision.transform.localScale.y / 2f))
+            (transform.position.y > collision.transform.position.y + collision.transform.localScale.y / 2.1f))
         {
             isOnFloor = true;
         }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "Platform")
+        {
+            isOnFloor = false;
+        }
+
+
     }
 
     [Command]
