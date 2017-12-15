@@ -432,7 +432,6 @@ public class Combat : NetworkBehaviour
         //    }
         //    yield return null;
         //}
-        healthBar.GetComponent<Renderer>().enabled = false;
 
         foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
         {
@@ -442,6 +441,7 @@ public class Combat : NetworkBehaviour
         {
             r.enabled = false;
         }
+        healthBar.gameObject.SetActive(false);
 
         //starts the next coroutine
         yield return new WaitForSeconds(waitTime);
@@ -472,6 +472,7 @@ public class Combat : NetworkBehaviour
         {
             r.enabled = true;
         }
+        healthBar.gameObject.SetActive(true);
 
         isInvulnerable = false;
     }

@@ -16,10 +16,14 @@ public class HealthBar : MonoBehaviour
     public float displayDistAR = 1f;
     public float displayDistVR = 1f;
 
+    public Renderer bgRenderer;
+    private Renderer rendererr;
+
     // Use this for initialization
     void Start()
     {
         healthBarPivot = transform.GetChild(0);
+        rendererr = GetComponent<Renderer>();
     }
 
     public void Init(Combat combat, PlayerType playerType, Transform avatar)
@@ -33,6 +37,18 @@ public class HealthBar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (player.IsInvulnerable)
+        {
+            rendererr.enabled = false;
+            bgRenderer.enabled = false;
+            return;
+        }
+        else
+        {
+            rendererr.enabled = true;
+            bgRenderer.enabled = true;
+        }
+
         if (playerAvatar)
         {
             if (typeOfPlayer == PlayerType.AR)
