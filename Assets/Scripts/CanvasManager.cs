@@ -104,6 +104,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
                 break;
             case GamePhase.Placing:
                 //manager.SetPhaseTo(GamePhase.Playing);
+                ARUI.SetActive(true);
                 //break;
                 List<GameObject> buttons = new List<GameObject>();
                 for (int i = 0; i < manager.trapList.Length; i++)

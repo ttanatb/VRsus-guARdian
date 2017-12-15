@@ -281,6 +281,8 @@ public class GameManager : NetworkBehaviour
 
     public void ResetGame()
     {
+        if (!isServer) return;
+
         currGamePhase = (int)GamePhase.Placing;
 
         foreach (TrapDefense trap in FindObjectsOfType<TrapDefense>())
@@ -337,6 +339,7 @@ public class GameManager : NetworkBehaviour
                 UnityARAnchorManager.Instance.TogglePlaneMaterial();
                 break;
             case GamePhase.Over:
+                if (!isServer) break;
                 CanvasManager.Instance.ShowGameOverBtn(this);
                 break;
         }
