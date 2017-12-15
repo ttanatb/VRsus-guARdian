@@ -48,6 +48,7 @@ public class Relic : NetworkBehaviour
                 combat.GainRelic();
                 isErecting = true;
                 CmdRelicStolen();
+                RpcStealRelic();
                 relicRenderer.enabled = false;
                 for (int i = 0; i < lerpPos.Length; i++)
                 {
@@ -94,5 +95,11 @@ public class Relic : NetworkBehaviour
     private void CmdRelicStolen()
     {
         CanvasManager.Instance.SetMessage("A relic was stolen!");
+    }
+
+    [ClientRpc]
+    private void RpcStealRelic()
+    {
+        relicRenderer.enabled = false;
     }
 }
