@@ -186,7 +186,7 @@ public class GameManager : NetworkBehaviour
         previouslySelectedTrap = currentlySelectedTrap;
     }
 
-    void CheckTapOnARPlane()
+    bool CheckTapOnARPlane()
     {
         RaycastHit hit;
         LayerMask layer = LayerMask.NameToLayer("Tower");
@@ -202,16 +202,17 @@ public class GameManager : NetworkBehaviour
                     trapList[currTrapSelection].count -= 1;
 
                     CmdSpawnTrap(currTrapSelection, hit.point);
-                    TogglePreviouslySelectedTrap();
+                    //TogglePreviouslySelectedTrap();
 
                     CanvasManager.Instance.ClearSelection(this);
                     CanvasManager.Instance.UpdateTrapCount(this);
 
                     currTrapSelection = -1;
-                    return;
+                    return true;
                 }
             }
         }
+
 
 #if !UNITY_IOS
         //Testing for PC
@@ -227,15 +228,19 @@ public class GameManager : NetworkBehaviour
             CanvasManager.Instance.UpdateTrapCount(this);
 
             currTrapSelection = -1;
+            return true;
         }
 #endif
+        return false;
     }
 
     [Command]
     private void CmdSpawnTrap(int index, Vector3 pos)
     {
         GameObject go = Instantiate(trapList[index].trap, pos, Quaternion.identity);
-        go.GetComponent<TrapDefense>().ToggleSelected();
+        currentlySelectedTrap = go.GetComponent<TrapDefense>();
+        currentlySelectedTrap.ToggleSelected();
+        TogglePreviouslySelectedTrap();
         NetworkServer.Spawn(go);
     }
 
