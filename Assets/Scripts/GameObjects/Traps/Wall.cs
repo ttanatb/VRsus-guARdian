@@ -40,7 +40,7 @@ public class Wall : TrapDefense
 
         if (isCollidingWithRelic)
         {
-            Debug.Log("isColliding Wall)");
+            //Debug.Log("isColliding Wall)");
         }
     }
 
@@ -76,20 +76,12 @@ public class Wall : TrapDefense
 
         if (collision.gameObject.tag == "Relic")
         {
-            Debug.Log("Colliding with wall!");
+            //Debug.Log("Colliding with wall!");
             timer += Time.deltaTime;
             if (timer > TIME_TO_DESTROY)
             {
                 Network.Destroy(gameObject);
             }
-        }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.tag == "Relic")
-        {
-            Debug.Log("Colliding relic");
         }
     }
 }
