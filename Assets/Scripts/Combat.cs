@@ -390,6 +390,11 @@ public class Combat : NetworkBehaviour
     [ClientRpc]
     void RpcDie()
     {
+        if (!manager)
+        {
+            manager = FindObjectOfType<GameManager>();
+        }
+
         manager.SetPhaseTo(GamePhase.Over);
         canShoot = false;
 
@@ -400,6 +405,7 @@ public class Combat : NetworkBehaviour
     public void RpcRespawn()
     {
         transform.position = new Vector3(0.759f, 1005f, -0.659f);
+        relicCount = 0;
         health = 3;
     }
 

@@ -284,17 +284,25 @@ public class GameManager : NetworkBehaviour
         currGamePhase = (int)GamePhase.Placing;
 
         foreach (TrapDefense trap in FindObjectsOfType<TrapDefense>())
-            Network.Destroy(trap.gameObject);
+            NetworkServer.Destroy(trap.gameObject);
 
         foreach (Relic relic in FindObjectsOfType<Relic>())
-            Network.Destroy(relic.gameObject);
+            NetworkServer.Destroy(relic.gameObject);
 
         foreach (Entrance entrance in FindObjectsOfType<Entrance>())
-            Network.Destroy(entrance.gameObject);
+            NetworkServer.Destroy(entrance.gameObject);
 
         foreach (Trap t in trapList)
         {
             t.count = t.maxCount;
+        }
+
+        foreach(Combat c in FindObjectsOfType<Combat>())
+        {
+            if (c.GetComponent<Player>().PlayerType == PlayerType.VR)
+            {
+                c.RpcRespawn();
+            }
         }
 
         SetPhaseTo(GamePhase.Placing);
