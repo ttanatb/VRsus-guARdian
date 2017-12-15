@@ -333,9 +333,8 @@ public class GameManager : NetworkBehaviour
 			
                 Combat combat = GetComponent<Combat>();
                 if (combat != null)
-                    combat.CanShoot = true;
+                    combat.CanShoot = false;
 			
-                //CanvasManager.Instance.ToggleCrossHairUI();
                 UnityARAnchorManager.Instance.TogglePlaneMaterial();
                 break;
             case GamePhase.Over:

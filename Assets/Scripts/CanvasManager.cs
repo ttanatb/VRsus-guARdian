@@ -217,13 +217,19 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
 
     public void ShowGameOverBtn(GameManager manager)
     {
+        ClearMsg();
+
         gameOverObj.SetActive(true);
         gameOverObj.GetComponent<Button>().onClick.RemoveAllListeners();
-        message.ClearMsg();
         gameOverObj.GetComponent<Button>().onClick.AddListener(() =>
         {
             manager.ResetGame();
             gameOverObj.SetActive(false);
         });
+    }
+
+    public void ClearMsg()
+    {
+        message.ClearMsg();
     }
 }

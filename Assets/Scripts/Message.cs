@@ -73,8 +73,10 @@ public class Message : MonoBehaviour
 
     public void ClearMsg()
     {
-        timer = timeToFade;
-        isDisplay = true;
+        foreach (CanvasRenderer r in renderers)
+        {
+            r.SetAlpha(0f);
+        }
     }
 
     IEnumerator FadeOut()

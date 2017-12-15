@@ -104,5 +104,6 @@ public class Relic : NetworkBehaviour
     private void RpcStealRelic()
     {
         relicRenderer.enabled = false;
+        CanvasManager.Instance.SetMessage("Stole a relic!");
     }
 }
