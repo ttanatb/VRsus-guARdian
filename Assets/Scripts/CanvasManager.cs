@@ -24,6 +24,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     public Message message;
 
     public GameObject gameOverObj;
+    public GameObject jumpUI;
 
     /*
     public void SetUpBlockPlacingUI(BlockManager blockPlacer, int count)
@@ -231,5 +232,11 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     public void ClearMsg()
     {
         message.ClearMsg();
+    }
+
+    public void InitJumpEnergyBar(Movement movement)
+    {
+        jumpUI.SetActive(true);
+        jumpUI.GetComponent<JumpEnergyUI>().Init(movement);
     }
 }

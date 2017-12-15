@@ -333,7 +333,7 @@ public class GameManager : NetworkBehaviour
 			
                 Combat combat = GetComponent<Combat>();
                 if (combat != null)
-                    combat.CanShoot = false;
+                    combat.CanShoot = true;
 			
                 UnityARAnchorManager.Instance.TogglePlaneMaterial();
                 break;
@@ -341,7 +341,7 @@ public class GameManager : NetworkBehaviour
                 if (!isServer) break;
                 Combat combatt = GetComponent<Combat>();
                 if (combatt != null)
-                    combatt.CanShoot = true;
+                    combatt.CanShoot = false;
                 CanvasManager.Instance.ShowGameOverBtn(this);
                 break;
         }

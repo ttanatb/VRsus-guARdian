@@ -8,8 +8,10 @@ public class Movement : NetworkBehaviour
 {
     private Rigidbody rigidBody;
 
-    public uint jumpCount = 4;
-    private uint currJumps = 0;
+    public float jumpCost = 3f;
+    public float jumpEnergyMax = 15f;
+    public float energyRegainRate = 5f;
+    private float currJumpEnergy;
 
     public float jumpFactor = 2;
     public float movementSpeed = 0.025f;
@@ -54,6 +56,8 @@ public class Movement : NetworkBehaviour
         set { isSlowed = value; }
     }
 
+    public float CurrJumpEnergy { get { return currJumpEnergy; } }
+
     // Use this for initialization
     void Awake()
     {
@@ -73,9 +77,13 @@ public class Movement : NetworkBehaviour
 
         //transform.Translate(Vector3.up * 200f);
 #endif
-
         trailRenderer = GetComponentInChildren<TrailRenderer>();
         CmdTurnOffTrailRenderer();
+        if (isLocalPlayer)
+        {
+            currJumpEnergy = jumpEnergyMax;
+            CanvasManager.Instance.InitJumpEnergyBar(this);
+        }
     }
 
     public void SwitchToPlaying()
@@ -107,7 +115,7 @@ public class Movement : NetworkBehaviour
                 {
                     SwitchOutOfPlaying();
                     transform.position = startingPos;
-                    currJumps = 0;
+                    currJumpEnergy = jumpEnergyMax;
                 }
                 else SwitchToPlaying();
             }
@@ -160,11 +168,25 @@ public class Movement : NetworkBehaviour
 
             transform.rotation = startingRot * xRot * yRot;
 
-            if (Input.GetKey(KeyCode.Space) && currJumps < jumpCount)
+            if (Input.GetKey(KeyCode.Space) && currJumpEnergy > jumpCost * Time.deltaTime * 2f)
             {
-                isOnFloor = true;
                 Jump(jumpFactor);
             }
+
+        }
+
+        if (isOnFloor)
+        {
+            currJumpEnergy += Time.deltaTime * energyRegainRate * 5f;
+        }
+        else
+        {
+            currJumpEnergy += Time.deltaTime * energyRegainRate / 2f;
+        }
+
+        if (currJumpEnergy > jumpEnergyMax)
+        {
+            currJumpEnergy = jumpEnergyMax;
         }
     }
 
@@ -193,7 +215,8 @@ public class Movement : NetworkBehaviour
         if (isSlowed) return;
 
         rigidBody.AddForce(jumpAmount * Vector3.up);
-        //currJumps++;
+        isOnFloor = false;
+        currJumpEnergy -= jumpCost * Time.deltaTime;
     }
 
     float ClampAngle(float angle, float min, float max)
@@ -220,7 +243,6 @@ public class Movement : NetworkBehaviour
             (transform.position.y > collision.transform.position.y + collision.transform.localScale.y / 2f))
         {
             isOnFloor = true;
-            currJumps = 0;
         }
     }
 
@@ -229,7 +251,7 @@ public class Movement : NetworkBehaviour
     {
         if (isLocalPlayer) return;
 
-        if(!trailRenderer)
+        if (!trailRenderer)
         {
             trailRenderer = GetComponentInChildren<TrailRenderer>();
         }
