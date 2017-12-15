@@ -37,17 +37,7 @@ public class HealthBar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (player.IsInvulnerable)
-        {
-            rendererr.enabled = false;
-            bgRenderer.enabled = false;
-            return;
-        }
-        else
-        {
-            rendererr.enabled = true;
-            bgRenderer.enabled = true;
-        }
+
 
         if (playerAvatar)
         {
@@ -64,6 +54,18 @@ public class HealthBar : MonoBehaviour
         {
             //Debug.LogError("Missing Avatar for " + gameObject.name);
             Destroy(gameObject);
+        }
+
+        if (player.IsInvulnerable)
+        {
+            rendererr.enabled = false;
+            bgRenderer.enabled = false;
+            return;
+        }
+        else
+        {
+            rendererr.enabled = true;
+            bgRenderer.enabled = true;
         }
 
         if (player)
