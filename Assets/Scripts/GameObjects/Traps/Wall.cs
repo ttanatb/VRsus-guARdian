@@ -5,8 +5,8 @@ using UnityEngine.Networking;
 
 public class Wall : TrapDefense
 {
-    private Vector2 scale = Vector2.one;
-    private Material m;
+    //private Vector2 scale = Vector2.one;
+    //private Material m;
 
     private bool isCollidingWithRelic = false;
     private float timer = 0f;
@@ -23,7 +23,7 @@ public class Wall : TrapDefense
     // Use this for initialization
     void Start()
     {
-        m = GetComponent<Renderer>().material;
+       //m = GetComponent<Renderer>().material;
 #if !UNITY_IOS
         GetComponent<Renderer>().enabled = false;
 #endif
@@ -32,10 +32,10 @@ public class Wall : TrapDefense
     // Update is called once per frame
     void Update()
     {
-        scale = new Vector2(transform.localScale.x, transform.localScale.z);
-        if (!m)
-            m = GetComponent<Renderer>().material;
-        m.SetTextureScale("_MainTex", scale / 0.75f);
+        //scale = new Vector2(transform.localScale.x, transform.localScale.z);
+        //if (!m)
+        //    m = GetComponent<Renderer>().material;
+        //m.SetTextureScale("_MainTex", scale / 0.75f);
 
 
         if (isCollidingWithRelic)
@@ -82,6 +82,14 @@ public class Wall : TrapDefense
             {
                 Network.Destroy(gameObject);
             }
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Relic")
+        {
+            Debug.Log("Colliding relic");
         }
     }
 }
