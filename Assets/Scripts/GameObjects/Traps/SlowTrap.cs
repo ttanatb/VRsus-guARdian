@@ -8,6 +8,14 @@ public class SlowTrap : TrapDefense
     [SyncVar]
     bool isActive = false;
 
+    public override string TrapName
+    {
+        get
+        {
+            return "Security Camera";
+        }
+    }
+
     private void Start()
     {
 #if !UNITY_IOS
@@ -18,9 +26,10 @@ public class SlowTrap : TrapDefense
 
     public override void ToggleSelected()
     {
-        Renderer childRenderer = GetComponentInChildren<Renderer>();
-        childRenderer.enabled = !childRenderer.enabled;
         base.ToggleSelected();
+        Renderer childRenderer = GetComponentInChildren<Renderer>();
+        if (childRenderer)
+            childRenderer.enabled = selected;
     }
 
     private void OnTriggerEnter(Collider other)

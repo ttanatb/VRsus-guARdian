@@ -73,7 +73,7 @@ public class SecurityCamera : TrapDefense
     public override void ToggleSelected()
     {
         base.ToggleSelected();
-        Debug.Log("Toggling this Camera");
+        //Debug.Log("Toggling this Camera");
         areaOfEffectRenderer.enabled = selected;
     }
 
