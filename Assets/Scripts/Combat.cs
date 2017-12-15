@@ -373,7 +373,7 @@ public class Combat : NetworkBehaviour
         else
         {
             isInvulnerable = true;
-            IEnumerator flash = Flash(1.5f);
+            IEnumerator flash = Flash(1.75f);
             StartCoroutine(flash);
             //invulTimer = 0f;
             //foreach(Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
@@ -432,6 +432,7 @@ public class Combat : NetworkBehaviour
         //    }
         //    yield return null;
         //}
+        healthBar.GetComponent<Renderer>().enabled = false;
 
         foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
         {
@@ -461,6 +462,8 @@ public class Combat : NetworkBehaviour
         //    }
         //    yield return null;
         //}
+        healthBar.GetComponent<Renderer>().enabled = true;
+
         foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
         {
             r.enabled = true;

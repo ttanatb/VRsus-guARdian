@@ -175,18 +175,21 @@ public class Movement : NetworkBehaviour
 
         }
 
-        if (isOnFloor)
+        if (!Input.GetKey(KeyCode.LeftShift))
         {
-            currJumpEnergy += Time.deltaTime * energyRegainRate * 5f;
-        }
-        else
-        {
-            currJumpEnergy += Time.deltaTime * energyRegainRate / 2f;
-        }
+            if (isOnFloor)
+            {
+                currJumpEnergy += Time.deltaTime * energyRegainRate * 5f;
+            }
+            else
+            {
+                currJumpEnergy += Time.deltaTime * energyRegainRate / 2f;
+            }
 
-        if (currJumpEnergy > jumpEnergyMax)
-        {
-            currJumpEnergy = jumpEnergyMax;
+            if (currJumpEnergy > jumpEnergyMax)
+            {
+                currJumpEnergy = jumpEnergyMax;
+            }
         }
     }
 
@@ -201,9 +204,10 @@ public class Movement : NetworkBehaviour
             {
                 movement *= slowFactor;
             }
-            else if (Input.GetKey(KeyCode.LeftShift) && isOnFloor)
+            else if (Input.GetKey(KeyCode.LeftShift) && isOnFloor && currJumpEnergy > jumpCost * Time.deltaTime * 2f)
             {
                 movement *= sprintFactor;
+                currJumpEnergy -= jumpCost * Time.deltaTime;
             }
 
             rigidBody.MovePosition(movement + transform.position);

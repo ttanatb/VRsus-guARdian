@@ -104,19 +104,16 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
                 }
                 break;
             case GamePhase.Placing:
-                if (!ARUI.activeSelf)
+                ARUI.SetActive(true);
+                for (int i = 0; i < ARUI.transform.childCount; i++)
                 {
-                    ARUI.SetActive(true);
-                    for (int i = 0; i < ARUI.transform.childCount; i++)
+                    if (ARUI.transform.GetChild(i).gameObject.name == "Done")
                     {
-                        if (ARUI.transform.GetChild(i).gameObject.name == "Done")
-                        {
-                            ARUI.transform.GetChild(i).gameObject.SetActive(true);
-                        }
-                        else if (ARUI.transform.GetChild(i).gameObject.name == "TrapBtn")
-                        {
-                            Destroy(ARUI.transform.GetChild(i).gameObject);
-                        }
+                        ARUI.transform.GetChild(i).gameObject.SetActive(true);
+                    }
+                    else if (ARUI.transform.GetChild(i).gameObject.name == "TrapBtn")
+                    {
+                        Destroy(ARUI.transform.GetChild(i).gameObject);
                     }
                 }
                 List<GameObject> buttons = new List<GameObject>();
