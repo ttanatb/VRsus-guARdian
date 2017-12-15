@@ -46,6 +46,8 @@ public class Movement : NetworkBehaviour
     public float slowFactor = 0.7f;
     TrailRenderer trailRenderer;
 
+    public bool isOnFloor = false;
+
     public bool IsSlowed
     {
         get { return isSlowed; }
@@ -158,8 +160,9 @@ public class Movement : NetworkBehaviour
 
             transform.rotation = startingRot * xRot * yRot;
 
-            if (Input.GetKeyDown(KeyCode.Space) && currJumps < jumpCount)
+            if (Input.GetKey(KeyCode.Space) && currJumps < jumpCount)
             {
+                isOnFloor = true;
                 Jump(jumpFactor);
             }
         }
@@ -176,7 +179,7 @@ public class Movement : NetworkBehaviour
             {
                 movement *= slowFactor;
             }
-            else if (Input.GetKey(KeyCode.LeftShift))
+            else if (Input.GetKey(KeyCode.LeftShift) && isOnFloor)
             {
                 movement *= sprintFactor;
             }
@@ -189,8 +192,8 @@ public class Movement : NetworkBehaviour
     {
         if (isSlowed) return;
 
-        rigidBody.AddForce(jumpAmount * Vector3.up, ForceMode.VelocityChange);
-        currJumps++;
+        rigidBody.AddForce(jumpAmount * Vector3.up);
+        //currJumps++;
     }
 
     float ClampAngle(float angle, float min, float max)
@@ -216,6 +219,7 @@ public class Movement : NetworkBehaviour
         if ((collision.gameObject.tag == "Platform") &&
             (transform.position.y > collision.transform.position.y + collision.transform.localScale.y / 2f))
         {
+            isOnFloor = true;
             currJumps = 0;
         }
     }
@@ -231,7 +235,7 @@ public class Movement : NetworkBehaviour
         }
 
         if (trailRenderer)
-            trailRenderer.enabled = true;
+            trailRenderer.time = 1f;
     }
 
     [Command]
@@ -245,6 +249,6 @@ public class Movement : NetworkBehaviour
         }
 
         if (trailRenderer)
-            trailRenderer.enabled = false;
+            trailRenderer.time = 0f;
     }
 }

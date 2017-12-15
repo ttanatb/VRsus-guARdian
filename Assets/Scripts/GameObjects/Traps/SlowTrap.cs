@@ -6,19 +6,7 @@ using UnityEngine.Networking;
 public class SlowTrap : TrapDefense
 {
     [SyncVar]
-    bool isActive = true;
-
-    // Use this for initialization
-    private void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
-
-    }
+    bool isActive = false;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -44,6 +32,12 @@ public class SlowTrap : TrapDefense
         {
             other.GetComponent<Movement>().IsSlowed = false;
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player" && !isActive) 
+            CmdTriggerTrap();
     }
 
     [Command]
