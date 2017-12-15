@@ -85,9 +85,9 @@ public class SecurityCamera : TrapDefense
     {
         if (!isServer) return;
 
-        foreach (GameObject screen in securityScreens)
+        for(int i = 0; i < securityScreens.childCount; i++)
         {
-            screen.SetActive(false);
+            securityScreens.GetChild(i).gameObject.SetActive(false);
         }
     }
 
