@@ -25,6 +25,8 @@ public class Entrance : NetworkBehaviour
                 combat = collision.gameObject.GetComponent<CameraAvatar>().rootPlayer.GetComponent<Combat>();
             }
 
+            Debug.Log("Collision with player! Relic count: " + combat.GetRelicCount());
+
             if (combat.GetRelicCount() == 2 && manager.CurrGamePhase != GamePhase.Over)
             {
                 manager.SetPhaseTo(GamePhase.Over);
