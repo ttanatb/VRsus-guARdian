@@ -202,6 +202,7 @@ public class GameManager : NetworkBehaviour
                     trapList[currTrapSelection].count -= 1;
 
                     CmdSpawnTrap(currTrapSelection, hit.point);
+                    TogglePreviouslySelectedTrap();
 
                     CanvasManager.Instance.ClearSelection(this);
                     CanvasManager.Instance.UpdateTrapCount(this);
@@ -220,6 +221,7 @@ public class GameManager : NetworkBehaviour
             trapList[currTrapSelection].count -= 1;
 
             CmdSpawnTrap(currTrapSelection, Vector3.zero);
+            TogglePreviouslySelectedTrap();
 
             CanvasManager.Instance.ClearSelection(this);
             CanvasManager.Instance.UpdateTrapCount(this);
