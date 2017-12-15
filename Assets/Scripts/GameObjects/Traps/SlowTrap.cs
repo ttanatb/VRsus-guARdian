@@ -7,6 +7,7 @@ public class SlowTrap : TrapDefense
 {
     [SyncVar]
     bool isActive = false;
+    private Renderer areaBox;
 
     public override string TrapName
     {
@@ -18,6 +19,7 @@ public class SlowTrap : TrapDefense
 
     private void Start()
     {
+        areaBox = transform.GetChild(0).GetComponent<Renderer>();
 #if !UNITY_IOS
         GetComponent<Renderer>().enabled = false;
         foreach(Collider c in GetComponents<Collider>())
@@ -34,12 +36,7 @@ public class SlowTrap : TrapDefense
     {
         base.ToggleSelected();
 
-        Debug.Log("Slow Trap toggled");
-
-
-        Renderer childRenderer = GetComponentInChildren<Renderer>();
-        if (childRenderer)
-            childRenderer.enabled = selected;
+        areaBox.enabled = selected;
     }
 
     private void OnTriggerEnter(Collider other)

@@ -115,7 +115,7 @@ public class GameManager : NetworkBehaviour
                 {
                     //Debug.Log("Raycast hit the trap");
                     currentlySelectedTrap = hit.transform.GetComponent<TrapDefense>();
-                    Debug.Log(currentlySelectedTrap);
+                    //Debug.Log(currentlySelectedTrap);
                     currentlySelectedTrap.ToggleSelected();
                     TogglePreviouslySelectedTrap();
                 }
