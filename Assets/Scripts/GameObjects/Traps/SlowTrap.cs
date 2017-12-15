@@ -39,46 +39,40 @@ public class SlowTrap : TrapDefense
         areaBox.enabled = selected;
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!isServer) return;
-
-        if (other.tag == "Player")
-        {
-            Debug.Log("Player enterred trigger area");
-
-            if (!isActive)
-                CmdTriggerTrap();
-
-            if (isActive)
-            {
-                other.GetComponent<Movement>().IsSlowed = true;
-            }
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (!isServer) return;
-
-        if (other.tag == "Player" && isActive)
-        {
-            other.GetComponent<Movement>().IsSlowed = false;
-        }
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
         if (!isServer) return;
 
-        if (collision.gameObject.tag == "Player" && !isActive) 
-            CmdTriggerTrap();
+        if (collision.gameObject.tag == "Player")
+        {
+            Debug.Log("Player enterred trigger area");
+
+            if (!isActive)
+                RpcTriggerTrap();
+
+            if (isActive)
+            {
+                collision.gameObject.GetComponent<Movement>().RpcSlow();
+            }
+        }
     }
 
-    [Command]
-    private void CmdTriggerTrap()
+    private void OnCollisionExit(Collision collision)
     {
+        if (!isServer) return;
+
+        if (collision.gameObject.tag == "Player" && isActive)
+        {
+            collision.gameObject.GetComponent<Movement>().RpcUnSlow();
+        }
+    }
+
+    [ClientRpc]
+    private void RpcTriggerTrap()
+    {
+        if (isLocalPlayer) return;
+
         isActive = true;
-        GetComponentInChildren<Renderer>().enabled = true;
+        areaBox.enabled = true;
     }
 }

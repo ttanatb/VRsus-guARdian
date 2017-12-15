@@ -235,6 +235,7 @@ public class GameManager : NetworkBehaviour
     private void CmdSpawnTrap(int index, Vector3 pos)
     {
         GameObject go = Instantiate(trapList[index].trap, pos, Quaternion.identity);
+        go.GetComponent<TrapDefense>().ToggleSelected();
         NetworkServer.Spawn(go);
     }
 

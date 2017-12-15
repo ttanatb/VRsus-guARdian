@@ -251,4 +251,16 @@ public class Movement : NetworkBehaviour
         if (trailRenderer)
             trailRenderer.time = 0f;
     }
+
+    [ClientRpc]
+    public void RpcSlow()
+    {
+        isSlowed = true;
+    }
+
+    [ClientRpc]
+    public void RpcUnSlow()
+    {
+        isSlowed = false;
+    }
 }
