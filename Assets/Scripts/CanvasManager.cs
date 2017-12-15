@@ -103,10 +103,20 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
                 }
                 break;
             case GamePhase.Placing:
-                ARUI.SetActive(true);
-                foreach (Button b in ARUI.GetComponentsInChildren<Button>())
+                if (!ARUI.activeSelf)
                 {
-                    if (b.gameObject.name == "Done") b.gameObject.SetActive(true);
+                    ARUI.SetActive(true);
+                    for (int i = 0; i < ARUI.transform.childCount; i++)
+                    {
+                        if (ARUI.transform.GetChild(i).gameObject.name == "Done")
+                        {
+                            ARUI.transform.GetChild(i).gameObject.SetActive(true);
+                        }
+                        else if (ARUI.transform.GetChild(i).gameObject.name == "TrapBtn")
+                        {
+                            Destroy(ARUI.transform.GetChild(i).gameObject);
+                        }
+                    }
                 }
                 List<GameObject> buttons = new List<GameObject>();
                 for (int i = 0; i < manager.trapList.Length; i++)
@@ -148,10 +158,8 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
             case GamePhase.Playing:
                 foreach (Button b in ARUI.GetComponentsInChildren<Button>())
                 {
-                    if (b.gameObject.name == "TrapBtn") Destroy(b.gameObject);
-                    else b.gameObject.SetActive(false);
+                    b.gameObject.SetActive(false);
                 }
-
                 break;
             default:
                 ARUI.SetActive(false);
@@ -212,7 +220,8 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
         gameOverObj.SetActive(true);
         gameOverObj.GetComponent<Button>().onClick.RemoveAllListeners();
         message.ClearMsg();
-        gameOverObj.GetComponent<Button>().onClick.AddListener(() => {
+        gameOverObj.GetComponent<Button>().onClick.AddListener(() =>
+        {
             manager.ResetGame();
             gameOverObj.SetActive(false);
         });
