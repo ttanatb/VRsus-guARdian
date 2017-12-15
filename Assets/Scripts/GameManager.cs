@@ -110,12 +110,8 @@ public class GameManager : NetworkBehaviour
             {
                 if (t.phase != TouchPhase.Began)
                 {
-                    //Debug.Log("Tap wasn't a begin");
                     continue;
-                }
-
-                if (t.phase == TouchPhase.Began &&
-                    Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, float.MaxValue, 1 << layer))
+                } else if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, float.MaxValue, 1 << layer))
                 {
                     //Debug.Log("Raycast hit the trap");
                     currentlySelectedTrap = hit.transform.GetComponent<TrapDefense>();
@@ -336,7 +332,7 @@ public class GameManager : NetworkBehaviour
     {
         GameObject obj = Instantiate(relicPrefab,
             new Vector3(Random.Range(plane.transform.position.x - plane.transform.localScale.x / 4, plane.transform.position.x + plane.transform.localScale.x / 4),
-            plane.transform.localScale.y / 2 + plane.transform.position.y + relicPrefab.transform.localScale.y / 2,
+            plane.transform.localScale.y / 2 + plane.transform.position.y,
             Random.Range(plane.transform.position.z - plane.transform.localScale.z / 4, plane.transform.position.z + plane.transform.localScale.z / 4)),
             Quaternion.identity);
         obj.GetComponent<Relic>().Init(walls, plane);

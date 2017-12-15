@@ -37,6 +37,17 @@ public class SecurityCamera : TrapDefense
             foreach (Renderer r in GetComponentsInChildren<Renderer>())
                 r.enabled = false;
         }
+
+#if !UNITY_IOS
+        GetComponent<Renderer>().enabled = false;
+        foreach (Collider c in GetComponents<Collider>())
+        {
+            if (!c.isTrigger)
+            {
+                c.enabled = false;
+            }
+        }
+#endif
     }
 
     public void Init()

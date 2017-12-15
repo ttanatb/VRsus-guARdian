@@ -37,6 +37,17 @@ public class ProximitySensor : TrapDefense
 
         farRangeSqr = Mathf.Pow(farRange, 2);
         transform.GetChild(1).localScale *= farRangeSqr;
+
+#if !UNITY_IOS
+        GetComponent<Renderer>().enabled = false;
+        foreach (Collider c in GetComponents<Collider>())
+        {
+            if (!c.isTrigger)
+            {
+                c.enabled = false;
+            }
+        }
+#endif
     }
 
     public override void OnStartServer()

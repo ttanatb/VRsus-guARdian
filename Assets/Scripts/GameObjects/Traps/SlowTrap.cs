@@ -20,12 +20,23 @@ public class SlowTrap : TrapDefense
     {
 #if !UNITY_IOS
         GetComponent<Renderer>().enabled = false;
+        foreach(Collider c in GetComponents<Collider>())
+        {
+            if (!c.isTrigger)
+            {
+                c.enabled = false;
+            }
+        }
 #endif
     }
 
     public override void ToggleSelected()
     {
         base.ToggleSelected();
+
+        Debug.Log("Slow Trap toggled");
+
+
         Renderer childRenderer = GetComponentInChildren<Renderer>();
         if (childRenderer)
             childRenderer.enabled = selected;
@@ -37,6 +48,8 @@ public class SlowTrap : TrapDefense
 
         if (other.tag == "Player")
         {
+            Debug.Log("Player enterred trigger area");
+
             if (!isActive)
                 CmdTriggerTrap();
 
