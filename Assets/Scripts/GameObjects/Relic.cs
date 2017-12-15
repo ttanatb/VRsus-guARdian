@@ -59,29 +59,32 @@ public class Relic : NetworkBehaviour
     }
 
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (!isServer || isErecting)
-    //        return;
-    //    if (other.gameObject.tag == "Player")
-    //    {
-    //        Combat combat = other.gameObject.GetComponent<Combat>();
-    //        if (!combat)
-    //        {
-    //            combat = other.gameObject.GetComponent<CameraAvatar>().rootPlayer.GetComponent<Combat>();
-    //        }
-    //        if (!combat.IsInvulnerable)
-    //        {
-    //            combat.GainRelic();
-    //            isErecting = true;
-    //            AlertRelicStolen();
-    //            for (int i = 0; i < lerpPos.Length; i++)
-    //            {
-    //                //walls[i].GetComponent<Renderer>().enabled = true;
-    //            }
-    //        }
-    //    }
-    //}
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!isServer || isErecting)
+            return;
+        if (other.gameObject.tag == "Player")
+        {
+            Combat combat = other.gameObject.GetComponent<Combat>();
+            if (!combat)
+            {
+                combat = other.gameObject.GetComponent<CameraAvatar>().rootPlayer.GetComponent<Combat>();
+            }
+
+            if (!combat.IsInvulnerable)
+            {
+                combat.GainRelic();
+                isErecting = true;
+                CmdRelicStolen();
+                RpcStealRelic();
+                relicRenderer.enabled = false;
+                for (int i = 0; i < lerpPos.Length; i++)
+                {
+                    //walls[i].GetComponent<Renderer>().enabled = true;
+                }
+            }
+        }
+    }
 
     private void Update()
     {

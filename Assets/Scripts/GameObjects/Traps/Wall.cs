@@ -12,6 +12,9 @@ public class Wall : TrapDefense
     private float timer = 0f;
     private float TIME_TO_DESTROY = 3f;
 
+    [SyncVar]
+    bool isActive = false;
+
     public override string TrapName
     {
         get
@@ -46,7 +49,7 @@ public class Wall : TrapDefense
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!isServer) return;
+        if (!isServer || isActive) return;
 
         if (collision.gameObject.tag == "Relic")
         {
@@ -57,31 +60,29 @@ public class Wall : TrapDefense
         if (collision.gameObject.tag == "Player")
         {
             GetComponent<Renderer>().enabled = true;
+            isActive = true;
+            RpcEnable();
+            GetComponent<Rigidbody>().isKinematic = true;
         }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (!isServer) return;
+        if (!isServer || isActive) return;
 
-        if (collision.gameObject.tag == "Relic")
+        if (other.gameObject.tag == "Player")
         {
-            isCollidingWithRelic = false;
+            GetComponent<Renderer>().enabled = true;
+            isActive = true;
+            RpcEnable();
+            GetComponent<Rigidbody>().isKinematic = true;
         }
     }
 
-    private void OnCollisionStay(Collision collision)
+    [ClientRpc]
+    private void RpcEnable()
     {
-        if (!isServer) return;
-
-        if (collision.gameObject.tag == "Relic")
-        {
-            //Debug.Log("Colliding with wall!");
-            timer += Time.deltaTime;
-            if (timer > TIME_TO_DESTROY)
-            {
-                Network.Destroy(gameObject);
-            }
-        }
+        GetComponent<Renderer>().enabled = true;
+        GetComponent<Rigidbody>().isKinematic = true;
     }
 }
