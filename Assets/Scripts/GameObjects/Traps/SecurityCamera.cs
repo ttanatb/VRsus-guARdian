@@ -89,6 +89,8 @@ public class SecurityCamera : TrapDefense
         {
             securityScreens.GetChild(i).gameObject.SetActive(false);
         }
+
+        count = 0;
     }
 
     public override void ToggleSelected()

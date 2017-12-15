@@ -340,6 +340,9 @@ public class GameManager : NetworkBehaviour
                 break;
             case GamePhase.Over:
                 if (!isServer) break;
+                Combat combatt = GetComponent<Combat>();
+                if (combatt != null)
+                    combatt.CanShoot = true;
                 CanvasManager.Instance.ShowGameOverBtn(this);
                 break;
         }
