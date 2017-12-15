@@ -390,13 +390,17 @@ public class Combat : NetworkBehaviour
     [ClientRpc]
     void RpcDie()
     {
-        if (isServer)
-        {
-            manager.SetPhaseTo(GamePhase.Over);
-            canShoot = false;
-        }
+        manager.SetPhaseTo(GamePhase.Over);
+        canShoot = false;
 
         CanvasManager.Instance.SetPermanentMessage("AR player wins!");
+    }
+
+    [ClientRpc]
+    public void RpcRespawn()
+    {
+        transform.position = new Vector3(0.759f, 1005f, -0.659f);
+        health = 3;
     }
 
     float alpha = 1f;

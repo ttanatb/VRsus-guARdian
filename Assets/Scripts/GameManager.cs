@@ -281,22 +281,23 @@ public class GameManager : NetworkBehaviour
 
     public void ResetGame()
     {
-        //foreach (Wall w in FindObjectsOfType<Wall>())
-        //{
-        //    Network.Destroy(w.gameObject);
-        //}
         currGamePhase = (int)GamePhase.Placing;
 
+        foreach (TrapDefense trap in FindObjectsOfType<TrapDefense>())
+            Network.Destroy(trap.gameObject);
 
-        foreach (TrapDefense t in FindObjectsOfType<TrapDefense>())
-        {
-            Network.Destroy(t.gameObject);
-        }
+        foreach (Relic relic in FindObjectsOfType<Relic>())
+            Network.Destroy(relic.gameObject);
+
+        foreach (Entrance entrance in FindObjectsOfType<Entrance>())
+            Network.Destroy(entrance.gameObject);
 
         foreach (Trap t in trapList)
         {
             t.count = t.maxCount;
         }
+
+        SetPhaseTo(GamePhase.Placing);
     }
 
     public void SetPhaseTo(GamePhase newPhase)
@@ -324,6 +325,9 @@ public class GameManager : NetworkBehaviour
 			
                 //CanvasManager.Instance.ToggleCrossHairUI();
                 UnityARAnchorManager.Instance.TogglePlaneMaterial();
+                break;
+            case GamePhase.Over:
+                CanvasManager.Instance.ShowGameOverBtn(this);
                 break;
         }
 

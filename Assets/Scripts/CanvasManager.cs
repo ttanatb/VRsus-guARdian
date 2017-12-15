@@ -23,6 +23,8 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
 
     public Message message;
 
+    public GameObject gameOverObj;
+
     /*
     public void SetUpBlockPlacingUI(BlockManager blockPlacer, int count)
     {
@@ -198,5 +200,17 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     public void SetPermanentMessage(string msg)
     {
         message.SetPermanentMessage(msg);
+    }
+
+    public void ShowGameOverBtn(GameManager manager)
+    {
+        gameOverObj.SetActive(true);
+        gameOverObj.GetComponent<Button>().onClick.RemoveAllListeners();
+        gameOverObj.GetComponent<Button>().onClick.AddListener(() => {
+
+
+            manager.ResetGame();
+            gameOverObj.SetActive(false);
+        });
     }
 }

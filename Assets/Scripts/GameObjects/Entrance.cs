@@ -27,10 +27,9 @@ public class Entrance : NetworkBehaviour
 
             Debug.Log("Collision with player! Relic count: " + combat.GetRelicCount());
 
-            if (combat.GetRelicCount() == 2 && manager.CurrGamePhase != GamePhase.Over)
+            if (!combat.IsInvulnerable && combat.GetRelicCount() == 2 && manager.CurrGamePhase != GamePhase.Over)
             {
-                manager.SetPhaseTo(GamePhase.Over);
-                RpcAlertVRWin(combat.GetRelicCount());
+                Win(combat);
             }
         }
     }
@@ -50,12 +49,17 @@ public class Entrance : NetworkBehaviour
 
             Debug.Log("Collision with player! Relic count: " + combat.GetRelicCount());
 
-            if (combat.GetRelicCount() == 2 && manager.CurrGamePhase != GamePhase.Over)
+            if (!combat.IsInvulnerable && combat.GetRelicCount() == 2 && manager.CurrGamePhase != GamePhase.Over)
             {
-                manager.SetPhaseTo(GamePhase.Over);
-                RpcAlertVRWin(combat.GetRelicCount());
+                Win(combat);
             }
         }
+    }
+
+    private void Win(Combat combat)
+    {
+        manager.SetPhaseTo(GamePhase.Over);
+        RpcAlertVRWin(combat.GetRelicCount());
     }
 
     [ClientRpc]
