@@ -12,7 +12,7 @@ public class SlowTrap : TrapDefense
     {
         get
         {
-            return "Security Camera";
+            return "Slow Trap";
         }
     }
 
@@ -20,7 +20,6 @@ public class SlowTrap : TrapDefense
     {
 #if !UNITY_IOS
         GetComponent<Renderer>().enabled = false;
-
 #endif
     }
 
@@ -60,6 +59,8 @@ public class SlowTrap : TrapDefense
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (!isServer) return;
+
         if (collision.gameObject.tag == "Player" && !isActive) 
             CmdTriggerTrap();
     }
