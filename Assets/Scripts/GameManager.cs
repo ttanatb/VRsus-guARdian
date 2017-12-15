@@ -144,7 +144,7 @@ public class GameManager : NetworkBehaviour
 
                     if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, float.MaxValue, 1 << layer))
                     {
-                        currentlySelectedTrap.transform.position = hit.point;
+                        currentlySelectedTrap.transform.position = hit.point + Vector3.up * currentlySelectedTrap.transform.localScale.y / 2;
                         return;
                     }
                 }

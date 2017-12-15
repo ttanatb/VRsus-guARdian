@@ -36,6 +36,12 @@ public class Wall : TrapDefense
         if (!m)
             m = GetComponent<Renderer>().material;
         m.SetTextureScale("_MainTex", scale / 0.75f);
+
+
+        if (isCollidingWithRelic)
+        {
+            Debug.Log("isColliding Wall)");
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -70,6 +76,7 @@ public class Wall : TrapDefense
 
         if (collision.gameObject.tag == "Relic")
         {
+            Debug.Log("Colliding with wall!");
             timer += Time.deltaTime;
             if (timer > TIME_TO_DESTROY)
             {
