@@ -5,7 +5,7 @@ AR_Hack is a networked, stealth-based game between AR and PC. The game utilizes 
 ![Picture of Screenshots](https://i.imgur.com/51sv3oX.jpg)
 
 ## Demo Video
-[![AR_Hack](https://i.imgur.com/M7L3Qoq.jpg)](https://youtu.be/-Z7KCzS648w "AR_Hack")
+[![AR_Hack](https://i.imgur.com/JEC7qyz.png)](https://youtu.be/-Z7KCzS648w "AR_Hack")
 
 ## Development Blog
 Check out a more personal narrative about the project on my [blog](https://tanatbdev.wordpress.com/)!
