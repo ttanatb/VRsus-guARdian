@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: aec01a33c09b06c45940d2bb73bdeb51
+timeCreated: 1514860219
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - healthBarPrefab: {fileID: 1276707426920934, guid: 8ac179e6b8384d345901bb26a37ea7c8,
+      type: 2}
+  - healthBarUIPrefab: {fileID: 1566539021502138, guid: 163a4e5b7ba9ab647ac95649ab46cc19,
+      type: 2}
+  - HurtScreenPrefab: {fileID: 1629627864760112, guid: 78673a8e31d0e5e4d9ea031915f3c24b,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

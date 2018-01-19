@@ -3,75 +3,75 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+/// <summary>
+/// Script that manges the functionality of a security camera
+/// 
+/// Author: Tanat Boozayaangool
+/// </summary>
 public class SecurityCamera : TrapDefense
 {
+    #region Fields
+    [Tooltip("The Render Textures for the cameras & screens. The count should reflect how many camera screens there are.")]
     public RenderTexture[] renderTextures;
+
+    [Tooltip("The renderer for the 'Area of Effect'")]
     public Renderer areaOfEffectRenderer;
 
-    static int count;
-    static Transform securityScreens;
+    private static int count;
+    private static Transform screenParentObj;
 
-    public override string TrapName
-    {
-        get
-        {
-            return "Security Camera";
-        }
-    }
+    public override string TrapName { get { return "Security Camera"; } }
+    #endregion
 
+    #region Init & Destruction
     private void Start()
     {
-        if (isServer)
-        {
-            Camera cam = GetComponentInChildren<Camera>();
-            GetComponentInChildren<Camera>().targetTexture = renderTextures[count];
-            cam.enabled = true;
+        if (isServer) return;
 
-            if (count < renderTextures.Length)
-                count++;
-
-            Init();
-        }
-        else
-        {
-            foreach (Renderer r in GetComponentsInChildren<Renderer>())
-                r.enabled = false;
-        }
-
-#if !UNITY_IOS
+        //Disable components for clients that aren't hosts
         GetComponent<Renderer>().enabled = false;
+        foreach (Renderer r in GetComponentsInChildren<Renderer>())
+            r.enabled = false;
+
         foreach (Collider c in GetComponents<Collider>())
         {
             if (!c.isTrigger)
-            {
                 c.enabled = false;
-            }
         }
-#endif
     }
 
-    public void Init()
+    public override void OnStartServer()
     {
-        Debug.Log(Camera.main.name);
-
-        if (securityScreens == null)
+        //initializes static reference
+        if (screenParentObj == null)
         {
             if (!Camera.main)
-            {
-                Debug.Log("No main camera");
-            }
+                Debug.LogError("No main camera");
 
+            //Finds the Security Screen Parent Obj
             for (int i = 0; i < Camera.main.transform.childCount; i++)
             {
                 Transform child = Camera.main.transform.GetChild(i);
                 if (child.name == "SecurityScreens")
-                    securityScreens = child;
+                {
+                    screenParentObj = child;
+                    break;
+                }
             }
         }
 
-        if (securityScreens)
+        //does set-up on the Camera component
+        Camera cam = GetComponentInChildren<Camera>();
+        GetComponentInChildren<Camera>().targetTexture = renderTextures[count];
+        cam.enabled = true;
+
+        if (count < renderTextures.Length)
+            count++;
+
+        //enables the security screen
+        if (screenParentObj)
         {
-            GameObject screen = securityScreens.GetChild(count - 1).gameObject;
+            GameObject screen = screenParentObj.GetChild(count - 1).gameObject;
             screen.SetActive(true);
             screen.GetComponent<SecurityScreen>().associatedCamera = this;
         }
@@ -81,26 +81,31 @@ public class SecurityCamera : TrapDefense
         }
     }
 
+    /// <summary>
+    /// Destroys/Disables and static references
+    /// </summary>
     public override void OnNetworkDestroy()
     {
         if (!isServer) return;
 
-        for(int i = 0; i < securityScreens.childCount; i++)
+        if (count > 0)
         {
-            securityScreens.GetChild(i).gameObject.SetActive(false);
+            for (int i = 0; i < screenParentObj.childCount; i++)
+                screenParentObj.GetChild(i).gameObject.SetActive(false);
+
+            count = 0;
         }
-
-        count = 0;
     }
+    #endregion
 
+    #region Life Cycle
+    /// <summary>
+    /// Toggles renderer to reflect being selected or not
+    /// </summary>
     public override void ToggleSelected()
     {
         base.ToggleSelected();
         areaOfEffectRenderer.enabled = selected;
     }
-
-    public override void RpcDisable()
-    {
-        base.RpcDisable();
-    }
+    #endregion
 }

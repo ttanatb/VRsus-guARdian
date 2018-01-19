@@ -1,10 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
+/// <summary>
+/// This script deals with the functionalities of the proximity sensor
+/// 
+/// Author: Tanat Boozayaangool
+/// </summary>
 public class ProximitySensor : TrapDefense
 {
+    #region Fields
     public float nearRange = 3;
     public float farRange = 5;
 
@@ -12,33 +16,17 @@ public class ProximitySensor : TrapDefense
     private float farRangeSqr;
 
     private static Transform[] players;
-    private static GameManager manager;
 
-    public override string TrapName
-    {
-        get
-        {
-            return "Proximity Sensor";
-        }
-    }
+    public override string TrapName { get { return "Proximity Sensor"; } }
+    #endregion
 
+    #region Init Logic
     // Use this for initialization
     void Start()
     {
-        if (farRange < nearRange)
-        {
-            float temp = farRange;
-            farRange = nearRange;
-            nearRange = temp;
-        }
+        //disable stuff for clients
+        if (isServer) return;
 
-        nearRangeSqr = Mathf.Pow(nearRange, 2);
-        transform.GetChild(0).localScale *= nearRangeSqr;
-
-        farRangeSqr = Mathf.Pow(farRange, 2);
-        transform.GetChild(1).localScale *= farRangeSqr;
-
-#if !UNITY_IOS
         GetComponent<Renderer>().enabled = false;
         foreach (Collider c in GetComponents<Collider>())
         {
@@ -47,14 +35,14 @@ public class ProximitySensor : TrapDefense
                 c.enabled = false;
             }
         }
-#endif
     }
 
     public override void OnStartServer()
     {
+        //gets the player to keep track for
         if (players == null)
         {
-            Player[] playerScripts = FindObjectsOfType<Player>();
+            PlayerInitializer[] playerScripts = FindObjectsOfType<PlayerInitializer>();
             players = new Transform[1];
             for (int i = 0; i < players.Length; i++)
             {
@@ -63,20 +51,31 @@ public class ProximitySensor : TrapDefense
             }
         }
 
-        if (manager == null)
+        //swap the values if needed
+        if (farRange < nearRange)
         {
-            manager = FindObjectOfType<GameManager>();
+            float temp = farRange;
+            farRange = nearRange;
+            nearRange = temp;
         }
-    }
 
+        nearRangeSqr = Mathf.Pow(nearRange, 2);
+        farRangeSqr = Mathf.Pow(farRange, 2);
+
+        transform.GetChild(0).localScale *= nearRangeSqr;
+        transform.GetChild(1).localScale *= farRangeSqr;
+    }
+    #endregion
+
+    #region Life Cycle
     // Update is called once per frame
     void Update()
     {
-        if (!isServer || manager.CurrGamePhase != GamePhase.Playing)
+        if (!isServer)
             return;
-        float closestDist = float.MaxValue;
 
-        //this does not check for decoys
+        //gets the closest distance to a player entity
+        float closestDist = float.MaxValue;
         foreach (Transform t in players)
         {
             if (t.position.y < transform.position.y - transform.localScale.y / 2)
@@ -84,38 +83,26 @@ public class ProximitySensor : TrapDefense
 
             float dist = (t.position - transform.position).sqrMagnitude;
             if (dist < closestDist)
-            {
                 closestDist = dist;
-            }
         }
 
+        //determine the color (green to red)
         Color c = Color.black;
         float halfRange = (farRangeSqr - nearRangeSqr) / 2f;
         c.r = Mathf.Lerp(1, 0, (closestDist - nearRangeSqr) / halfRange);
         c.g = Mathf.Lerp(0, 1, (closestDist - nearRangeSqr + halfRange) / (halfRange * 2f));
-
-        //Debug.Log(closestDist + ": " + c);
         GetComponent<Renderer>().material.color = c;
     }
 
+    /// <summary>
+    /// Toggles the renderers of the radius
+    /// </summary>
     public override void ToggleSelected()
     {
         base.ToggleSelected();
 
         for (int i = 0; i < transform.childCount; i++)
-        {
             transform.GetChild(i).GetComponent<Renderer>().enabled = selected;
-        }
     }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = new Color(1, 0, 0, 0.3f);
-        Gizmos.DrawSphere(transform.position, nearRangeSqr);
-
-
-        Gizmos.color = new Color(0, 1, 0, 0.3f);
-        Gizmos.DrawSphere(transform.position, farRangeSqr);
-
-    }
+    #endregion
 }

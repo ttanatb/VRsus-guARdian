@@ -1,67 +1,56 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
+/// <summary>
+/// Manages the entrances and what happens when you hit it
+/// 
+/// Author: Tanat Boozayaangool
+/// </summary>
 public class Entrance : NetworkBehaviour
 {
-    private GameManager manager;
+    //Field(s)
+    private ARSetUp manager;
 
+    //Init
     public override void OnStartServer()
     {
-        manager = FindObjectOfType<GameManager>();
+        manager = FindObjectOfType<ARSetUp>();
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (!isServer)
-            return;
-
-        if (collision.gameObject.tag == "Player")
-        {
-            Combat combat = collision.gameObject.GetComponent<Combat>();
-            if (!combat)
-            {
-                combat = collision.gameObject.GetComponent<CameraAvatar>().rootPlayer.GetComponent<Combat>();
-            }
-
-            Debug.Log("Collision with player! Relic count: " + combat.GetRelicCount());
-
-            if (!combat.IsInvulnerable && combat.GetRelicCount() == 2 && manager.CurrGamePhase != GamePhase.Over)
-            {
-                Win(combat);
-            }
-        }
-    }
-
+    /// <summary>
+    /// Handles when a VR player collides with the entrance
+    /// </summary>
     private void OnTriggerEnter(Collider other)
     {
         if (!isServer)
             return;
 
+        //
         if (other.gameObject.tag == "Player")
         {
-            Combat combat = other.gameObject.GetComponent<Combat>();
+            VRCombat combat = other.gameObject.GetComponent<VRCombat>();
             if (!combat)
-            {
-                combat = other.gameObject.GetComponent<CameraAvatar>().rootPlayer.GetComponent<Combat>();
-            }
-
-            Debug.Log("Collision with player! Relic count: " + combat.GetRelicCount());
+                combat = other.gameObject.GetComponent<CameraAvatar>().rootPlayer.GetComponent<VRCombat>();
 
             if (!combat.IsInvulnerable && combat.GetRelicCount() == 2 && manager.CurrGamePhase != GamePhase.Over)
-            {
                 Win(combat);
-            }
         }
     }
 
-    private void Win(Combat combat)
+    /// <summary>
+    /// Appropriately adjust values to reflect winning
+    /// </summary>
+    /// <param name="combat">The VRcombat with the relics</param>
+    private void Win(VRCombat combat)
     {
         manager.SetPhaseTo(GamePhase.Over);
         RpcAlertVRWin(combat.GetRelicCount());
     }
 
+    /// <summary>
+    /// Sends a message to announce winning
+    /// </summary>
+    /// <param name="relicCount">The count of relics</param>
     [ClientRpc]
     void RpcAlertVRWin(int relicCount)
     {
