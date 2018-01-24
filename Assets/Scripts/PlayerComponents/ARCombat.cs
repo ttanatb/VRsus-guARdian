@@ -37,15 +37,18 @@ public class ARCombat : Combat
     private LaserParticle laserParticle;
     private Transform avatar;
 
+    private bool isShootingEnabled = false;
+
     /// <summary>
     /// Changes if the character can shoot
     /// </summary>
-    public bool CanShoot
+    public bool IsShootingEnabled
     {
         set
         {
+            laserTimer = 0f;
             CanvasManager.Instance.SetCrossHairUI(value);
-            canShoot = value;
+            isShootingEnabled = value;
         }
     }
     #endregion
@@ -88,7 +91,7 @@ public class ARCombat : Combat
         UpdateLaser();
 
         //checks input and if laser should be shot
-        if (canShoot && CheckTap() && !Utility.IsPointerOverUIObject())
+        if (isShootingEnabled && canShoot && CheckTap() && !Utility.IsPointerOverUIObject())
             Fire();
     }
 
@@ -144,7 +147,7 @@ public class ARCombat : Combat
 
                 //Needs rework
                 if (hit.transform.tag == "Player")
-                    hit.transform.GetComponent<CameraAvatar>().rootPlayer.GetComponent<VRCombat>().TakeDamage();
+                    hit.transform.GetComponent<CameraAvatar>().RootPlayer.GetComponent<VRCombat>().TakeDamage();
             }
 
             //puts it at the furthest distance

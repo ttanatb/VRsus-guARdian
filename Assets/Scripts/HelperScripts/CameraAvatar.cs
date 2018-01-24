@@ -7,6 +7,17 @@
 /// </summary>
 public class CameraAvatar : MonoBehaviour
 {
-    //Needs fixing
-    public Combat rootPlayer;
+    public Combat RootPlayer
+    {
+        get
+        {
+            Transform curr = transform;
+            while(curr.parent != null)
+            {
+                curr = curr.parent;
+            }
+
+            return curr.GetComponent<Combat>();
+        }
+    }
 }

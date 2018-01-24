@@ -30,7 +30,7 @@ public class Entrance : NetworkBehaviour
         {
             VRCombat combat = other.gameObject.GetComponent<VRCombat>();
             if (!combat)
-                combat = other.gameObject.GetComponent<CameraAvatar>().rootPlayer.GetComponent<VRCombat>();
+                combat = other.gameObject.GetComponent<CameraAvatar>().RootPlayer.GetComponent<VRCombat>();
 
             if (!combat.IsInvulnerable && combat.GetRelicCount() == 2 && manager.CurrGamePhase != GamePhase.Over)
                 Win(combat);

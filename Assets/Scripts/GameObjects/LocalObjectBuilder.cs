@@ -28,6 +28,8 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
     /// Y-position of the floor
     /// </summary>
     public float FloorPos { get { return floorPos; } }
+
+    public ARPlaneManager Manager { get { return planeManager; } }
     #endregion
 
     #region Init & Destructor
@@ -51,6 +53,7 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
     /// <param name="planeManager"></param>
     public void SetPlaneManager(ARPlaneManager planeManager)
     {
+        //Debug.Log("Setting plane manager");
         this.planeManager = planeManager;
         Clear();
         Init();
@@ -69,6 +72,7 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
     /// </summary>
     public void Clear()
     {
+        //Debug.Log("Clearing");
         StopAllCoroutines();
         for (int i = 0; i < localPlanes.Count; i++)
             Destroy(localPlanes[i]);

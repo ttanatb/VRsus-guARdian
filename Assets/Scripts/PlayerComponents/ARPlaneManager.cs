@@ -17,16 +17,21 @@ public class ARPlaneManager : PlayerComponent
 
     public override void OnStartLocalPlayer()
     {
+        if (isServer)
+        {
+            StartCoroutine(UpdateARPlanes());
+        }
+    }
+
+    private void Start()
+    {
         if (LocalObjectBuilder.Instance)
             LocalObjectBuilder.Instance.SetPlaneManager(this);
-
-        if (isServer)
-            StartCoroutine(UpdateARPlanes());
     }
 
     private void OnDestroy()
     {
-        if (LocalObjectBuilder.Instance)
+        if (LocalObjectBuilder.Instance && LocalObjectBuilder.Instance.Manager == this)
             LocalObjectBuilder.Instance.Clear();
     }
 
@@ -126,7 +131,7 @@ public class ARPlaneManager : PlayerComponent
         if (index < m_ARPlane.Count)
         {
             //must create a new SyncStruct to make sure it updates on client
-            m_ARPlane[index] = new ARPlane(m_ARPlane[index].identifier, pos, rot, scale); 
+            m_ARPlane[index] = new ARPlane(m_ARPlane[index].identifier, pos, rot, scale);
             m_ARPlane.Dirty(index);
         }
     }

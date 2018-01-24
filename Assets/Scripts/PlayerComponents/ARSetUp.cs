@@ -166,7 +166,7 @@ public class ARSetUp : PlayerComponent
         if (currentlySelectedTrap == null) return;
 
         LayerMask layer = LayerMask.NameToLayer("Tower");
-        LayerMask layer2 = LayerMask.NameToLayer("Trap");
+        //LayerMask layer2 = LayerMask.NameToLayer("Trap");
         InputResult resultInfo = XInput.Instance.CheckTap((1 << layer), TouchPhase.Moved, TouchPhase.Stationary);
         if (resultInfo.result == ResultType.Success)
         {
@@ -323,7 +323,9 @@ public class ARSetUp : PlayerComponent
 
         SetPhaseTo(GamePhase.Placing);
         CanvasManager.Instance.SetUpUI(this);
+#if UNITY_IOS
         UnityARAnchorManager.Instance.TogglePlaneMaterial();
+#endif
     }
 
     /// <summary>
@@ -351,7 +353,7 @@ public class ARSetUp : PlayerComponent
 
                 ARCombat combat = GetComponent<ARCombat>();
                 if (combat != null)
-                    combat.CanShoot = true;
+                    combat.IsShootingEnabled = true;
 
 #if UNITY_IOS
                 UnityARAnchorManager.Instance.TogglePlaneMaterial();
@@ -361,7 +363,7 @@ public class ARSetUp : PlayerComponent
                 if (!isServer) break;
                 ARCombat combatt = GetComponent<ARCombat>();
                 if (combatt != null)
-                    combatt.CanShoot = false;
+                    combatt.IsShootingEnabled = false;
                 CanvasManager.Instance.ShowGameOverBtn(this);
                 break;
         }

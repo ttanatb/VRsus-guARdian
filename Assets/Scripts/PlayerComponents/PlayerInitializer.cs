@@ -37,7 +37,6 @@ public class PlayerInitializer : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            //Decides player type
             if (isServer)
                 PlayerType = PlayerType.AR;
             else PlayerType = PlayerType.VR;
@@ -45,8 +44,14 @@ public class PlayerInitializer : NetworkBehaviour
             EnableCameraAndAudioListener();
         }
 
-        //Only for remote players
-        else EnablePlayerRenderers();
+        else
+        {
+            if (isServer)
+                PlayerType = PlayerType.VR;
+            else PlayerType = PlayerType.AR;
+
+            EnablePlayerRenderers();
+        }
 
         //Enabling stuff for both local player and remote players
         if (PlayerType == PlayerType.AR)

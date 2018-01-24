@@ -88,9 +88,9 @@ public class Movement : PlayerComponent
     void Start()
     {
         InitObj();
-        CmdTurnOffTrailRenderer();
         if (isLocalPlayer)
         {
+            CmdTurnOffTrailRenderer();
             currJumpEnergy = jumpEnergyMax;
             if (playerType == PlayerType.VR)
                 CanvasManager.Instance.InitJumpEnergyBar(this);
