@@ -140,13 +140,11 @@ public class PlayerInitializer : NetworkBehaviour
             EnablePlayerComponent<ARPlaneManager>();
             EnablePlayerComponent<ARSetUp>();
             EnablePlayerComponent<ARCombat>();
-
 #if UNITY_IOS
             DestroyPlayerComponent<Movement>();
 #else
             EnablePlayerComponent<Movement>();
 #endif
-
             DestroyPlayerComponent<VRTransition>();
             DestroyPlayerComponent<VRCombat>();
         }

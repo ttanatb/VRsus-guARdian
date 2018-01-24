@@ -132,27 +132,18 @@ public class ARSetUp : PlayerComponent
     /// </summary>
     void CheckTapOnTraps()
     {
-        RaycastHit hit;
         LayerMask layer = LayerMask.NameToLayer("Trap");
-        if (Input.touchCount > 0)
+        InputResult resultInfo = XInput.Instance.CheckTap(1 << layer, TouchPhase.Began);
+        if (resultInfo.result == ResultType.Success)
         {
-            foreach (Touch t in Input.touches)
-            {
-                if (t.phase != TouchPhase.Began)
-                    continue;
-                else if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, float.MaxValue, 1 << layer))
-                {
-                    currentlySelectedTrap = hit.transform.GetComponent<TrapDefense>();
-                    currentlySelectedTrap.ToggleSelected();
-                    TogglePreviouslySelectedTrap();
-                }
-                else
-                {
-                    currentlySelectedTrap = null;
-                    TogglePreviouslySelectedTrap();
-                }
-                return;
-            }
+            currentlySelectedTrap = resultInfo.hit.transform.GetComponent<TrapDefense>();
+            currentlySelectedTrap.ToggleSelected();
+            TogglePreviouslySelectedTrap();
+        }
+        else if (resultInfo.result == ResultType.MissTap)
+        {
+            currentlySelectedTrap = null;
+            TogglePreviouslySelectedTrap();
         }
     }
 
@@ -163,23 +154,13 @@ public class ARSetUp : PlayerComponent
     /// </summary>
     void MoveTrap()
     {
-        if (currentlySelectedTrap != null)
-        {
-            RaycastHit hit;
-            LayerMask layer = LayerMask.NameToLayer("Tower");
-            if (Input.touchCount > 0)
-            {
-                foreach (Touch t in Input.touches)
-                {
-                    if (t.phase == TouchPhase.Stationary || t.phase == TouchPhase.Began) continue;
+        if (currentlySelectedTrap == null) return;
 
-                    if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, float.MaxValue, 1 << layer))
-                    {
-                        currentlySelectedTrap.transform.position = hit.point + Vector3.up * currentlySelectedTrap.transform.localScale.y / 2;
-                        return;
-                    }
-                }
-            }
+        LayerMask layer = LayerMask.NameToLayer("Tower");
+        InputResult resultInfo = XInput.Instance.CheckTap(1 << layer, TouchPhase.Moved);
+        if (resultInfo.result == ResultType.Success)
+        {
+            currentlySelectedTrap.transform.position = resultInfo.hit.point + Vector3.up * currentlySelectedTrap.transform.localScale.y / 2;
         }
     }
 
@@ -190,26 +171,18 @@ public class ARSetUp : PlayerComponent
     /// </summary>
     void CheckTapOnSecurityScreen()
     {
-        RaycastHit hit;
         LayerMask layer = LayerMask.NameToLayer("UI");
-        if (Input.touchCount > 0)
+        InputResult resultInfo = XInput.Instance.CheckTap(1 << layer, TouchPhase.Began);
+        if (resultInfo.result == ResultType.Success)
         {
-            foreach (Touch t in Input.touches)
-            {
-                if (t.phase != TouchPhase.Began) continue;
-                if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, float.MaxValue, 1 << layer))
-                {
-                    currentlySelectedTrap = hit.collider.GetComponent<SecurityScreen>().associatedCamera;
-                    currentlySelectedTrap.ToggleSelected();
-                    TogglePreviouslySelectedTrap();
-                }
-                else
-                {
-                    currentlySelectedTrap = null;
-                    TogglePreviouslySelectedTrap();
-                }
-                return;
-            }
+            currentlySelectedTrap = resultInfo.hit.collider.GetComponent<SecurityScreen>().associatedCamera;
+            currentlySelectedTrap.ToggleSelected();
+            TogglePreviouslySelectedTrap();
+        }
+        else if (resultInfo.result == ResultType.MissTap)
+        {
+            currentlySelectedTrap = null;
+            TogglePreviouslySelectedTrap();
         }
     }
 
@@ -232,28 +205,9 @@ public class ARSetUp : PlayerComponent
     /// <returns></returns>
     bool CheckTapOnARPlane()
     {
-#if UNITY_IOS
-        RaycastHit hit;
         LayerMask layer = LayerMask.NameToLayer("Tower");
-        if (Input.touchCount > 0)
-        {
-            foreach (Touch t in Input.touches)
-            {
-                if (t.phase != TouchPhase.Began || currTrapSelection < 0 || currTrapSelection > trapList.Length - 1 || trapList[currTrapSelection].count < 1)
-                    continue;
-
-                if (Physics.Raycast(Camera.main.ScreenPointToRay(t.position), out hit, 10f, 1 << layer))
-                    return true;
-            }
-        }
-#else 
-        //fix this
-        //to-do check for click
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.B) &&
-         (currTrapSelection >= 0 && currTrapSelection < trapList.Length && trapList[currTrapSelection].count > 0))
-            return true;
-#endif
-        return false;
+        InputResult resultInfo = XInput.Instance.CheckTap(1 << layer, TouchPhase.Began);
+        return resultInfo.result == ResultType.Success;
     }
 
     /// <summary>
