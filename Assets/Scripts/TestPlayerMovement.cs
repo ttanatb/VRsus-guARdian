@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.VR;
 
 //FPS camera movement adapted from: http://wiki.unity3d.com/index.php/SmoothMouseLook
 public class TestPlayerMovement : PlayerComponent
@@ -127,16 +128,19 @@ public class TestPlayerMovement : PlayerComponent
             if (!isPlaying)
                 return;
 
-            float mouseX = Input.GetAxis("Mouse X");
-            float mouseY = -Input.GetAxis("Mouse Y");
+            if (!VRSettings.enabled)
+            {
+                float mouseX = Input.GetAxis("Mouse X");
+                float mouseY = -Input.GetAxis("Mouse Y");
 
-            rotY += mouseX * mouseSensitivity * Time.deltaTime;
-            rotX += mouseY * mouseSensitivity * Time.deltaTime;
+                rotY += mouseX * mouseSensitivity * Time.deltaTime;
+                rotX += mouseY * mouseSensitivity * Time.deltaTime;
 
-            rotX = Mathf.Clamp(rotX, -clampAngle, clampAngle);
+                rotX = Mathf.Clamp(rotX, -clampAngle, clampAngle);
 
-            Quaternion localRotation = Quaternion.Euler(rotX, rotY, 0.0f);
-            transform.rotation = localRotation;
+                Quaternion localRotation = Quaternion.Euler(rotX, rotY, 0.0f);
+                transform.rotation = localRotation;
+            }
 
             if (Input.GetKey(KeyCode.Space) && currJumpEnergy > jumpCost * Time.deltaTime * 2f)
             {
