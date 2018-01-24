@@ -78,6 +78,7 @@ public class ProximitySensor : TrapDefense
         float closestDist = float.MaxValue;
         foreach (Transform t in players)
         {
+            if (t == null) continue;
             if (t.position.y < transform.position.y - transform.localScale.y / 2)
                 continue;
 

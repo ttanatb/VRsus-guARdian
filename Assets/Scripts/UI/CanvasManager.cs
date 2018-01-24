@@ -65,7 +65,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
                 //loops through to find the correct button
                 foreach (Button b in ARUI.GetComponentsInChildren<Button>())
                 {
-                    if (b.name == "Done")
+                    if (b.gameObject.name == "Done")
                     {
                         //Callback function after clicking the 'done' button
                         b.onClick.AddListener(() =>
@@ -84,7 +84,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
                     }
                 }
 
-                Debug.LogError("Canvas Manager does not contain 'Done' button");
+                //Debug.LogError("Canvas Manager does not contain 'Done' button");
                 break;
 
             //UI for placing traps
@@ -101,8 +101,11 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
                 }
 
                 //'resets' previously created button
-                foreach (GameObject obj in arUIbuttons)
-                    Destroy(obj);
+                if (arUIbuttons != null)
+                {
+                    foreach (GameObject obj in arUIbuttons)
+                        Destroy(obj);
+                }
 
                 //refills the array of buttons
                 arUIbuttons = new GameObject[manager.trapList.Length];

@@ -59,8 +59,18 @@ public class ARSetUp : PlayerComponent
     #region Init Logic
     public override void OnStartLocalPlayer()
     {
-        InitObj();
-        CanvasManager.Instance.SetUpUI(this);
+        if (isServer)
+        {
+            InitObj();
+            CanvasManager.Instance.SetUpUI(this);
+        }
+    }
+
+    public void Awake()
+    {
+        //psuedo-singleton (fix later)
+        if (XInput.Instance == null)
+            new XInput();
     }
 
     public void Start()
@@ -93,15 +103,14 @@ public class ARSetUp : PlayerComponent
                 if (currTrapSelection != -1)
                 {
                     //i think this should be commented out 
-                    //if (currentlySelectedTrap != null)
-                    //{
-                    //   currentlySelectedTrap = null;
-                    //    TogglePreviouslySelectedTrap();
-                    //}
+                    if (currentlySelectedTrap != null)
+                    {
+                        currentlySelectedTrap = null;
+                        TogglePreviouslySelectedTrap();
+                    }
 
                     //check for a tap on the plane to place trap
-                    if (CheckTapOnARPlane())
-                        PlaceTrap();
+                    CheckTapOnARPlane();
                 }
 
                 //if no trap is currently selected
@@ -157,10 +166,14 @@ public class ARSetUp : PlayerComponent
         if (currentlySelectedTrap == null) return;
 
         LayerMask layer = LayerMask.NameToLayer("Tower");
-        InputResult resultInfo = XInput.Instance.CheckTap(1 << layer, TouchPhase.Moved);
+        LayerMask layer2 = LayerMask.NameToLayer("Trap");
+        InputResult resultInfo = XInput.Instance.CheckTap((1 << layer), TouchPhase.Moved, TouchPhase.Stationary);
         if (resultInfo.result == ResultType.Success)
         {
             currentlySelectedTrap.transform.position = resultInfo.hit.point + Vector3.up * currentlySelectedTrap.transform.localScale.y / 2;
+        }
+        else if (resultInfo.result == ResultType.NoTap)
+        {
         }
     }
 
@@ -203,22 +216,23 @@ public class ARSetUp : PlayerComponent
     /// To-do: extend input
     /// </summary>
     /// <returns></returns>
-    bool CheckTapOnARPlane()
+    private void CheckTapOnARPlane()
     {
         LayerMask layer = LayerMask.NameToLayer("Tower");
         InputResult resultInfo = XInput.Instance.CheckTap(1 << layer, TouchPhase.Began);
-        return resultInfo.result == ResultType.Success;
+        if (resultInfo.result == ResultType.Success)
+            PlaceTrap(resultInfo.hit.point);
     }
 
     /// <summary>
     /// Places a trap and updates selection & UI
     /// </summary>
-    private void PlaceTrap()
+    private void PlaceTrap(Vector3 position)
     {
         trapList[currTrapSelection].count -= 1;
 
         TogglePreviouslySelectedTrap();
-        CmdSpawnTrap(currTrapSelection, Vector3.zero);
+        CmdSpawnTrap(currTrapSelection, position);
 
         CanvasManager.Instance.ClearSelection(this);
         CanvasManager.Instance.UpdateTrapCount(this);

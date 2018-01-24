@@ -16,7 +16,7 @@ public class InvisibleWall : TrapDefense
     // Use this for initialization
     void Start()
     {
-        if (!isLocalPlayer)
+        if (!isServer)
             GetComponent<Renderer>().enabled = false;
     }
 

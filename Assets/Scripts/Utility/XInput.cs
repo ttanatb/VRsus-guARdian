@@ -34,7 +34,7 @@ public class XInput : Singleton<XInput>
         {
             if ((phase == TouchPhase.Began    && Input.GetMouseButtonDown(0)) ||
                 (phase == TouchPhase.Ended    && Input.GetMouseButtonUp(0))   ||
-                (phase != TouchPhase.Canceled && Input.GetMouseButton(0)))
+                ((phase == TouchPhase.Moved || phase == TouchPhase.Stationary) && Input.GetMouseButton(0)))
             {
                 validInput = true;
                 break;

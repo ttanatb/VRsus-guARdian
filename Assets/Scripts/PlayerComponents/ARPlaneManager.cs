@@ -20,7 +20,8 @@ public class ARPlaneManager : PlayerComponent
         if (LocalObjectBuilder.Instance)
             LocalObjectBuilder.Instance.SetPlaneManager(this);
 
-        StartCoroutine(UpdateARPlanes());
+        if (isServer)
+            StartCoroutine(UpdateARPlanes());
     }
 
     private void OnDestroy()
@@ -36,9 +37,6 @@ public class ARPlaneManager : PlayerComponent
     [Server]
     IEnumerator UpdateARPlanes()
     {
-        if (!isServer)
-            yield return null;
-
 #if UNITY_IOS
         while(true)
         {
@@ -96,6 +94,8 @@ public class ARPlaneManager : PlayerComponent
                Random.Range(0f, 360f),
                new Vector3(Random.Range(2f, 0.25f), 1f, Random.Range(2f, 0.25f)));
         }
+
+        yield return null;
 #endif
     }
 
