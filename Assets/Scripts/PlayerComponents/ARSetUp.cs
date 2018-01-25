@@ -172,9 +172,6 @@ public class ARSetUp : PlayerComponent
         {
             currentlySelectedTrap.transform.position = resultInfo.hit.point + Vector3.up * currentlySelectedTrap.transform.localScale.y / 2;
         }
-        else if (resultInfo.result == ResultType.NoTap)
-        {
-        }
     }
 
     /// <summary>
@@ -251,7 +248,7 @@ public class ARSetUp : PlayerComponent
         GameObject go = Instantiate(trapList[index].trap, pos, Quaternion.identity);
         currentlySelectedTrap = go.GetComponent<TrapDefense>();
         currentlySelectedTrap.ToggleSelected();
-        //TogglePreviouslySelectedTrap();
+        TogglePreviouslySelectedTrap();
         NetworkServer.Spawn(go);
     }
 
@@ -345,11 +342,14 @@ public class ARSetUp : PlayerComponent
                 break;
 
             case GamePhase.Playing:
+                currentlySelectedTrap = null;
+                TogglePreviouslySelectedTrap();
+
                 RpcSpawnEntrances();
 
-                VRTransition blockManager = FindObjectOfType<VRTransition>();
-                if (blockManager)
-                    blockManager.RpcSwitchToTopViewCam();
+                VRTransition vrTransition = FindObjectOfType<VRTransition>();
+                if (vrTransition)
+                    vrTransition.RpcSwitchToTopViewCam();
 
                 ARCombat combat = GetComponent<ARCombat>();
                 if (combat != null)

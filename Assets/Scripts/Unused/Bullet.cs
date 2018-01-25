@@ -34,15 +34,15 @@ public class Bullet : NetworkBehaviour
         CameraAvatar avatar = collision.gameObject.GetComponent<CameraAvatar>();
         Combat combat = collision.gameObject.GetComponent<Combat>();
 
-        if (avatar && avatar.rootPlayer.GetComponent<PlayerInitializer>().PlayerType != type)
-        {
-            avatar.rootPlayer.TakeDamage();
-            Destroy(gameObject);
-        }
-        else if (combat && combat.GetComponent<PlayerInitializer>().PlayerType != type)
-        {
-            combat.TakeDamage();
-            Destroy(gameObject);
-        }
+        //if (avatar && avatar.rootPlayer.GetComponent<PlayerInitializer>().PlayerType != type)
+        //{
+        //    avatar.rootPlayer.TakeDamage();
+        //    Destroy(gameObject);
+        //}
+        //else if (combat && combat.GetComponent<PlayerInitializer>().PlayerType != type)
+        //{
+        //    combat.TakeDamage();
+        //    Destroy(gameObject);
+        //}
     }
 }

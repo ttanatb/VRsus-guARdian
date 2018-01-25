@@ -147,7 +147,13 @@ public class ARCombat : Combat
 
                 //Needs rework
                 if (hit.transform.tag == "Player")
-                    hit.transform.GetComponent<CameraAvatar>().RootPlayer.GetComponent<VRCombat>().TakeDamage();
+                {
+                    Combat combat = hit.transform.GetComponent<Combat>();
+                    if (!combat)
+                        combat = hit.transform.GetComponent<CameraAvatar>().RootPlayer;
+
+                    combat.TakeDamage();
+                }
             }
 
             //puts it at the furthest distance

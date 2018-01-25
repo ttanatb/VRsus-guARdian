@@ -47,21 +47,8 @@ public class VRCombat : Combat
     #endregion
 
     #region Init & Destruction
-    public override void OnStartLocalPlayer()
-    {
-        //visual indicators for getting hurt
-        hurtFlashes = new HurtFlash[hurtFlashCount];
-        for (int i = 0; i < hurtFlashCount; i++)
-            hurtFlashes[i] = Instantiate(HurtScreenPrefab, canvas).GetComponent<HurtFlash>();
-
-        //UI for local player
-        healthBarUI = Instantiate(healthBarUIPrefab, canvas).GetComponent<HealthBarUI>();
-        healthBarUI.Init(this);
-    }
-
     private void Start()
     {
-        //
         canvas = CanvasManager.Instance.transform;
         avatar = player.VRAvatar.transform;
 
@@ -70,6 +57,14 @@ public class VRCombat : Combat
             //physical health bar
             healthBar = Instantiate(healthBarPrefab).GetComponent<HealthBar>();
             healthBar.Init(this, playerType, avatar);
+        }
+        else
+        {
+            hurtFlashes = new HurtFlash[hurtFlashCount];
+            for (int i = 0; i < hurtFlashCount; i++)
+                hurtFlashes[i] = Instantiate(HurtScreenPrefab, canvas).GetComponent<HurtFlash>();
+
+            CanvasManager.Instance.InitHealthEnergyBar(this);
         }
     }
 
@@ -97,12 +92,6 @@ public class VRCombat : Combat
         }
     }
     #endregion
-
-    void Update()
-    {
-        if (!isLocalPlayer)
-            return;
-    }
 
     [Server]
     public override void TakeDamage()

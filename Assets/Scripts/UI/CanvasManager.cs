@@ -34,7 +34,11 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     [Tooltip("The GameObject containing the Jump Energy UI")]
     public GameObject jumpUIObj;
 
+    [Tooltip("The GameObject containing the Health UI")]
+    public GameObject healthUIObj;
+
     private GameObject[] arUIbuttons;   //array of buttons
+    private Button doneBtn;
     #endregion
 
     #region Set Up & Life Cycle
@@ -46,6 +50,16 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     {
         jumpUIObj.SetActive(true);
         jumpUIObj.GetComponent<JumpEnergyUI>().Init(movement);
+    }
+
+    /// <summary>
+    /// Sets Activates the Health UI
+    /// </summary>
+    /// <param name="combat">Movement script to tie it to</param>
+    public void InitHealthEnergyBar(VRCombat combat)
+    {
+        healthUIObj.SetActive(true);
+        healthUIObj.GetComponent<HealthBarUI>().Init(combat);
     }
 
     /// <summary>
@@ -62,29 +76,32 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
                 planeCountText.gameObject.SetActive(true);
                 ARUI.SetActive(true);
 
-                //loops through to find the correct button
-                foreach (Button b in ARUI.GetComponentsInChildren<Button>())
+                if (!doneBtn)
                 {
-                    if (b.gameObject.name == "Done")
+                    //loops through to find the correct button
+                    foreach (Button b in ARUI.GetComponentsInChildren<Button>())
                     {
-                        //Callback function after clicking the 'done' button
-                        b.onClick.AddListener(() =>
+                        if (b.gameObject.name == "Done")
                         {
-                            if (manager.CheckAggregrateArea())
-                            {
-                                GamePhase nextLvl = (GamePhase)((int)manager.CurrGamePhase + 1);
-                                manager.SetPhaseTo(nextLvl);
-                            }
-                            else
-                            {
-                                message.SetMessage("Not enough play area! (Recommended: 3+ planes and over 4 units of play area)");
-                            }
-                        });
-                        break;
+                            doneBtn = b;
+                            break;
+                        }
                     }
                 }
 
-                //Debug.LogError("Canvas Manager does not contain 'Done' button");
+                //Callback function after clicking the 'done' button
+                doneBtn.onClick.AddListener(() =>
+                {
+                    if (manager.CheckAggregrateArea())
+                    {
+                        GamePhase nextLvl = (GamePhase)((int)manager.CurrGamePhase + 1);
+                        manager.SetPhaseTo(nextLvl);
+                    }
+                    else
+                    {
+                        message.SetMessage("Not enough play area! (Recommended: 3+ planes and over 4 units of play area)");
+                    }
+                });
                 break;
 
             //UI for placing traps
@@ -94,11 +111,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
                 ARUI.SetActive(true);
 
                 //activates the 'Done' button
-                foreach (Button b in ARUI.GetComponentsInChildren<Button>())
-                {
-                    if (b.name == "Done")
-                        b.gameObject.SetActive(true);
-                }
+                doneBtn.gameObject.SetActive(true);
 
                 //'resets' previously created button
                 if (arUIbuttons != null)
@@ -151,9 +164,8 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
             //Disable UI elements
             case GamePhase.Playing:
                 ARUI.SetActive(false);
-                foreach (Button b in ARUI.GetComponentsInChildren<Button>())
-                    b.gameObject.SetActive(false);
-
+                //foreach (Button b in ARUI.GetComponentsInChildren<Button>())
+                //    b.gameObject.SetActive(false);
                 break;
 
             default:

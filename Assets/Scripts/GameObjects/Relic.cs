@@ -15,6 +15,7 @@ public class Relic : NetworkBehaviour
     {
         if (!isServer || hasBeenStolen)
             return;
+
         if (other.gameObject.tag == "Player")
         {
             VRCombat combat = other.gameObject.GetComponent<VRCombat>();
@@ -23,11 +24,9 @@ public class Relic : NetworkBehaviour
 
             if (!combat.IsInvulnerable)
             {
+                hasBeenStolen = true;
                 combat.GainRelic();
                 RpcStealRelic();
-                if (relicRenderer)
-                    relicRenderer.enabled = false;
-                CanvasManager.Instance.SetMessage("A relic was stolen!");
             }
         }
     }
@@ -37,6 +36,9 @@ public class Relic : NetworkBehaviour
     {
         if (relicRenderer)
             relicRenderer.enabled = false;
-        CanvasManager.Instance.SetMessage("Stole a relic!");
+
+        if (isServer)
+            CanvasManager.Instance.SetMessage("A relic was stolen!");
+        else CanvasManager.Instance.SetMessage("Stole a relic!");
     }
 }

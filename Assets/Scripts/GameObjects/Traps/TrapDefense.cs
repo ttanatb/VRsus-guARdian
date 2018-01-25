@@ -10,7 +10,7 @@ using UnityEngine.Networking;
 /// </summary>
 public abstract class TrapDefense : NetworkBehaviour
 {
-    protected bool selected = true; //wether the trap is currently being selected
+    protected bool selected = false; //wether the trap is currently being selected
 
     /// <summary>
     /// The name of the trap (label)
