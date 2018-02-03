@@ -7,16 +7,25 @@ public class EnvironmentCreation : MonoBehaviour {
     public Mesh mountains;
     public List<Vector3> boundary;
     public float yMax;
-    public float mountainWidth;
+    public float yMin;
+    public float yVariance;
+    public float layerWidth;
+    public int peakOffset;
+    public int extrudeTimes;
 
     private List<Vector3> mountainVerts;
     private List<int> mountainTris;
     private List<Vector2> mountainUVs;
     private Vector3 center;
     private int angles;
+    private int layers = 1;
 
-	// Use this for initialization
-	void Start ()
+    void Start()
+    {
+        CreateTerrain();
+    }
+
+    public void CreateTerrain ()
     {
 		if (boundary != null)
         {
@@ -34,7 +43,9 @@ public class EnvironmentCreation : MonoBehaviour {
         
             center /= angles;
 
-            Extrude(2);
+            Extrude(extrudeTimes);
+
+            RandomizeHeights();
 
             mountains = new Mesh();
 
@@ -44,6 +55,7 @@ public class EnvironmentCreation : MonoBehaviour {
 
             mountains.RecalculateBounds();
             mountains.RecalculateNormals();
+            mountains.RecalculateTangents();
             mountains.UploadMeshData(false);
 
             GetComponent<MeshFilter>().sharedMesh = mountains;
@@ -57,6 +69,8 @@ public class EnvironmentCreation : MonoBehaviour {
             return;
         }
 
+        layers++;
+
         int curMountVerts = mountainVerts.Count;
         int extrudeStart = curMountVerts - angles;
 
@@ -64,7 +78,7 @@ public class EnvironmentCreation : MonoBehaviour {
         {
             Vector3 curMount = mountainVerts[i];
             Vector3 centerToMount = curMount - center;
-            Vector3 temp = curMount + centerToMount.normalized;
+            Vector3 temp = curMount + (centerToMount.normalized * layerWidth);
 
             mountainVerts.Add(temp);
             mountainUVs.Add(new Vector2(temp.x, temp.z));
@@ -93,19 +107,36 @@ public class EnvironmentCreation : MonoBehaviour {
 
         Extrude(extrusions - 1);
     }
-	
-	// Update is called once per frame
-	void Update () {
-		for (int i = 0; i < mountainVerts.Count; i++)
+
+    private void RandomizeHeights()
+    {
+        int peakLayer = layers - peakOffset;
+        float yRange = yMax - yMin;
+        float yIncrement = yRange / peakLayer;
+        int startIndex = angles;
+        int endIndex = mountainVerts.Count;
+
+        for (int i = startIndex; i < endIndex; i++)
         {
-            if (i == mountainVerts.Count - 1)
+            Vector3 temp = mountainVerts[i];
+
+            int curLayer = i / angles;
+
+            Debug.Log(curLayer);
+
+            float standardHeight = 0;
+
+            if (curLayer > peakLayer)
             {
-                Debug.DrawLine(mountainVerts[i], mountainVerts[0], Color.green);
+                standardHeight = (peakLayer - Mathf.Abs(peakLayer - curLayer)) * yIncrement;
             }
             else
             {
-                Debug.DrawLine(mountainVerts[i], mountainVerts[i + 1], Color.green);
+                standardHeight = curLayer * yIncrement;
             }
+
+            temp.y = standardHeight + Random.Range(-yVariance, yVariance);
+            mountainVerts[i] = temp;
         }
-	}
+    }
 }
