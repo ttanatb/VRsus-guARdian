@@ -13,27 +13,28 @@ public class EnvironmentCreation : MonoBehaviour {
     public int peakOffset;
     public int extrudeTimes;
 
+    public int minCliffSides;
+    public int maxCliffSides;
+    public float cliffY;
+
     private List<Vector3> mountainVerts;
     private List<int> mountainTris;
     private List<Vector2> mountainUVs;
     private Vector3 center;
     private int angles;
-    private int layers = 1;
-
-    void Start()
-    {
-        CreateTerrain();
-    }
+    private int layers;
 
     public void CreateTerrain ()
     {
 		if (boundary != null)
         {
+            layers = 1;
             angles = boundary.Count;
             mountainVerts = new List<Vector3>(angles * 2);
             mountainUVs = new List<Vector2>(angles * 2);
             mountainTris = new List<int>(6 * angles);
             center = Vector3.zero;
+
             foreach (Vector3 vert in boundary)
             {
                 center += vert;
@@ -46,6 +47,7 @@ public class EnvironmentCreation : MonoBehaviour {
             Extrude(extrudeTimes);
 
             RandomizeHeights();
+            CreateCliffs();
 
             mountains = new Mesh();
 
@@ -135,6 +137,34 @@ public class EnvironmentCreation : MonoBehaviour {
 
             temp.y = standardHeight + Random.Range(-yVariance, yVariance);
             mountainVerts[i] = temp;
+        }
+    }
+
+    private void CreateCliffs()
+    {
+        int cliffSides = Random.Range(minCliffSides, maxCliffSides + 1);
+        int cliffStart = Random.Range(0, angles);
+        int cliffEnd = cliffStart + cliffSides;
+
+        for (int i = cliffStart; i < cliffEnd; i++)
+        {
+            for (int k = 1; k < layers; k++)
+            {
+                Vector3 temp = Vector3.zero;
+
+                if (i >= angles)
+                {
+                    temp = mountainVerts[(i - angles) + (angles * k)];
+                    temp.y = cliffY;
+                    mountainVerts[(i - angles) + (angles * k)] = temp;
+                }
+                else
+                {
+                    temp = mountainVerts[i + (angles * k)];
+                    temp.y = cliffY;
+                    mountainVerts[i + (angles * k)] = temp;
+                }
+            }
         }
     }
 }
