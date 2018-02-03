@@ -98,6 +98,60 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
     }
 
     /// <summary>
+    /// Returns all the points defining the world bounds
+    /// </summary>
+    /// <returns>List of vector3 that define the bounds of the world</returns>
+    public List<Vector3> GetWorldGeometry()
+    {
+        List<Vector3> worldGeometry = new List<Vector3>();
+        float largestArea = float.MinValue;
+        int indexOfLargestPlane = -1;
+
+        //loop through planes to find largest plane
+        for (int i = 0; i < localPlanes.Count; i++)
+        {
+            float planeArea = localPlanes[i].transform.localScale.x * localPlanes[i].transform.localScale.z;
+            if (planeArea > largestArea)
+            {
+                largestArea = planeArea;
+                indexOfLargestPlane = i;
+            }
+        }
+        if (indexOfLargestPlane < 0) return worldGeometry;  //if there is no plane, return empty
+
+        //add the corners of the plane;
+        GameObject largestPlane = localPlanes[indexOfLargestPlane];
+        Vector3 planeScale = largestPlane.transform.localScale / 2f;
+        worldGeometry.Add(new Vector3(planeScale.x, 0f, planeScale.z));
+        worldGeometry.Add(new Vector3(-planeScale.x, 0f, planeScale.z));
+        worldGeometry.Add(new Vector3(-planeScale.x, 0f, -planeScale.z));
+        worldGeometry.Add(new Vector3(planeScale.x, 0f, -planeScale.z));
+
+        //loop through to rotate and translate accordingly
+        for (int i = 0; i < worldGeometry.Count; i++)
+            worldGeometry[i] = (Quaternion.AngleAxis(largestPlane.transform.eulerAngles.y, Vector3.up) * worldGeometry[i]) + largestPlane.transform.position;
+
+        return worldGeometry;
+    }
+
+    //for testing
+    private void Update()
+    {
+        //List<Vector3> worldGeometry = GetWorldGeometry();
+        //for (int i = 0; i < worldGeometry.Count; i++)
+        //{
+        //    Vector3 point1 = worldGeometry[i];
+        //    Vector3 point2 = Vector3.zero;
+        //    if (i == worldGeometry.Count - 1) point2 = worldGeometry[0];
+        //    else point2 = worldGeometry[i + 1];
+        //    Debug.DrawLine(point1, point2);
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.D))
+        //    StopAllCoroutines();
+    }
+
+    /// <summary>
     /// Reads the list from the plane manager and builds it
     /// </summary>
     IEnumerator UpdateLocalPlanes()
