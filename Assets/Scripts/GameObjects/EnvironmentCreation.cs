@@ -122,8 +122,6 @@ public class EnvironmentCreation : MonoBehaviour {
 
             int curLayer = i / angles;
 
-            Debug.Log(curLayer);
-
             float standardHeight = 0;
 
             if (curLayer > peakLayer)
