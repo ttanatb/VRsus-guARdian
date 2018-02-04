@@ -13,6 +13,8 @@ public class EnvironmentCreation : MonoBehaviour {
     public int peakOffset;
     public int extrudeTimes;
 
+    public MeshFilter plainFilter;
+
     public int minCliffSides;
     public int maxCliffSides;
     public float cliffY;
@@ -26,6 +28,7 @@ public class EnvironmentCreation : MonoBehaviour {
     private int layers;
 
     private Mesh plains;
+    private Vector2[] boundaryFlat;
 
     public void CreateTerrain ()
     {
@@ -69,7 +72,28 @@ public class EnvironmentCreation : MonoBehaviour {
             mountains.RecalculateTangents();
             mountains.UploadMeshData(false);
 
+            plains = new Mesh();
+            boundaryFlat = new Vector2[boundary.Count];
+
+            for (int v = 0; v < boundary.Count; v++)
+            {
+                Vector2 temp = new Vector2(boundary[v].x, boundary[v].z);
+
+                boundaryFlat[v] = temp;
+            }
+
+            Triangulator triangulator = new Triangulator(boundaryFlat);
+            plains.SetVertices(boundary);
+            int[] indices = triangulator.Triangulate();
+            plains.SetTriangles(indices, 0);
+            
+            plains.RecalculateBounds();
+            plains.RecalculateNormals();
+            plains.RecalculateTangents();
+            plains.UploadMeshData(false);
+            
             GetComponent<MeshFilter>().sharedMesh = mountains;
+            plainFilter.sharedMesh = plains;
         }
 	}
 
