@@ -63,6 +63,10 @@ public class ARPlaneManager : PlayerComponent
 #if UNITY_IOS
         while(true)
         {
+            if (UnityARAnchorManager.Instance == null) {
+                yield return new WaitForSeconds(1f);
+            }
+
             //removes a plane from the list
             if (m_ARPlane.Count > UnityARAnchorManager.Instance.planeAnchorMap.Count)
             {

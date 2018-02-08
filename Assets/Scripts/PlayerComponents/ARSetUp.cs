@@ -343,13 +343,13 @@ public class ARSetUp : PlayerComponent
 #endif
                 sortedPlanes = LocalObjectBuilder.Instance.GetSortedPlanes();
                 CmdSpawnRelics();
-                RpcSpawnEntrances();
                 break;
 
             case GamePhase.Playing:
                 currentlySelectedTrap = null;
                 TogglePreviouslySelectedTrap();
 
+                CmdSpawnEntrances();
 
                 VRTransition vrTransition = FindObjectOfType<VRTransition>();
                 if (vrTransition)
@@ -415,16 +415,25 @@ public class ARSetUp : PlayerComponent
     private Vector3 GetRandPosNotUnderAnyOtherPlanes(int index)
     {
         Vector3 spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
-        while (Utility.CheckIfTooCloseToEdge(sortedPlanes[index], spawnPos, 0.05f))
-            spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
+        for (int i = 0; i < 10; i++)
+        {
+            if (!Utility.CheckIfTooCloseToEdge(sortedPlanes[index], spawnPos, 0.05f))
+                break;
+            else spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
+        }
 
         for (int i = index + 1; i < sortedPlanes.Count; i++)
         {
             if (Utility.CheckIfPointIsInPolygon(spawnPos, sortedPlanes[i]) || Utility.CheckIfTooCloseToEdge(sortedPlanes[i], spawnPos, 0.05f))
             {
+                Debug.Log("Generated point was inside or too close to another polygon");
                 spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
-                while (Utility.CheckIfTooCloseToEdge(sortedPlanes[index], spawnPos, 0.05f))
-                    spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
+                for (int i = 0; i < 10; i++)
+                {
+                    if (!Utility.CheckIfTooCloseToEdge(sortedPlanes[index], spawnPos, 0.05f))
+                        break;
+                    else spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
+                }
                 i = index;
             }
         }
@@ -432,8 +441,8 @@ public class ARSetUp : PlayerComponent
     }
 
 
-    [ClientRpc]
-    private void RpcSpawnEntrances()
+    [Command]
+    private void CmdSpawnEntrances()
     {
         if (!isServer) return;
         float scale = FindObjectOfType<LocalPlane>().transform.localScale.y / 2;
