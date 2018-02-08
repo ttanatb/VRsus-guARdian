@@ -11,7 +11,7 @@ public class XInput : Singleton<XInput>
 #if UNITY_IOS
         if (Input.touchCount < 1) 
         {
-            info.result = TapResult.NoTap;
+            info.result = ResultType.NoTap;
             return info;
         }
 

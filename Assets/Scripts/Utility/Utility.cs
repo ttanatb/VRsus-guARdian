@@ -30,18 +30,45 @@ public class Utility
     /// <returns>The list of vertices</returns>
     public static List<Vector3> CreateVerticesFromPlane(GameObject plane)
     {
-        List<Vector3> vertices = new List<Vector3>();
-
-        //add the corners of the plane;
         Vector3 planeScale = plane.transform.localScale / 2f;
-        vertices.Add(new Vector3(planeScale.x, 0f, planeScale.z));
-        vertices.Add(new Vector3(-planeScale.x, 0f, planeScale.z));
-        vertices.Add(new Vector3(-planeScale.x, 0f, -planeScale.z));
-        vertices.Add(new Vector3(planeScale.x, 0f, -planeScale.z));
+        List<Vector3> vertices = new List<Vector3>
+        {
+            //add the corners of the plane;
+            new Vector3(planeScale.x, 0f, planeScale.z),
+            new Vector3(-planeScale.x, 0f, planeScale.z),
+            new Vector3(-planeScale.x, 0f, -planeScale.z),
+            new Vector3(planeScale.x, 0f, -planeScale.z)
+        };
 
         //loop through to rotate and translate accordingly
+        Quaternion rot = Quaternion.AngleAxis(plane.transform.eulerAngles.y, Vector3.up);
+        Vector3 translation = plane.transform.position;
         for (int i = 0; i < vertices.Count; i++)
-            vertices[i] = (Quaternion.AngleAxis(plane.transform.eulerAngles.y, Vector3.up) * vertices[i]) + plane.transform.position;
+            vertices[i] = (rot * vertices[i]) +translation;
+
+        return vertices;
+    }
+
+    /// <summary>
+    /// Creates a new list of vector3 that defines the edges of a rotatable plane
+    /// </summary>
+    /// <param name="plane">The plane</param>
+    /// <returns>The list of vertices</returns>
+    public static List<Vector3> CreateVerticesFromPlane(Vector3 translation, Vector2 scale, float rotY)
+    {
+        List<Vector3> vertices = new List<Vector3>
+        {
+            //add the corners of the plane;
+            new Vector3(scale.x, 0f, scale.y),
+            new Vector3(-scale.x, 0f, scale.y),
+            new Vector3(-scale.x, 0f, -scale.y),
+            new Vector3(scale.x, 0f, -scale.y)
+        };
+
+        //loop through to rotate and translate accordingly
+        Quaternion rot = Quaternion.AngleAxis(rotY, Vector3.up);
+        for (int i = 0; i < vertices.Count; i++)
+            vertices[i] = (rot * vertices[i]) + translation;
 
         return vertices;
     }
@@ -220,6 +247,12 @@ public class Utility
             if (distSqr < minDistSqr) return true;
         }
         return false;
+    }
+
+    public static float GetAreaSqr(List<Vector3> planeVertices)
+    {
+        return (planeVertices[0] - planeVertices[1]).sqrMagnitude *
+            (planeVertices[2] - planeVertices[1]).sqrMagnitude;
     }
 }
 

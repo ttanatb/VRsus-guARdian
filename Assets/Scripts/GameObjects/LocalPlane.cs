@@ -8,7 +8,7 @@
 public class LocalPlane : MonoBehaviour
 {
     #region Fields
-    private const float HEIGHT = .15f;          //height of tower
+    private const float HEIGHT = 50.15f;          //height of tower
     private Vector2 scale = Vector2.one;        //x,z scale of tower
 
     //TEMP (prototype graphics)

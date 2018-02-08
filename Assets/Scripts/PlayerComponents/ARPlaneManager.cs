@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.iOS;
 using UnityEngine.Networking;
@@ -12,6 +13,23 @@ public class ARPlaneManager : PlayerComponent
 {
     //The list of planes (as a list of synced structs)
     public ARPlaneSync m_ARPlane = new ARPlaneSync();
+
+#if !UNITY_IOS
+    [MinMaxSlider(2f, 7f)]
+    public Vector2 roomWidthRange = new Vector2(2f, 5f);
+    [MinMaxSlider(2f, 7f)]
+    public Vector2 roomLengthRange = new Vector2(3f, 7f);
+
+    public int planeCount = 4;
+
+    [MinMaxSlider(0.1f, 0.8f)]
+    public Vector2 planeElevationRange = new Vector2(0.25f, 0.5f);
+
+    [MinMaxSlider(0.1f, 3f)]
+    public Vector2 planeWidthRange = new Vector2(.25f, 2f);
+    [MinMaxSlider(0.1f, 3f)]
+    public Vector2 planeLengthRange = new Vector2(.25f, 2f);
+#endif
 
     protected override void InitObj() { }
 
@@ -87,17 +105,33 @@ public class ARPlaneManager : PlayerComponent
         }
 #else
         //build planes to simulate a random room
-        ServerAddPlane("floor",
-            Vector3.zero,
-            Random.Range(0f, 360f),
-            new Vector3(Random.Range(4f, 3f), 1f, Random.Range(4f, 3f)));
+        float width = Random.Range(roomWidthRange.x, roomWidthRange.y);
+        float length = Random.Range(roomLengthRange.x, roomLengthRange.y);
+        float rotY = Random.Range(0f, 360f);
 
-        for (int i = 0; i < 3; i++)
+        ServerAddPlane("floor", Vector3.zero, rotY, new Vector3(width, 1f, length));
+        List<Vector3> floorGeometry = Utility.CreateVerticesFromPlane(Vector3.zero, (new Vector2(width, length)) / 2f, rotY);
+
+        List<List<Vector3>> prevPlanes = new List<List<Vector3>>();// { floorGeometry };
+        for (int i = 0; i < planeCount; i++)
         {
-            ServerAddPlane("table" + i,
-               new Vector3(Random.Range(-0.75f, 0.75f), Random.Range(0.5f, 1.5f), Random.Range(-0.75f, 0.75f)),
-               Random.Range(0f, 360f),
-               new Vector3(Random.Range(2f, 0.25f), 1f, Random.Range(2f, 0.25f)));
+            Vector3 planePos = Utility.GetRandomPointInPlane(floorGeometry);
+            for (int j = 0; j < prevPlanes.Count; j++)
+            {
+                if (Utility.CheckIfPointIsInPolygon(planePos, prevPlanes[j]))
+                {
+                    planePos = Utility.GetRandomPointInPlane(floorGeometry);
+                    j = -1;
+                }
+            }
+
+            planePos += Vector3.up * (((planeElevationRange.y - planeElevationRange.x) * (i + 1) / 0.75f)  + Random.Range(planeElevationRange.x, planeElevationRange.y)); // (Random.Range(0.2f, planeElevationRange.y - planeElevationRange.x) * i / planeCount) + planeElevationRange.x);
+            float planeRotY = Random.Range(0f, 360f);
+            Vector3 planeScale = new Vector3(Random.Range(planeWidthRange.x, planeWidthRange.y), 1f, Random.Range(planeLengthRange.x, planeLengthRange.y));
+
+            List<Vector3> planeGeometry = Utility.CreateVerticesFromPlane(planePos, (new Vector2(planeScale.x, planeScale.z)) / 2f, rotY);
+            prevPlanes.Add(planeGeometry);
+            ServerAddPlane("table " + i, planePos, planeRotY, planeScale);
         }
 
         yield return null;

@@ -5,7 +5,19 @@ using UnityEngine.Networking;
 
 public class NetworkedGameManager : NetworkManager
 {
+    public bool isArtTest = false;
     public GameObject gameManagerPrefab;
+
+    private void Start()
+    {
+        if (isArtTest)
+        {
+            StartHost();
+            //StartServer();
+            //networkAddress = "127.0.0.1";
+            //StartClient();
+        }
+    }
 
     public override void OnServerConnect(NetworkConnection conn)
     {

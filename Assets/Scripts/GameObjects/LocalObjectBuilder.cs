@@ -134,6 +134,25 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
         return worldGeometry;
     }
 
+    public List<List<Vector3>> GetSortedPlanes()
+    {
+        List<List<Vector3>> sortedList = new List<List<Vector3>>();
+        for(int i = 0; i < localPlanes.Count; i++)
+        {
+            int insertionIndex = 0;
+            float yPos = localPlanes[i].transform.position.y;
+            for(; insertionIndex < sortedList.Count; insertionIndex++)
+            {
+                float thisYPos = sortedList[insertionIndex][0].y; //.transform.position.y;
+                if (yPos < thisYPos)
+                    break;
+            }
+            sortedList.Insert(insertionIndex, Utility.CreateVerticesFromPlane(localPlanes[i]));
+        }
+
+        return sortedList;
+    }
+
     //for testing
     private void Update()
     {
