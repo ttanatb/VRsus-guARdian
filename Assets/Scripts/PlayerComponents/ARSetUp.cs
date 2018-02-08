@@ -428,7 +428,7 @@ public class ARSetUp : PlayerComponent
             {
                 Debug.Log("Generated point was inside or too close to another polygon");
                 spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
-                for (int i = 0; i < 10; i++)
+                for (int j = 0; j < 10; j++)
                 {
                     if (!Utility.CheckIfTooCloseToEdge(sortedPlanes[index], spawnPos, 0.05f))
                         break;
