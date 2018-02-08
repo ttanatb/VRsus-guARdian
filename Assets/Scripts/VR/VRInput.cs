@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.VR;
+using System.Collections.Generic;
 
-public class ToggleVR : MonoBehaviour
+public class VRInput : MonoBehaviour
 {
     //Example of toggling VRSettings
     private void Update()
@@ -12,5 +13,7 @@ public class ToggleVR : MonoBehaviour
             VRSettings.enabled = !VRSettings.enabled;
             Debug.Log("Changed VRSettings.enabled to:" + VRSettings.enabled);
         }
+
+
     }
 }
