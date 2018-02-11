@@ -226,7 +226,7 @@ public class Movement : PlayerComponent
             }
 
             if (slowTimer > 0f)
-                movement *= slowFactor;
+                movement *= slowFactor * slowTimer / MAX_SLOW_TIME;
 
             rigidBody.MovePosition(movement + transform.position);
         }
