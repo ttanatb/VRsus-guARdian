@@ -16,7 +16,7 @@ public class ProximitySensor : TrapDefense
     private MeshRenderer meshRenderer;
     private static Transform[] players;
     private bool isActive = false;
-
+    private SphereCollider radiusCollider;
     public override string TrapName { get { return "Proximity Sensor"; } }
     #endregion
 
@@ -46,9 +46,10 @@ public class ProximitySensor : TrapDefense
         //calc radius sqr
         radiusSqr = Mathf.Pow(radius, 2);
         transform.GetChild(0).localScale *= radius * 2;// transform.localScale.x;
-        SphereCollider radiusCollider = gameObject.AddComponent<SphereCollider>();
+        radiusCollider = gameObject.AddComponent<SphereCollider>();
         radiusCollider.radius = radius;
         radiusCollider.isTrigger = true;
+        radiusCollider.enabled = false;
     }
     #endregion
 
@@ -81,6 +82,11 @@ public class ProximitySensor : TrapDefense
             meshRenderer.enabled = true;
         }
         meshRenderer.material.color = Color.red;
+    }
+
+    public override void TransitionToPlayPhase()
+    {
+        radiusCollider.enabled = true;
     }
     #endregion
 }
