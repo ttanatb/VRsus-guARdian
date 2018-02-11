@@ -121,6 +121,7 @@ public class Movement : PlayerComponent
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.D)) Cursor.lockState = CursorLockMode.None;
         if (rigidBody)
         {
             if (!isLocalPlayer) return;

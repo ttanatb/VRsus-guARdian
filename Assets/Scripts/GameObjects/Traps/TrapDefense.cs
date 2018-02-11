@@ -30,4 +30,9 @@ public abstract class TrapDefense : NetworkBehaviour
     {
         selected = !selected;
     }
+
+    public virtual void TransitionToPlayPhase()
+    {
+
+    }
 }

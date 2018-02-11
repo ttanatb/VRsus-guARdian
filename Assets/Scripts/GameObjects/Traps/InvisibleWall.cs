@@ -13,11 +13,39 @@ public class InvisibleWall : TrapDefense
 
     public override string TrapName { get { return "Invisible Wall"; } }
 
+    private Animator animator;
+    private ParticleSystem particles;
+    private MeshRenderer mRenderer;
+
+    private BoxCollider triggerCollider;
+    private BoxCollider realCollider;
+
     // Use this for initialization
     void Start()
     {
+        animator = GetComponent<Animator>();
+        particles = GetComponentInChildren<ParticleSystem>();
+
         if (!isServer)
-            GetComponent<Renderer>().enabled = false;
+        {
+            mRenderer = GetComponentInChildren<MeshRenderer>();
+            mRenderer.enabled = false;
+        }
+        else
+        {
+            BoxCollider[] colliders = GetComponents<BoxCollider>();
+            foreach (BoxCollider c in colliders)
+            {
+                if (c.isTrigger)
+                    triggerCollider = c;
+                else realCollider = c;
+            }
+
+            triggerCollider.enabled = false;
+            Vector3 center = realCollider.center;
+            center.y *= -1;
+            realCollider.center = center;
+        }
     }
 
     // Collision detection
@@ -27,9 +55,8 @@ public class InvisibleWall : TrapDefense
 
         if (other.gameObject.tag == "Player")
         {
-            GetComponent<Renderer>().enabled = true;
+            isActive = true;
             RpcEnable();
-            GetComponent<Rigidbody>().isKinematic = true;
         }
     }
 
@@ -39,7 +66,19 @@ public class InvisibleWall : TrapDefense
     [ClientRpc]
     private void RpcEnable()
     {
-        GetComponent<Renderer>().enabled = true;
-        GetComponent<Rigidbody>().isKinematic = true;
+        if (!isServer)
+            mRenderer.enabled = true;
+
+        animator.SetTrigger("Trigger");
+        particles.Play();
+    }
+
+    [Server]
+    public override void TransitionToPlayPhase()
+    {
+        triggerCollider.enabled = true;
+        Vector3 center = realCollider.center;
+        center.y *= -1;
+        realCollider.center = center;
     }
 }

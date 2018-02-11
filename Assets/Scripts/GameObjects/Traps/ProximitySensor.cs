@@ -9,13 +9,13 @@ using UnityEngine.Networking;
 public class ProximitySensor : TrapDefense
 {
     #region Fields
-    public float nearRange = 3;
-    public float farRange = 5;
-
-    private float nearRangeSqr;
-    private float farRangeSqr;
-
+    public float radius = 3;
+    private float radiusSqr;
+    private ParticleSystem alertParticles;
+    public MeshRenderer radiusRenderer;
+    private MeshRenderer meshRenderer;
     private static Transform[] players;
+    private bool isActive = false;
 
     public override string TrapName { get { return "Proximity Sensor"; } }
     #endregion
@@ -24,17 +24,9 @@ public class ProximitySensor : TrapDefense
     // Use this for initialization
     void Start()
     {
-        //disable stuff for clients
-        if (isServer) return;
-
-        GetComponent<Renderer>().enabled = false;
-        foreach (Collider c in GetComponents<Collider>())
-        {
-            if (!c.isTrigger)
-            {
-                c.enabled = false;
-            }
-        }
+        alertParticles = GetComponentInChildren<ParticleSystem>();
+        meshRenderer = GetComponent<MeshRenderer>();
+        if (isServer) meshRenderer.enabled = true;
     }
 
     public override void OnStartServer()
@@ -51,48 +43,24 @@ public class ProximitySensor : TrapDefense
             }
         }
 
-        //swap the values if needed
-        if (farRange < nearRange)
-        {
-            float temp = farRange;
-            farRange = nearRange;
-            nearRange = temp;
-        }
-
-        nearRangeSqr = Mathf.Pow(nearRange, 2);
-        farRangeSqr = Mathf.Pow(farRange, 2);
-
-        transform.GetChild(0).localScale *= nearRangeSqr;
-        transform.GetChild(1).localScale *= farRangeSqr;
+        //calc radius sqr
+        radiusSqr = Mathf.Pow(radius, 2);
+        transform.GetChild(0).localScale *= radius * 2;// transform.localScale.x;
+        SphereCollider radiusCollider = gameObject.AddComponent<SphereCollider>();
+        radiusCollider.radius = radius;
+        radiusCollider.isTrigger = true;
     }
     #endregion
 
     #region Life Cycle
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter(Collider other)
     {
-        if (!isServer)
-            return;
-
-        //gets the closest distance to a player entity
-        float closestDist = float.MaxValue;
-        foreach (Transform t in players)
+        if (!isServer || isActive) return;
+        if(other.tag == "Player")
         {
-            if (t == null) continue;
-            if (t.position.y < transform.position.y - transform.localScale.y / 2)
-                continue;
-
-            float dist = (t.position - transform.position).sqrMagnitude;
-            if (dist < closestDist)
-                closestDist = dist;
+            isActive = true;
+            RpcTriggerAlarm();
         }
-
-        //determine the color (green to red)
-        Color c = Color.black;
-        float halfRange = (farRangeSqr - nearRangeSqr) / 2f;
-        c.r = Mathf.Lerp(1, 0, (closestDist - nearRangeSqr) / halfRange);
-        c.g = Mathf.Lerp(0, 1, (closestDist - nearRangeSqr + halfRange) / (halfRange * 2f));
-        GetComponent<Renderer>().material.color = c;
     }
 
     /// <summary>
@@ -101,9 +69,18 @@ public class ProximitySensor : TrapDefense
     public override void ToggleSelected()
     {
         base.ToggleSelected();
+        radiusRenderer.enabled = selected;
+    }
 
-        for (int i = 0; i < transform.childCount; i++)
-            transform.GetChild(i).GetComponent<Renderer>().enabled = selected;
+    [ClientRpc]
+    private void RpcTriggerAlarm()
+    {
+        alertParticles.Play();
+        if (!isServer)
+        {
+            meshRenderer.enabled = true;
+        }
+        meshRenderer.material.color = Color.red;
     }
     #endregion
 }

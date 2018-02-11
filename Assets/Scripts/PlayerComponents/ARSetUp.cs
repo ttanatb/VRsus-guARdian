@@ -52,6 +52,7 @@ public class ARSetUp : PlayerComponent
 
     private List<List<Vector3>> sortedPlanes;
     private List<float> usedIndecies = new List<float>();
+    private List<TrapDefense> trapObjList = new List<TrapDefense>();
 
     /// <summary>
     /// Gets the current phase of the game
@@ -173,7 +174,7 @@ public class ARSetUp : PlayerComponent
         InputResult resultInfo = XInput.Instance.CheckTap((1 << layer), TouchPhase.Moved, TouchPhase.Stationary);
         if (resultInfo.result == ResultType.Success)
         {
-            currentlySelectedTrap.transform.position = resultInfo.hit.point + Vector3.up * currentlySelectedTrap.transform.localScale.y / 2;
+            currentlySelectedTrap.transform.position = resultInfo.hit.point;// + Vector3.up * currentlySelectedTrap.transform.localScale.y / 2;
         }
     }
 
@@ -250,6 +251,7 @@ public class ARSetUp : PlayerComponent
     {
         GameObject go = Instantiate(trapList[index].trap, pos, Quaternion.identity);
         currentlySelectedTrap = go.GetComponent<TrapDefense>();
+        trapObjList.Add(currentlySelectedTrap);
         currentlySelectedTrap.ToggleSelected();
         TogglePreviouslySelectedTrap();
         NetworkServer.Spawn(go);
@@ -348,7 +350,7 @@ public class ARSetUp : PlayerComponent
             case GamePhase.Playing:
                 currentlySelectedTrap = null;
                 TogglePreviouslySelectedTrap();
-
+                foreach (TrapDefense trap in trapObjList) trap.TransitionToPlayPhase();
                 CmdSpawnEntrances();
 
                 VRTransition vrTransition = FindObjectOfType<VRTransition>();
