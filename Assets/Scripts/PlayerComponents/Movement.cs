@@ -43,18 +43,12 @@ public class Movement : PlayerComponent
     Quaternion startingRot;
     Vector3 startingPos;
 
-    [SyncVar]
-    bool isSlowed = false;
+    private float slowTimer;
+    private const float MAX_SLOW_TIME = 2f;
     public float slowFactor = 0.7f;
     TrailRenderer trailRenderer;
 
     public bool isOnFloor = false;
-
-    public bool IsSlowed
-    {
-        get { return isSlowed; }
-        set { isSlowed = value; }
-    }
 
     public float CurrJumpEnergy { get { return currJumpEnergy; } }
 
@@ -207,6 +201,8 @@ public class Movement : PlayerComponent
         {
             currJumpEnergy = jumpEnergyMax;
         }
+
+        slowTimer -= Time.deltaTime;
     }
 
     private void FixedUpdate()
@@ -229,13 +225,16 @@ public class Movement : PlayerComponent
                 currJumpEnergy -= jumpCost * Time.deltaTime * 1.5f;
             }
 
+            if (slowTimer > 0f)
+                movement *= slowFactor;
+
             rigidBody.MovePosition(movement + transform.position);
         }
     }
 
     public void Jump(float jumpAmount)
     {
-        if (isSlowed || playerType == PlayerType.AR) return;
+        if (playerType == PlayerType.AR) return;
 
         rigidBody.AddForce(jumpAmount * Vector3.up);
         isOnFloor = false;
@@ -311,12 +310,6 @@ public class Movement : PlayerComponent
     [ClientRpc]
     public void RpcSlow()
     {
-        isSlowed = true;
-    }
-
-    [ClientRpc]
-    public void RpcUnSlow()
-    {
-        isSlowed = false;
+        slowTimer = MAX_SLOW_TIME;
     }
 }
