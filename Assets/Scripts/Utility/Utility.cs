@@ -44,7 +44,7 @@ public class Utility
         Quaternion rot = Quaternion.AngleAxis(plane.transform.eulerAngles.y, Vector3.up);
         Vector3 translation = plane.transform.position;
         for (int i = 0; i < vertices.Count; i++)
-            vertices[i] = (rot * vertices[i]) +translation;
+            vertices[i] = (rot * vertices[i]) + translation;
 
         return vertices;
     }
@@ -174,7 +174,7 @@ public class Utility
                     lowerPoint = vertex2;
                     higherPoint = vertex1;
                 }
-                
+
                 //calculates intersecting point
                 Vector3 intersectingPt = lowerPoint + ((higherPoint - lowerPoint) * ((point.z - lowerPoint.z) / (higherPoint.z - lowerPoint.z)));
 
@@ -183,7 +183,7 @@ public class Utility
                     counter++;
             }
         }
-        
+
         //return true if odd number of itnersections
         return (counter % 2 != 0);
     }
@@ -254,6 +254,205 @@ public class Utility
         return (planeVertices[0] - planeVertices[1]).sqrMagnitude *
             (planeVertices[2] - planeVertices[1]).sqrMagnitude;
     }
+
+    public static List<Vector3> CombinePolygons(List<Vector3> polygon1, List<Vector3> polygon2, float epsilon)
+    {
+        //hoist some variables that are used a lot
+        int polygon1Count = polygon1.Count;
+        int polygon2Count = polygon2.Count;
+        if (polygon1Count < polygon2Count)
+        {
+            List<Vector3> temp = polygon1;
+            polygon1 = polygon2;
+            polygon2 = temp;
+        }
+        else if (polygon1Count == polygon2Count)
+        {
+            float polyarea1 = (polygon1[0] - polygon1[1]).sqrMagnitude * (polygon1[0] - polygon1[polygon1Count - 1]).sqrMagnitude;
+            float polyarea2 = (polygon2[0] - polygon2[1]).sqrMagnitude * (polygon2[0] - polygon2[polygon1Count - 1]).sqrMagnitude;
+
+            if (polyarea1 < polyarea2)
+            {
+                List<Vector3> temp = polygon1;
+                polygon1 = polygon2;
+                polygon2 = temp;
+            }
+        }
+
+        //check if p1 is contained in p2
+        bool contained = true;
+        for (int i = 0; i < polygon2Count; i++)
+        {
+            if (!CheckIfPointIsInPolygon(polygon2[i], polygon1))
+            {
+                contained = false;
+                break;
+            }
+        }
+        if (contained) return polygon1;
+
+        //create the overall list and declare some variables
+        List<Vector3> combined = new List<Vector3>();
+        Vector3 p1segment1 = polygon1[0];
+        Vector3 p1segment2 = polygon1[1];
+        Vector3 p2segment1 = polygon2[0];
+        Vector3 p2segment2 = polygon2[1];
+        Vector3 intersectionPt = Vector3.zero;
+        Vector3 closestIntersection = Vector3.one * float.MaxValue;
+        int intersectionIndex = -1;
+
+        //iterate through the segments of the first polygon
+        int startingi = 0;
+        while (CheckIfPointIsInPolygon(polygon1[startingi], polygon2))
+        {
+            startingi++;
+        }
+
+        for (int i = startingi; i - startingi <= polygon1Count; i++)
+        {
+            //determine the first line segment
+            if (i < polygon1Count)
+                p1segment1 = polygon1[i];
+            else p1segment1 = polygon1[i % polygon1Count];
+            if (i + 1 < polygon1Count)
+                p1segment2 = polygon1[i + 1];
+            else p1segment2 = polygon1[(i + 1) % polygon1Count];
+
+            //track if there was intersection
+            closestIntersection = Vector3.one * float.MaxValue;
+            intersectionIndex = -1;
+            //loop through all the other segments
+            for (int j = 0; j < polygon2Count; j++)
+            {
+                //determine second line segment
+                p2segment1 = polygon2[j];
+                if (j == polygon2Count - 1)
+                    p2segment2 = polygon2[0];
+                else p2segment2 = polygon2[j + 1];
+
+                //check if there was an intersection
+                bool currDidIntersect = CheckIntersectionBetweenSegments(p1segment1, p1segment2, p2segment1, p2segment2, out intersectionPt);
+                if (currDidIntersect)
+                {
+                    if ((intersectionPt - p1segment1).sqrMagnitude < (closestIntersection - p1segment1).sqrMagnitude)
+                    {
+                        closestIntersection = intersectionPt;
+                        intersectionIndex = j;
+                    }
+                }
+            }
+
+            //if there were no intersections, just add the orig
+            if (intersectionIndex == -1)
+            {
+                if (combined.Contains(p1segment2))
+                    break;
+                    //return combined;
+                else combined.Add(p1segment2);
+            }
+            else
+            {
+                if (combined.Contains(closestIntersection))
+                    break;
+                    //return combined;
+                else combined.Add(closestIntersection);
+
+                int index = -1;
+                if (intersectionIndex == polygon2Count - 1)
+                    index = 0;
+                else index = intersectionIndex + 1;
+
+                combined.Add(polygon2[index]);
+
+                List<Vector3> temp = polygon1;
+                polygon1 = polygon2;
+                polygon2 = temp;
+
+                int tempCount = polygon1Count;
+                polygon1Count = polygon2Count;
+                polygon2Count = tempCount;
+
+                i = intersectionIndex;
+                startingi = i;
+            }
+        }
+
+        for (int i = 0; i < combined.Count; i++)
+        {
+            Vector3 vert1 = combined[i];
+            int index = i + 1;
+            if (index >= combined.Count)
+                index -= combined.Count;
+            Vector3 vert2 = combined[index];
+
+            if (Mathf.Abs(vert2.x - vert1.x) + Mathf.Abs(vert2.z - vert1.z) < epsilon)
+            {
+                combined.RemoveAt(index);
+                i--;
+            }
+        }
+
+        return combined;
+    }
+
+    /*
+    int startingj = j;
+    for (j = j + 1; j - startingj <= polygon2Count; j++)
+    {
+        if (j > polygon2Count - 1)
+            p1segment1 = polygon2[j - polygon2Count];
+        else p1segment1 = polygon2[j];
+        if (j + 1 > polygon2Count - 1)
+            p1segment2 = polygon2[j - polygon2Count + 1];
+        else p1segment2 = polygon2[j + 1];
+        for (int k = 0; k < polygon1Count; k++)
+        {
+            p2segment1 = polygon1[k];
+            if (k == polygon1Count - 1)
+                p2segment2 = polygon1[0];
+            else p2segment2 = polygon1[k + 1];
+
+            didIntersect = CheckIntersectionBetweenSegments(p1segment1, p1segment2, p2segment1, p2segment2, out intersectionPt);
+            if (didIntersect)
+            {
+                combined.Add(intersectionPt);
+                combined.Add(p2segment2);
+                i = k + 1;
+                break;
+            }
+        }
+
+        if (!didIntersect)
+            combined.Add(p1segment2);
+        else break;
+    }
+    */
+    public static bool CheckIntersectionBetweenSegments(Vector3 s1v1, Vector3 s1v2, Vector3 s2v1, Vector3 s2v2, out Vector3 intersectingPos)
+    {
+        //https://stackoverflow.com/questions/563198/whats-the-most-efficent-way-to-calculate-where-two-line-segments-intersect
+        intersectingPos = Vector3.zero;
+        Vector3 r = s1v2 - s1v1;
+        Vector3 s = s2v2 - s2v1;
+        Vector3 qp = s2v1 - s1v1;
+
+        float rxs = (r.x * s.z) - (r.z * s.x);
+        float qpxr = (qp.x * r.z) - (qp.z * r.x);
+
+        if (Mathf.Abs(rxs) < 0.0001)
+            return false;
+
+        float u = qpxr / rxs;
+        float qpxs = (qp.x * s.z) - (qp.z * s.x);
+        float t = qpxs / rxs;
+
+        if (u > 0f && u < 1f && t > 0f && t < 1f)
+        {
+            intersectingPos = s1v1 + (s1v2 - s1v1) * t;
+            return true;
+        }
+        return false;
+    }
+
 }
 
 /// <summary>
