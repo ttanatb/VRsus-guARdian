@@ -35,7 +35,7 @@ public class LocalPlane : MonoBehaviour
 
         if (!m)
             m = GetComponent<Renderer>().material;
-        m.SetTextureScale("_MainTex", scale / 0.75f);
+        //m.SetTextureScale("_MainTex", scale / 0.75f);
         //END TEMP
     }
 #endif

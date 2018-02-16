@@ -80,7 +80,10 @@ public class PlayerInitializer : NetworkBehaviour
     {
         if (PlayerType == PlayerType.AR)
         {
-            ARAvatar.GetComponent<Renderer>().enabled = true;
+            Renderer[] ARrenderers = ARAvatar.GetComponentsInChildren<Renderer>();
+            foreach (Renderer r in ARrenderers)
+                r.enabled = true;
+
             foreach (Object o in ARRenderersOnlyForVR)
             {
                 if (o is GameObject)
