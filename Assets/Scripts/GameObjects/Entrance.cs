@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Networking;
 
 /// <summary>
@@ -10,11 +11,22 @@ public class Entrance : NetworkBehaviour
 {
     //Field(s)
     private ARSetUp manager;
+    private Renderer mRenderer;
+
+    private void Awake()
+    {
+        mRenderer = GetComponent<MeshRenderer>();
+    }
 
     //Init
     public override void OnStartServer()
     {
         manager = FindObjectOfType<ARSetUp>();
+        if (!mRenderer)
+        {
+            mRenderer = GetComponent<MeshRenderer>();
+        }
+        mRenderer.enabled = false;
     }
 
     /// <summary>
@@ -45,6 +57,22 @@ public class Entrance : NetworkBehaviour
     {
         manager.SetPhaseTo(GamePhase.Over);
         RpcAlertVRWin(combat.GetRelicCount());
+    }
+
+    [ClientRpc]
+    public void RpcActivate()
+    {
+        if (mRenderer)
+        {
+            mRenderer.enabled = true;
+        }
+    }
+    public void Deactivate()
+    {
+        if (mRenderer)
+        {
+            mRenderer.enabled = false;
+        }
     }
 
     /// <summary>

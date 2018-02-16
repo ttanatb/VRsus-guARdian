@@ -24,7 +24,7 @@ public class JumpPad : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            collision.gameObject.GetComponent<Movement>().Jump(jumpFactor);
+            //collision.gameObject.GetComponent<Movement>().Jump(jumpFactor);
         }
     }
 }

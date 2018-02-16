@@ -141,7 +141,7 @@ public class ARCombat : Combat
             RaycastHit hit;
 
             //puts the laser where it 'hits'
-            if (Physics.Raycast(avatar.position, avatar.forward, out hit, layerMaxDist, laserLayerMask))
+            if (Physics.Raycast(avatar.position, -avatar.forward, out hit, layerMaxDist, laserLayerMask))
             {
                 laserPoint = hit.point;
 

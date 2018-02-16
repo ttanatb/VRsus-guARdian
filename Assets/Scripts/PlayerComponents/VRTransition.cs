@@ -120,8 +120,21 @@ public class VRTransition : PlayerComponent
                 SwitchToFPSCam();
                 transform.position = hitInfo.point;
                 startingPos = hitInfo.point;
+                CmdSetIntruderMessage();
+                Entrance[] entrances = FindObjectsOfType<Entrance>();
+                foreach(Entrance e in entrances)
+                {
+                    e.Deactivate();
+                }
             }
         }
+    }
+
+    [Command]
+    private void CmdSetIntruderMessage()
+    {
+        if (!isServer) return;
+        CanvasManager.Instance.SetMessage("Intruder alert!");
     }
 
     /// <summary>

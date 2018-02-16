@@ -133,7 +133,7 @@ public class Movement : PlayerComponent
             else if (Input.GetKeyDown(KeyCode.T))
                 Cursor.lockState = CursorLockMode.Locked;
 
-             if (Input.GetKeyDown(KeyCode.LeftShift))
+            if (Input.GetKeyDown(KeyCode.LeftShift))
             {
                 CmdTurnOnTrailRenderer();
             }
@@ -181,10 +181,7 @@ public class Movement : PlayerComponent
 
             transform.rotation = startingRot * xRot * yRot;
 
-            if (Input.GetKey(KeyCode.Space) && currJumpEnergy > jumpCost * Time.deltaTime * 2f)
-            {
-                Jump(jumpFactor);
-            }
+
 
         }
 
@@ -217,12 +214,17 @@ public class Movement : PlayerComponent
 
             if (Input.GetKey(KeyCode.Space))
             {
-                movement *= slowFactor;
+                //movement *= slowFactor;
             }
             else if (Input.GetKey(KeyCode.LeftShift) && isOnFloor && currJumpEnergy > jumpCost * Time.deltaTime * 2f)
             {
                 movement *= sprintFactor;
                 currJumpEnergy -= jumpCost * Time.deltaTime * 1.5f;
+            }
+
+            if (Input.GetKey(KeyCode.Space) && currJumpEnergy > jumpCost * Time.deltaTime * 2f)
+            {
+                movement += Jump(jumpFactor);
             }
 
             if (slowTimer > 0f)
@@ -232,14 +234,13 @@ public class Movement : PlayerComponent
         }
     }
 
-    public void Jump(float jumpAmount)
+    public Vector3 Jump(float jumpAmount)
     {
-        if (playerType == PlayerType.AR) return;
+        if (playerType == PlayerType.AR) return Vector3.zero;
 
-        rigidBody.AddForce(jumpAmount * Vector3.up);
         isOnFloor = false;
-
         currJumpEnergy -= jumpCost * Time.deltaTime;
+        return jumpAmount * Vector3.up;
     }
 
     float ClampAngle(float angle, float min, float max)

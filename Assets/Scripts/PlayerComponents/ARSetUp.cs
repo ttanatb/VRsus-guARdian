@@ -53,6 +53,7 @@ public class ARSetUp : PlayerComponent
     private List<List<Vector3>> sortedPlanes;
     private List<float> usedIndecies = new List<float>();
     private List<TrapDefense> trapObjList = new List<TrapDefense>();
+    private List<Relic> relicObjList = new List<Relic>();
 
     /// <summary>
     /// Gets the current phase of the game
@@ -356,7 +357,7 @@ public class ARSetUp : PlayerComponent
                 VRTransition vrTransition = FindObjectOfType<VRTransition>();
                 if (vrTransition)
                     vrTransition.RpcSwitchToTopViewCam();
-
+                RpcSetMessage();
                 ARCombat combat = GetComponent<ARCombat>();
                 if (combat != null)
                     combat.IsShootingEnabled = true;
@@ -387,6 +388,7 @@ public class ARSetUp : PlayerComponent
     private void CmdSpawnRelic(Vector3 position)
     {
         GameObject obj = Instantiate(relicPrefab, position, Quaternion.identity);
+        relicObjList.Add(obj.GetComponent<Relic>());
         NetworkServer.Spawn(obj);
     }
 
@@ -459,6 +461,14 @@ public class ARSetUp : PlayerComponent
     private void CmdSpawnEntrance(Vector3 position)
     {
         GameObject obj = Instantiate(entrancePrefab, position + entrancePrefab.transform.localScale / 2f, Quaternion.identity);
+        relicObjList[Random.Range(0, relicObjList.Count)].AddEntrance(obj.GetComponent<Entrance>());
         NetworkServer.Spawn(obj);
+    }
+
+    [ClientRpc]
+    private void RpcSetMessage()
+    {
+        if (isServer) return;
+        CanvasManager.Instance.SetMessage("Click one of the white boxes to choose where to spawn from");
     }
 }

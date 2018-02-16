@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using System.Collections.Generic;
 
 /// <summary>
 /// Handles player collecting relic and related stuff
@@ -10,6 +11,18 @@ public class Relic : NetworkBehaviour
 {
     public Renderer relicRenderer;
     private bool hasBeenStolen = false;
+    private List<Entrance> entrances;
+
+    public override void OnStartServer()
+    {
+        entrances = new List<Entrance>();
+    }
+
+    public void AddEntrance(Entrance entrance)
+    {
+        entrances.Add(entrance);
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -36,6 +49,16 @@ public class Relic : NetworkBehaviour
     {
         if (relicRenderer)
             relicRenderer.enabled = false;
+
+
+        if (entrances != null)
+        {
+            foreach (Entrance e in entrances)
+            {
+                e.RpcActivate();
+            }
+        }
+
 
         if (isServer)
             CanvasManager.Instance.SetMessage("A relic was stolen!");
