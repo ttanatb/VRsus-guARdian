@@ -1456,16 +1456,12 @@ MonoBehaviour:
   jumpCost: 4
   jumpEnergyMax: 11
   energyRegainRate: 3
-  jumpFactor: 0.15
-  movementSpeed: 2
+  jumpFactor: 13
+  movementSpeed: 5
   sprintFactor: 1.8
   maxSpeed: 999
-  sensitivityX: 90
-  sensitivityY: 90
-  minX: -360
-  maxX: 360
-  minY: -60
-  maxY: 60
+  mouseSensitivity: 80
+  clampAngle: 80
   frameCounter: 5
   slowFactor: 0.35
   isOnFloor: 0

@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Platform
+  - Relic
+  - AROnly
+  - ARPlayer
+  - VROnly
   layers:
   - Default
   - TransparentFX
@@ -13,14 +18,14 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Tower
+  - Entrance
+  - Bullet
+  - VRPlayer
+  - Relic
+  - Crosshair
+  - Trap
+  - Healthbar
   - 
   - 
   - 
