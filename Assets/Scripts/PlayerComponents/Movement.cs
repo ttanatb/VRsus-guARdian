@@ -68,7 +68,7 @@ public class Movement : PlayerComponent
         {
             rigidBody = gameObject.AddComponent<Rigidbody>();
             rigidBody.mass = 1;
-            rigidBody.drag = 3;
+            rigidBody.drag = 5;
 
             if (playerType == PlayerType.AR)
                 rigidBody.useGravity = false;
@@ -230,7 +230,8 @@ public class Movement : PlayerComponent
             if (slowTimer > 0f)
                 movement *= Mathf.Lerp(1.0f, slowFactor, slowTimer / MAX_SLOW_TIME);
 
-            rigidBody.MovePosition(movement + transform.position);
+            //rigidBody.MovePosition(movement + transform.position);
+            rigidBody.AddForce(movement, ForceMode.Acceleration);
         }
     }
 

@@ -128,7 +128,7 @@ public class TestPlayerMovement : PlayerComponent
             if (!isPlaying)
                 return;
 
-            if (!VRSettings.enabled)
+            if (!UnityEngine.XR.XRSettings.enabled)
             {
                 float mouseX = Input.GetAxis("Mouse X");
                 float mouseY = -Input.GetAxis("Mouse Y");

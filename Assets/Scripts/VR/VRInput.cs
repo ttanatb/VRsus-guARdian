@@ -10,8 +10,8 @@ public class VRInput : MonoBehaviour
         //If V is pressed, toggle VRSettings.enabled
         if (Input.GetKeyDown(KeyCode.V))
         {
-            VRSettings.enabled = !VRSettings.enabled;
-            Debug.Log("Changed VRSettings.enabled to:" + VRSettings.enabled);
+            UnityEngine.XR.XRSettings.enabled = !UnityEngine.XR.XRSettings.enabled;
+            Debug.Log("Changed VRSettings.enabled to:" + UnityEngine.XR.XRSettings.enabled);
         }
 
 
