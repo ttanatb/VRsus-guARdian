@@ -94,6 +94,7 @@ public class EnvironmentCreation : MonoBehaviour {
             
             GetComponent<MeshFilter>().sharedMesh = mountains;
             plainFilter.sharedMesh = plains;
+            GetComponent<MeshCollider>().sharedMesh = plains;
         }
 	}
 
