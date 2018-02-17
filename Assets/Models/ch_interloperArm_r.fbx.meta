@@ -1,37 +1,60 @@
 fileFormatVersion: 2
-guid: 5fd38616fbce6754ca6c607b93c0f256
-timeCreated: 1518750818
+guid: 13215fb8ecfe5644cba8bd337341a704
+timeCreated: 1518903429
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
+    100002: ch_interloperArm_r
+    100004: elbow_r
+    100006: fingerBottom_r
+    100008: fingerMid_r
+    100010: fingerTip_r
+    100012: hand_r
+    100014: root_r
+    100016: shoulder_r
+    100018: thumbBottom_r
+    100020: thumbMid_r
+    100022: thumbTip_r
+    100024: wrist_r
     400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: ch_interloper
+    400002: ch_interloperArm_r
+    400004: elbow_r
+    400006: fingerBottom_r
+    400008: fingerMid_r
+    400010: fingerTip_r
+    400012: hand_r
+    400014: root_r
+    400016: shoulder_r
+    400018: thumbBottom_r
+    400020: thumbMid_r
+    400022: thumbTip_r
+    400024: wrist_r
+    2100000: interloper
+    4300000: ch_interloperArm_r
     9500000: //RootNode
+    13700000: ch_interloperArm_r
   externalObjects: {}
   materials:
     importMaterials: 0
     materialName: 0
     materialSearch: 1
-    materialLocation: 0
+    materialLocation: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
-    rigImportErrors: "Invalid Avatar Rig Configuration. Missing or invalid transform:\n\tRequired
-      human bone 'Hips' not found\n"
+    rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
-    animationCompression: 3
+    animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -42,21 +65,21 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 25
     meshCompression: 0
     addColliders: 0
-    importVisibility: 0
+    importVisibility: 1
     importBlendShapes: 1
-    importCameras: 0
-    importLights: 0
-    swapUVChannels: 0
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 1
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
-    indexFormat: 1
+    indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
@@ -65,9 +88,9 @@ ModelImporter:
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
-    tangentImportMode: 3
-    normalCalculationMode: 0
-  importAnimation: 1
+    tangentImportMode: 0
+    normalCalculationMode: 4
+  importAnimation: 0
   copyAvatar: 0
   humanDescription:
     serializedVersion: 2
@@ -80,7 +103,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    rootMotionBoneName: 
+    rootMotionBoneName: hand_r
     rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
