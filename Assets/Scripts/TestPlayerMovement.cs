@@ -168,21 +168,43 @@ public class TestPlayerMovement : PlayerComponent
     {
         if (rigidBody && isPlaying)
         {
-            Vector3 movement = transform.right * Input.GetAxis("Horizontal");
-
-            movement = (movement + transform.forward * Input.GetAxis("Vertical")) * movementSpeed * 5f;
-
-            if (Input.GetKey(KeyCode.Space))
+            if (!UnityEngine.XR.XRSettings.enabled)
             {
-                movement *= slowFactor;
-            }
-            else if (Input.GetButton("Sprint") && isOnFloor && currJumpEnergy > jumpCost * Time.deltaTime * 2f)
-            {
-                movement *= sprintFactor;
-                currJumpEnergy -= jumpCost * Time.deltaTime * 1.5f;
-            }
+                Vector3 movement = transform.right * Input.GetAxis("Horizontal");
 
-            rigidBody.MovePosition(movement + transform.position);
+                movement = (movement + transform.forward * Input.GetAxis("Vertical")) * movementSpeed * 5f;
+
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    movement *= slowFactor;
+                }
+                else if (Input.GetButton("Sprint") && isOnFloor && currJumpEnergy > jumpCost * Time.deltaTime * 2f)
+                {
+                    movement *= sprintFactor;
+                    currJumpEnergy -= jumpCost * Time.deltaTime * 1.5f;
+                }
+
+                rigidBody.MovePosition(movement + transform.position);
+            }
+            else
+            {
+                Vector3 movement = Vector3.zero;
+
+                if (Input.GetAxis("VRLeftHorizontal") != 0 || Input.GetAxis("VRLeftVertical") != 0)
+                {
+                    movement = transform.Find("[CameraRig]").Find("Controller (left)").right * Input.GetAxis("VRLeftHorizontal");
+
+                    movement = (movement + transform.Find("[CameraRig]").Find("Controller (left)").forward * Input.GetAxis("VRLeftVertical")) * movementSpeed;
+                }
+                else if (Input.GetAxis("VRRightHorizontal") != 0 || Input.GetAxis("VRRightVertical") != 0)
+                {
+                    movement = transform.Find("[CameraRig]").Find("Controller (right)").right * Input.GetAxis("VRRightHorizontal");
+
+                    movement = (movement + transform.Find("[CameraRig]").Find("Controller (right)").forward * Input.GetAxis("VRRightVertical")) * movementSpeed;
+                }
+
+                rigidBody.MovePosition(movement + transform.position);
+            }
         }
     }
 
