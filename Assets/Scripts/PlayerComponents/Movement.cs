@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.VR;
 
 //FPS camera movement adapted from: http://wiki.unity3d.com/index.php/SmoothMouseLook
 public class Movement : PlayerComponent
@@ -19,33 +20,20 @@ public class Movement : PlayerComponent
 
     public float maxSpeed = 5f;
 
-    private bool isPlaying = false;
+    private bool isPlaying = true;
 
-    public float sensitivityX = 15f;
-    public float sensitivityY = 15f;
+    public float mouseSensitivity = 100.0f;
+    public float clampAngle = 80.0f;
 
-    public float minX = -360f;
-    public float maxX = 360f;
-
-    public float minY = -60f;
-    public float maxY = 60f;
-
-    private float rotX = 0f;
-    private float rotY = 0f;
-
-    private List<float> rotListX = new List<float>();
-    float avgRotX = 0f;
-
-    private List<float> rotListY = new List<float>();
-    float avgRotY = 0f;
+    private float rotY = 0.0f; // rotation around the up/y axis
+    private float rotX = 0.0f; // rotation around the right/x axis
 
     public uint frameCounter = 20;
-    Quaternion startingRot;
     Vector3 startingPos;
 
+    public float slowFactor = 0.3f;
     private float slowTimer;
     private const float MAX_SLOW_TIME = 2f;
-    public float slowFactor = 0.7f;
     TrailRenderer trailRenderer;
 
     public bool isOnFloor = false;
@@ -55,8 +43,11 @@ public class Movement : PlayerComponent
     // Use this for initialization
     void Awake()
     {
-        startingRot = transform.rotation;
         startingPos = transform.position;
+
+        Vector3 rot = transform.localRotation.eulerAngles;
+        rotY = rot.y;
+        rotX = rot.x;
     }
 
     protected override void InitObj()
@@ -82,13 +73,16 @@ public class Movement : PlayerComponent
     void Start()
     {
         InitObj();
-        if (isLocalPlayer)
+        currJumpEnergy = jumpEnergyMax;
+        //CmdTurnOffTrailRenderer();
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        SwitchToPlaying();
+        if (playerType == PlayerType.VR)
         {
-            CmdTurnOffTrailRenderer();
-            currJumpEnergy = jumpEnergyMax;
-            if (playerType == PlayerType.VR)
-                CanvasManager.Instance.InitJumpEnergyBar(this);
-            else SwitchToPlaying();
+            CanvasManager.Instance.InitJumpEnergyBar(this);
         }
     }
 
@@ -115,11 +109,10 @@ public class Movement : PlayerComponent
     // Update is called once per frame
     void Update()
     {
+        if (!isLocalPlayer) return;
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.D)) Cursor.lockState = CursorLockMode.None;
         if (rigidBody)
         {
-            if (!isLocalPlayer) return;
-
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.G))
             {
                 if (isPlaying)
@@ -133,11 +126,11 @@ public class Movement : PlayerComponent
             else if (Input.GetKeyDown(KeyCode.T))
                 Cursor.lockState = CursorLockMode.Locked;
 
-            if (Input.GetKeyDown(KeyCode.LeftShift))
+            if (Input.GetButtonDown("Sprint"))
             {
                 CmdTurnOnTrailRenderer();
             }
-            else if (Input.GetKeyUp(KeyCode.LeftShift))
+            else if (Input.GetButtonUp("Sprint"))
             {
                 CmdTurnOffTrailRenderer();
             }
@@ -145,47 +138,28 @@ public class Movement : PlayerComponent
             if (!isPlaying)
                 return;
 
-            avgRotX = 0f;
-            avgRotY = 0f;
-
-            rotY += Input.GetAxis("Mouse Y") * sensitivityY * Time.deltaTime;
-            rotX += Input.GetAxis("Mouse X") * sensitivityX * Time.deltaTime;
-
-            rotListY.Add(rotY);
-            rotListX.Add(rotX);
-
-            if (rotListX.Count > frameCounter)
+            if (!UnityEngine.XR.XRSettings.enabled)
             {
-                rotListX.RemoveAt(0);
+                float mouseX = Input.GetAxis("Mouse X");
+                float mouseY = -Input.GetAxis("Mouse Y");
+
+
+#if !UNITY_EDITOR
+                rotY += mouseX * mouseSensitivity * Time.deltaTime * 10f;
+                rotX += mouseY * mouseSensitivity * Time.deltaTime * 10f;
+#else
+                rotY += mouseX * mouseSensitivity * Time.deltaTime;
+                rotX += mouseY * mouseSensitivity * Time.deltaTime;
+#endif
+                rotX = Mathf.Clamp(rotX, -clampAngle, clampAngle);
+
+                Quaternion localRotation = Quaternion.Euler(rotX, rotY, 0.0f);
+                transform.rotation = localRotation;
             }
-
-            if (rotListY.Count > frameCounter)
-            {
-                rotListY.RemoveAt(0);
-            }
-
-            for (int i = 0; i < rotListX.Count; i++)
-            {
-                avgRotX += rotListX[i];
-                avgRotY += rotListY[i];
-            }
-
-            avgRotX /= rotListX.Count;
-            avgRotY /= rotListY.Count;
-
-            avgRotY = ClampAngle(avgRotY, minY, maxY);
-            avgRotX = ClampAngle(avgRotX, minX, maxX);
-
-            Quaternion yRot = Quaternion.AngleAxis(avgRotY, Vector3.left);
-            Quaternion xRot = Quaternion.AngleAxis(avgRotX, Vector3.up);
-
-            transform.rotation = startingRot * xRot * yRot;
-
-
 
         }
 
-        if (isOnFloor && !Input.GetKey(KeyCode.LeftShift))
+        if (isOnFloor && !Input.GetButton("Sprint"))
         {
             currJumpEnergy += Time.deltaTime * energyRegainRate * 5f;
         }
@@ -198,40 +172,60 @@ public class Movement : PlayerComponent
         {
             currJumpEnergy = jumpEnergyMax;
         }
-
         slowTimer -= Time.deltaTime;
     }
 
     private void FixedUpdate()
     {
-        if (rigidBody && isPlaying)
+        if (rigidBody && isPlaying && isLocalPlayer)
         {
-            Vector3 movement = transform.right * Input.GetAxis("Horizontal");
-
-            if (playerType == PlayerType.AR)
-                movement = (movement + transform.forward * Input.GetAxis("Vertical")) * movementSpeed * 5f;
-            else movement = (movement + (Vector3.ProjectOnPlane(transform.forward, Vector3.down) * Input.GetAxis("Vertical"))) * movementSpeed;
-
-            if (Input.GetKey(KeyCode.Space))
+            if (!UnityEngine.XR.XRSettings.enabled)
             {
-                //movement *= slowFactor;
+                Vector3 movement = transform.right * Input.GetAxis("Horizontal");
+
+                movement = (movement + transform.forward * Input.GetAxis("Vertical")) * movementSpeed;
+                if (playerType == PlayerType.AR)
+                {
+                    movement *= 3.5f;
+                }
+
+                if (Input.GetButton("Sprint") && isOnFloor && currJumpEnergy > jumpCost * Time.deltaTime * 2f)
+                {
+                    movement *= sprintFactor;
+                    currJumpEnergy -= jumpCost * Time.deltaTime * 1.5f;
+                }
+                if (Input.GetKey(KeyCode.Space) && currJumpEnergy > jumpCost * Time.deltaTime * 2f)
+                {
+                    movement += Jump(jumpFactor);
+                }
+
+                if (slowTimer > 0f)
+                    movement *= Mathf.Lerp(1.0f, slowFactor, slowTimer / MAX_SLOW_TIME);
+
+                rigidBody.AddForce(movement, ForceMode.Acceleration);
             }
-            else if (Input.GetKey(KeyCode.LeftShift) && isOnFloor && currJumpEnergy > jumpCost * Time.deltaTime * 2f)
+            else
             {
-                movement *= sprintFactor;
-                currJumpEnergy -= jumpCost * Time.deltaTime * 1.5f;
+                Vector3 movement = Vector3.zero;
+
+                if (Input.GetAxis("VRLeftHorizontal") != 0 || Input.GetAxis("VRLeftVertical") != 0)
+                {
+                    movement = transform.Find("[CameraRig]").Find("Controller (left)").right * Input.GetAxis("VRLeftHorizontal");
+
+                    movement = (movement + transform.Find("[CameraRig]").Find("Controller (left)").forward * Input.GetAxis("VRLeftVertical")) * movementSpeed;
+                }
+                else if (Input.GetAxis("VRRightHorizontal") != 0 || Input.GetAxis("VRRightVertical") != 0)
+                {
+                    movement = transform.Find("[CameraRig]").Find("Controller (right)").right * Input.GetAxis("VRRightHorizontal");
+
+                    movement = (movement + transform.Find("[CameraRig]").Find("Controller (right)").forward * Input.GetAxis("VRRightVertical")) * movementSpeed;
+                }
+
+                if (slowTimer > 0f)
+                    movement *= Mathf.Lerp(1.0f, slowFactor, slowTimer / MAX_SLOW_TIME);
+
+                rigidBody.MovePosition(movement + transform.position);
             }
-
-            if (Input.GetKey(KeyCode.Space) && currJumpEnergy > jumpCost * Time.deltaTime * 2f)
-            {
-                movement += Jump(jumpFactor);
-            }
-
-            if (slowTimer > 0f)
-                movement *= Mathf.Lerp(1.0f, slowFactor, slowTimer / MAX_SLOW_TIME);
-
-            //rigidBody.MovePosition(movement + transform.position);
-            rigidBody.AddForce(movement, ForceMode.Acceleration);
         }
     }
 
@@ -242,24 +236,6 @@ public class Movement : PlayerComponent
         isOnFloor = false;
         currJumpEnergy -= jumpCost * Time.deltaTime;
         return jumpAmount * Vector3.up;
-    }
-
-    float ClampAngle(float angle, float min, float max)
-    {
-        angle %= 360;
-        if ((angle >= -360f) && (angle <= 360f))
-        {
-            if (angle < -360f)
-            {
-                angle += 360f;
-            }
-            if (angle > 360f)
-            {
-                angle -= 360f;
-            }
-        }
-
-        return Mathf.Clamp(angle, min, max);
     }
 
     private void OnCollisionEnter(Collision collision)

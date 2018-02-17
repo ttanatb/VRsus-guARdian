@@ -20,7 +20,7 @@ public class TestPlayerMovement : PlayerComponent
 
     public float maxSpeed = 5f;
 
-    private bool isPlaying = false;
+    private bool isPlaying = true;
 
     public float mouseSensitivity = 100.0f;
     public float clampAngle = 80.0f;
@@ -31,18 +31,12 @@ public class TestPlayerMovement : PlayerComponent
     public uint frameCounter = 20;
     Vector3 startingPos;
 
-    [SyncVar]
-    bool isSlowed = false;
-    public float slowFactor = 0.7f;
+    public float slowFactor = 0.3f;
+    private float slowTimer;
+    private const float MAX_SLOW_TIME = 2f;
     TrailRenderer trailRenderer;
 
     public bool isOnFloor = false;
-
-    public bool IsSlowed
-    {
-        get { return isSlowed; }
-        set { isSlowed = value; }
-    }
 
     public float CurrJumpEnergy { get { return currJumpEnergy; } }
 
@@ -58,16 +52,18 @@ public class TestPlayerMovement : PlayerComponent
 
     protected override void InitObj()
     {
-        if (!trailRenderer)
+        if (!trailRenderer && playerType == PlayerType.VR)
             trailRenderer = GetComponentInChildren<TrailRenderer>();
 
         if (!rigidBody)
         {
             rigidBody = gameObject.AddComponent<Rigidbody>();
             rigidBody.mass = 1;
-            rigidBody.drag = 3;
+            rigidBody.drag = 5;
 
-            rigidBody.useGravity = true;
+            if (playerType == PlayerType.AR)
+                rigidBody.useGravity = false;
+            else rigidBody.useGravity = true;
 
             rigidBody.isKinematic = false;
             rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
@@ -78,11 +74,23 @@ public class TestPlayerMovement : PlayerComponent
     {
         InitObj();
         currJumpEnergy = jumpEnergyMax;
+        //CmdTurnOffTrailRenderer();
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        SwitchToPlaying();
+        if (playerType == PlayerType.VR)
+        {
+            CanvasManager.Instance.InitJumpEnergyBar(this);
+        }
     }
 
     public void SwitchToPlaying()
     {
-        rigidBody.useGravity = true;
+        if (playerType == PlayerType.AR)
+            rigidBody.useGravity = false;
+        else rigidBody.useGravity = true;
         rigidBody.isKinematic = false;
         Cursor.lockState = CursorLockMode.Locked;
         isPlaying = true;
@@ -101,6 +109,8 @@ public class TestPlayerMovement : PlayerComponent
     // Update is called once per frame
     void Update()
     {
+        if (!isLocalPlayer) return;
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.D)) Cursor.lockState = CursorLockMode.None;
         if (rigidBody)
         {
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.G))
@@ -133,18 +143,18 @@ public class TestPlayerMovement : PlayerComponent
                 float mouseX = Input.GetAxis("Mouse X");
                 float mouseY = -Input.GetAxis("Mouse Y");
 
+
+#if !UNITY_EDITOR
+                rotY += mouseX * mouseSensitivity * Time.deltaTime * 10f;
+                rotX += mouseY * mouseSensitivity * Time.deltaTime * 10f;
+#else
                 rotY += mouseX * mouseSensitivity * Time.deltaTime;
                 rotX += mouseY * mouseSensitivity * Time.deltaTime;
-
+#endif
                 rotX = Mathf.Clamp(rotX, -clampAngle, clampAngle);
 
                 Quaternion localRotation = Quaternion.Euler(rotX, rotY, 0.0f);
                 transform.rotation = localRotation;
-            }
-
-            if (Input.GetKey(KeyCode.Space) && currJumpEnergy > jumpCost * Time.deltaTime * 2f)
-            {
-                Jump(jumpFactor);
             }
 
         }
@@ -162,29 +172,37 @@ public class TestPlayerMovement : PlayerComponent
         {
             currJumpEnergy = jumpEnergyMax;
         }
+        slowTimer -= Time.deltaTime;
     }
 
     private void FixedUpdate()
     {
-        if (rigidBody && isPlaying)
+        if (rigidBody && isPlaying && isLocalPlayer)
         {
             if (!UnityEngine.XR.XRSettings.enabled)
             {
                 Vector3 movement = transform.right * Input.GetAxis("Horizontal");
 
-                movement = (movement + transform.forward * Input.GetAxis("Vertical")) * movementSpeed * 5f;
-
-                if (Input.GetKey(KeyCode.Space))
+                movement = (movement + transform.forward * Input.GetAxis("Vertical")) * movementSpeed;
+                if (playerType == PlayerType.AR)
                 {
-                    movement *= slowFactor;
+                    movement *= 3.5f;
                 }
-                else if (Input.GetButton("Sprint") && isOnFloor && currJumpEnergy > jumpCost * Time.deltaTime * 2f)
+
+                if (Input.GetButton("Sprint") && isOnFloor && currJumpEnergy > jumpCost * Time.deltaTime * 2f)
                 {
                     movement *= sprintFactor;
                     currJumpEnergy -= jumpCost * Time.deltaTime * 1.5f;
                 }
+                if (Input.GetKey(KeyCode.Space) && currJumpEnergy > jumpCost * Time.deltaTime * 2f)
+                {
+                    movement += Jump(jumpFactor);
+                }
 
-                rigidBody.MovePosition(movement + transform.position);
+                if (slowTimer > 0f)
+                    movement *= Mathf.Lerp(1.0f, slowFactor, slowTimer / MAX_SLOW_TIME);
+
+                rigidBody.AddForce(movement, ForceMode.Acceleration);
             }
             else
             {
@@ -203,17 +221,21 @@ public class TestPlayerMovement : PlayerComponent
                     movement = (movement + transform.Find("[CameraRig]").Find("Controller (right)").forward * Input.GetAxis("VRRightVertical")) * movementSpeed;
                 }
 
+                if (slowTimer > 0f)
+                    movement *= Mathf.Lerp(1.0f, slowFactor, slowTimer / MAX_SLOW_TIME);
+
                 rigidBody.MovePosition(movement + transform.position);
             }
         }
     }
 
-    public void Jump(float jumpAmount)
+    public Vector3 Jump(float jumpAmount)
     {
-        rigidBody.AddForce(jumpAmount * Vector3.up);
-        isOnFloor = false;
+        if (playerType == PlayerType.AR) return Vector3.zero;
 
+        isOnFloor = false;
         currJumpEnergy -= jumpCost * Time.deltaTime;
+        return jumpAmount * Vector3.up;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -266,12 +288,6 @@ public class TestPlayerMovement : PlayerComponent
     [ClientRpc]
     public void RpcSlow()
     {
-        isSlowed = true;
-    }
-
-    [ClientRpc]
-    public void RpcUnSlow()
-    {
-        isSlowed = false;
+        slowTimer = MAX_SLOW_TIME;
     }
 }
