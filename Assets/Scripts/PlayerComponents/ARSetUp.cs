@@ -14,6 +14,14 @@ public class TrapCounter
     public int maxCount;        //the maximum amount of traps
 }
 
+[System.Serializable]
+public class EnvironmentalObject
+{
+    public GameObject obj;
+    [MinMaxSlider(0.8f, 1.2f)]
+    public Vector2 scaleRange;
+}
+
 /// <summary>
 /// This class takes care of the game phase, setting up the world,
 /// and setting up traps for AR
@@ -38,6 +46,8 @@ public class ARSetUp : PlayerComponent
     [Tooltip("Prefab for the wall")]
     public GameObject wallPrefab; //currently not used
 
+    public EnvironmentalObject[] envPropList;
+
     [Tooltip("The minimum area to count as a play area")]
     public float minPlayArea = 1f;
 
@@ -51,10 +61,13 @@ public class ARSetUp : PlayerComponent
     private int currGamePhase = 0;
 
     private List<List<Vector3>> sortedPlanes;
-    private List<float> usedIndecies = new List<float>();
-    private List<TrapDefense> trapObjList = new List<TrapDefense>();
-    private List<Relic> relicObjList = new List<Relic>();
+    private List<float> usedIndecies;// = new List<float>();
+    private List<TrapDefense> trapObjList;// = new List<TrapDefense>();
+    private List<Relic> relicObjList;// = new List<Relic>();
+    private List<Entrance> entranceObjList;// = new List<Entrance>();
+    private List<GameObject> envObjList;
 
+    private float scale;
     /// <summary>
     /// Gets the current phase of the game
     /// </summary>
@@ -62,6 +75,14 @@ public class ARSetUp : PlayerComponent
     #endregion
 
     #region Init Logic
+    public override void OnStartServer()
+    {
+        usedIndecies = new List<float>();
+        trapObjList = new List<TrapDefense>();
+        relicObjList = new List<Relic>();
+        entranceObjList = new List<Entrance>();
+        envObjList = new List<GameObject>();
+    }
     public override void OnStartLocalPlayer()
     {
         if (isServer)
@@ -308,15 +329,18 @@ public class ARSetUp : PlayerComponent
 
         currGamePhase = (int)GamePhase.Placing;
 
-        foreach (TrapDefense trap in FindObjectsOfType<TrapDefense>())
+        foreach (TrapDefense trap in trapObjList)
             NetworkServer.Destroy(trap.gameObject);
-
-        foreach (Relic relic in FindObjectsOfType<Relic>())
+        trapObjList.Clear();
+        foreach (Relic relic in relicObjList)
             NetworkServer.Destroy(relic.gameObject);
-
-        foreach (Entrance entrance in FindObjectsOfType<Entrance>())
+        relicObjList.Clear();
+        foreach (Entrance entrance in entranceObjList)
             NetworkServer.Destroy(entrance.gameObject);
-
+        entranceObjList.Clear();
+        foreach (GameObject prop in envObjList)
+            NetworkServer.Destroy(prop);
+        entranceObjList.Clear();
         foreach (TrapCounter t in trapList)
         {
             t.count = t.maxCount;
@@ -345,14 +369,17 @@ public class ARSetUp : PlayerComponent
 			UnityARCameraManager.Instance.StopTracking ();
 #endif
                 sortedPlanes = LocalObjectBuilder.Instance.GetSortedPlanes();
-                CmdSpawnRelics();
+                scale = FindObjectOfType<LocalPlane>().transform.localScale.y / 2;
+                SpawnRelics();
+                StartCoroutine("SpawnEnvObjs");
+                RpcBuildTerrain();
                 break;
 
             case GamePhase.Playing:
                 currentlySelectedTrap = null;
                 TogglePreviouslySelectedTrap();
                 foreach (TrapDefense trap in trapObjList) trap.TransitionToPlayPhase();
-                CmdSpawnEntrances();
+                SpawnEntrances();
 
                 VRTransition vrTransition = FindObjectOfType<VRTransition>();
                 if (vrTransition)
@@ -388,15 +415,63 @@ public class ARSetUp : PlayerComponent
     private void CmdSpawnRelic(Vector3 position)
     {
         GameObject obj = Instantiate(relicPrefab, position, Quaternion.identity);
-        relicObjList.Add(obj.GetComponent<Relic>());
         NetworkServer.Spawn(obj);
+        if (isServer)
+            relicObjList.Add(obj.GetComponent<Relic>());
     }
 
     [Command]
-    private void CmdSpawnRelics()
+    private void CmdSpawnEnvObj(Vector3 position, int index, float rotY)
     {
-        if (!isServer) return;
+        GameObject obj = Instantiate(envPropList[index].obj, position, Quaternion.Euler(0f, rotY, 0f));
+        NetworkServer.Spawn(obj);
+        if (isServer)
+            envObjList.Add(obj);
+    }
 
+    [Command]
+    private void CmdSpawnEntrance(Vector3 position)
+    {
+        GameObject obj = Instantiate(entrancePrefab, position + entrancePrefab.transform.localScale / 2f, Quaternion.identity);
+        NetworkServer.Spawn(obj);
+
+        if (isServer)
+        {
+            Entrance e = obj.GetComponent<Entrance>();
+            relicObjList[Random.Range(0, relicObjList.Count)].AddEntrance(e);
+            entranceObjList.Add(e);
+        }
+    }
+    private Vector3 GetRandPosNotUnderAnyOtherPlanes(int index)
+    {
+        Vector3 spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
+        while(true)
+        {
+            spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
+            if (!Utility.CheckIfTooCloseToEdge(sortedPlanes[index], spawnPos, 0.2f))
+                break;
+        }
+
+        int planeCount = sortedPlanes.Count;
+        if (index == planeCount - 1) return spawnPos;
+        for (int i = index + 1; i < planeCount; i++)
+        {
+            if (Utility.CheckIfPointIsInPolygon(spawnPos, sortedPlanes[i]) || Utility.CheckIfTooCloseToEdge(sortedPlanes[i], spawnPos, 0.4f))
+            {
+                while (true)
+                {
+                    spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
+                    if (!Utility.CheckIfTooCloseToEdge(sortedPlanes[index], spawnPos, 0.2f))
+                        break;
+                }
+                i = index;
+            }
+        }
+        return spawnPos;
+    }
+
+    private void SpawnRelics()
+    {
         int largestPlaneIndex = 0;
         float largestArea = float.MinValue;
         for (int i = 1; i < sortedPlanes.Count; i++)
@@ -410,46 +485,57 @@ public class ARSetUp : PlayerComponent
         }
 
         usedIndecies.Add(largestPlaneIndex);
-        float scale = FindObjectOfType<LocalPlane>().transform.localScale.y / 2;
-
         CmdSpawnRelic(GetRandPosNotUnderAnyOtherPlanes(0) + Vector3.up * scale);
         CmdSpawnRelic(GetRandPosNotUnderAnyOtherPlanes(largestPlaneIndex) + Vector3.up * scale);
     }
 
-    private Vector3 GetRandPosNotUnderAnyOtherPlanes(int index)
+    System.Collections.IEnumerator SpawnEnvObjs()
     {
-        Vector3 spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
-        for (int i = 0; i < 10; i++)
+        int planeCount = sortedPlanes.Count;
+        int relicCount = relicObjList.Count;
+        List<Vector3> spawnedLoc = new List<Vector3>();
+        for (int i = 0; i < planeCount; i++)
         {
-            if (!Utility.CheckIfTooCloseToEdge(sortedPlanes[index], spawnPos, 0.05f))
-                break;
-            else spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
-        }
-
-        for (int i = index + 1; i < sortedPlanes.Count; i++)
-        {
-            if (Utility.CheckIfPointIsInPolygon(spawnPos, sortedPlanes[i]) || Utility.CheckIfTooCloseToEdge(sortedPlanes[i], spawnPos, 0.05f))
+            int spawnCount = (int)(Utility.GetAreaSqr(sortedPlanes[i]));
+            spawnCount = Mathf.Clamp(spawnCount, 0, 6);
+            spawnedLoc.Clear();
+            for (int j = 0; j < spawnCount; j++)
             {
-                Debug.Log("Generated point was inside or too close to another polygon");
-                spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
-                for (int j = 0; j < 10; j++)
+                Vector3 spawnPos = GetRandPosNotUnderAnyOtherPlanes(i);
+                int totalCount = relicCount + spawnedLoc.Count;
+                for (int k = 0; k < totalCount; k++)
                 {
-                    if (!Utility.CheckIfTooCloseToEdge(sortedPlanes[index], spawnPos, 0.05f))
-                        break;
-                    else spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
+                    if (k < relicCount)
+                    {
+                        if (Mathf.Abs(spawnPos.x - relicObjList[k].transform.position.x) + Mathf.Abs(spawnPos.z - relicObjList[k].transform.position.z) < 0.3f)
+                        {
+                            spawnPos = GetRandPosNotUnderAnyOtherPlanes(i);
+                            k = 0;
+                        }
+                    }
+                    else
+                    {
+                        if (Mathf.Abs(spawnPos.x - spawnedLoc[k - relicCount].x) + Mathf.Abs(spawnPos.z - spawnedLoc[k - relicCount].z) < 0.3f)
+                        {
+                            spawnPos = GetRandPosNotUnderAnyOtherPlanes(i);
+                            k = 0;
+                        }
+                    }
+
+                    yield return new WaitForSeconds(0.001f);
                 }
-                i = index;
+                spawnedLoc.Add(spawnPos);
+                CmdSpawnEnvObj(spawnPos + Vector3.up * scale, Random.Range(0, envPropList.Length), Random.Range(0f, 360f));
+                yield return new WaitForSeconds(0.05f);
             }
+
+            yield return new WaitForSeconds(0.05f);
+
         }
-        return spawnPos;
     }
 
-
-    [Command]
-    private void CmdSpawnEntrances()
+    private void SpawnEntrances()
     {
-        if (!isServer) return;
-        float scale = FindObjectOfType<LocalPlane>().transform.localScale.y / 2;
         for (int i = 1; i < sortedPlanes.Count; i++)
         {
             if (usedIndecies.Contains(i)) continue;
@@ -457,18 +543,40 @@ public class ARSetUp : PlayerComponent
         }
     }
 
-    [Command]
-    private void CmdSpawnEntrance(Vector3 position)
-    {
-        GameObject obj = Instantiate(entrancePrefab, position + entrancePrefab.transform.localScale / 2f, Quaternion.identity);
-        relicObjList[Random.Range(0, relicObjList.Count)].AddEntrance(obj.GetComponent<Entrance>());
-        NetworkServer.Spawn(obj);
-    }
-
     [ClientRpc]
     private void RpcSetMessage()
     {
         if (isServer) return;
         CanvasManager.Instance.SetMessage("Click one of the white boxes to choose where to spawn from");
+    }
+
+    [ClientRpc]
+    private void RpcBuildTerrain()
+    {
+        if (isServer) return;
+        sortedPlanes = LocalObjectBuilder.Instance.GetSortedPlanes();
+        List<Vector3> vertices = new List<Vector3>();
+        vertices = Utility.CombinePolygons(sortedPlanes[0], sortedPlanes[1], 0.2f);
+        for (int i = 2; i < sortedPlanes.Count; i++)
+        {
+            vertices = Utility.CombinePolygons(vertices, sortedPlanes[i], 0.2f);
+        }
+
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            Vector3 vert = vertices[i];
+            vert.y = 0f;
+            vertices[i] = vert;
+        }
+
+        EnvironmentCreation terrainBuilder = FindObjectOfType<EnvironmentCreation>();
+        terrainBuilder.boundary = vertices;
+        terrainBuilder.CreateTerrain();
+
+        //LocalPlane[] planes = FindObjectsOfType<LocalPlane>();
+        //foreach (LocalPlane plane in planes)
+        //{
+        //    plane.GetComponent<MeshRenderer>().material = terrainBuilder.GetComponent<MeshRenderer>().material;
+        //}
     }
 }

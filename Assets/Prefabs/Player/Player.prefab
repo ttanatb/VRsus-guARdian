@@ -1298,6 +1298,31 @@ MonoBehaviour:
   entrancePrefab: {fileID: 1638740177162806, guid: 6244c8c1573a0354fb969f4a2049dbba,
     type: 2}
   wallPrefab: {fileID: 1889715606113792, guid: 5806018cc7ad99849ae78e71dbd8185a, type: 2}
+  envPropList:
+  - obj: {fileID: 1236379191104268, guid: bacfdf21af4353a4f925e4e32fbc69a0, type: 2}
+    scaleRange: {x: 0.8, y: 1.2}
+  - obj: {fileID: 1714865084936148, guid: 81413f70623daef4ab63fd1931160179, type: 2}
+    scaleRange: {x: 0.8, y: 1.2}
+  - obj: {fileID: 1449063070523832, guid: 95b8a5171a2258a448c4c1261aed066c, type: 2}
+    scaleRange: {x: 0.8, y: 1.2}
+  - obj: {fileID: 1157712630293414, guid: d95cf37a0c0c95a4b99eee80c6029e41, type: 2}
+    scaleRange: {x: 0.8, y: 1.2}
+  - obj: {fileID: 1956784543454052, guid: 8d8f86755235360489359096f87676b4, type: 2}
+    scaleRange: {x: 0.8, y: 1.2}
+  - obj: {fileID: 1988146244574620, guid: 46c609847361a624496ef99ce4c45523, type: 2}
+    scaleRange: {x: 0.8, y: 1.2}
+  - obj: {fileID: 1379210161247254, guid: ffb7cf63fb8569e4e93e7621de17acba, type: 2}
+    scaleRange: {x: 0.8, y: 1.2}
+  - obj: {fileID: 1110260164513998, guid: 84831d83ed68dbd4ca67ac1553f6d22b, type: 2}
+    scaleRange: {x: 0.8, y: 1.2}
+  - obj: {fileID: 1083960920304480, guid: 3e74074feb3670f46819ed745d318dc2, type: 2}
+    scaleRange: {x: 0.8, y: 1.2}
+  - obj: {fileID: 1907469137836556, guid: 8ca87f4544d75364abcd0aa17c1e9618, type: 2}
+    scaleRange: {x: 0.8, y: 1.2}
+  - obj: {fileID: 1347989651943496, guid: 9ff0b409bcb1ede408950ce357b708d4, type: 2}
+    scaleRange: {x: 0.8, y: 1.2}
+  - obj: {fileID: 1844749160616960, guid: 050167f56d226384da0f80f4d9155928, type: 2}
+    scaleRange: {x: 0.8, y: 1.2}
   minPlayArea: 0
 --- !u!114 &114168227184911992
 MonoBehaviour:
@@ -1463,7 +1488,7 @@ MonoBehaviour:
   mouseSensitivity: 80
   clampAngle: 80
   frameCounter: 5
-  slowFactor: 0.35
+  slowFactor: 0.5
   isOnFloor: 0
 --- !u!114 &114620430664255440
 MonoBehaviour:

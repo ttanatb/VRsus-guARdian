@@ -24,6 +24,8 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
 
     private float floorPos;     //y-pos of floor
 
+    private List<List<Vector3>> sortedList;// = new List<List<Vector3>>();
+
     /// <summary>
     /// Y-position of the floor
     /// </summary>
@@ -136,8 +138,9 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
 
     public List<List<Vector3>> GetSortedPlanes()
     {
-        List<List<Vector3>> sortedList = new List<List<Vector3>>();
-        for(int i = 0; i < localPlanes.Count; i++)
+        if (sortedList != null) return sortedList;
+        sortedList = new List<List<Vector3>>();
+        for (int i = 0; i < localPlanes.Count; i++)
         {
             int insertionIndex = 0;
             float yPos = localPlanes[i].transform.position.y;

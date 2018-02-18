@@ -79,7 +79,6 @@ public class Movement : PlayerComponent
 
     public override void OnStartLocalPlayer()
     {
-        SwitchToPlaying();
         if (playerType == PlayerType.VR)
         {
             CanvasManager.Instance.InitJumpEnergyBar(this);
@@ -88,6 +87,7 @@ public class Movement : PlayerComponent
 
     public void SwitchToPlaying()
     {
+        if (!isLocalPlayer) return;
         if (playerType == PlayerType.AR)
             rigidBody.useGravity = false;
         else rigidBody.useGravity = true;
@@ -99,6 +99,7 @@ public class Movement : PlayerComponent
 
     public void SwitchOutOfPlaying()
     {
+        if (!isLocalPlayer) return;
         rigidBody.useGravity = false;
         rigidBody.isKinematic = true;
         Cursor.lockState = CursorLockMode.None;
@@ -183,7 +184,14 @@ public class Movement : PlayerComponent
             {
                 Vector3 movement = transform.right * Input.GetAxis("Horizontal");
 
-                movement = (movement + transform.forward * Input.GetAxis("Vertical")) * movementSpeed;
+                if (playerType == PlayerType.AR)
+                {
+                    movement = (movement + transform.forward * Input.GetAxis("Vertical")) * movementSpeed;
+                }
+                else
+                {
+                    movement = (movement + Vector3.ProjectOnPlane(transform.forward, Vector3.up) * Input.GetAxis("Vertical")) * movementSpeed;
+                }
                 if (playerType == PlayerType.AR)
                 {
                     movement *= 3.5f;

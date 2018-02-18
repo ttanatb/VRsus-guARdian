@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnvironmentCreation : MonoBehaviour {
+public class EnvironmentCreation : MonoBehaviour
+{
 
     public Mesh mountains;
     public List<Vector3> boundary;
@@ -30,9 +31,19 @@ public class EnvironmentCreation : MonoBehaviour {
     private Mesh plains;
     private Vector2[] boundaryFlat;
 
-    public void CreateTerrain ()
+    private void Start()
     {
-		if (boundary != null)
+#if !UNITY_IOS
+        gameObject.AddComponent<MeshFilter>();
+        Rigidbody rb = gameObject.AddComponent<Rigidbody>();
+        rb.isKinematic = true;
+        gameObject.AddComponent<MeshCollider>();
+#endif
+    }
+
+    public void CreateTerrain()
+    {
+        if (boundary != null)
         {
             layers = 1;
             angles = boundary.Count;
@@ -53,7 +64,7 @@ public class EnvironmentCreation : MonoBehaviour {
                 mountainUVs.Add(new Vector2(vert.x, vert.z));
                 mountainUVs.Add(new Vector2(vert.x, vert.z));
             }
-        
+
             center /= angles;
 
             Extrude(extrudeTimes);
@@ -86,17 +97,17 @@ public class EnvironmentCreation : MonoBehaviour {
             plains.SetVertices(boundary);
             int[] indices = triangulator.Triangulate();
             plains.SetTriangles(indices, 0);
-            
+
             plains.RecalculateBounds();
             plains.RecalculateNormals();
             plains.RecalculateTangents();
             plains.UploadMeshData(false);
-            
+
             GetComponent<MeshFilter>().sharedMesh = mountains;
             plainFilter.sharedMesh = plains;
             GetComponent<MeshCollider>().sharedMesh = plains;
         }
-	}
+    }
 
     private void Extrude(int extrusions)
     {

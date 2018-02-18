@@ -226,19 +226,21 @@ public class Utility
     /// <param name="point">The given point to check</param>
     /// <param name="minDistSqr">The point has to be at least further than the square root of this from every edge</param>
     /// <returns></returns>
-    public static bool CheckIfTooCloseToEdge(List<Vector3> planeVertices, Vector3 point, float minDistSqr)
+    public static bool CheckIfTooCloseToEdge(List<Vector3> planeVertices, Vector3 point, float minDist)
     {
+        int planeCount = planeVertices.Count;
         //this isn't a polygon
-        if (planeVertices.Count < 2) return false;
+        if (planeCount < 2) return false;
 
         Vector3 vertex1 = planeVertices[0];
         Vector3 vertex2 = planeVertices[1];
+        float minDistSqr = Mathf.Pow(minDist, 2f);
 
         //loops through every edge
-        for (int i = 0; i < planeVertices.Count; i++)
+        for (int i = 0; i < planeCount; i++)
         {
             vertex1 = planeVertices[i];
-            if (i == planeVertices.Count - 1)
+            if (i == planeCount - 1)
                 vertex2 = planeVertices[0];
             else vertex2 = planeVertices[i + 1];
 
