@@ -1285,14 +1285,14 @@ MonoBehaviour:
     type: 2}
   trapList:
   - trap: {fileID: 1407252897733738, guid: 0f93f41861af9be46b9d746f5bab6231, type: 2}
-    count: 3
-    maxCount: 3
+    count: 2
+    maxCount: 2
   - trap: {fileID: 1407252897733738, guid: 602194c92e2aa7446ac9eda4bdcc1a5f, type: 2}
     count: 4
     maxCount: 4
   - trap: {fileID: 1867356746107952, guid: d2bb8064afb387f4fad410add9461b0a, type: 2}
-    count: 5
-    maxCount: 5
+    count: 3
+    maxCount: 3
   relicPrefab: {fileID: 1909683740957674, guid: 1fba3092cfa8a974584836f5677d505c,
     type: 2}
   entrancePrefab: {fileID: 1638740177162806, guid: 6244c8c1573a0354fb969f4a2049dbba,

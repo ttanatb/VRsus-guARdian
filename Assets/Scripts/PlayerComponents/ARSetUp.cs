@@ -497,7 +497,7 @@ public class ARSetUp : PlayerComponent
         for (int i = 0; i < planeCount; i++)
         {
             int spawnCount = (int)(Utility.GetAreaSqr(sortedPlanes[i]));
-            spawnCount = Mathf.Clamp(spawnCount, 0, 6);
+            spawnCount = Mathf.Clamp(spawnCount, 1, 6);
             spawnedLoc.Clear();
             for (int j = 0; j < spawnCount; j++)
             {
@@ -555,7 +555,7 @@ public class ARSetUp : PlayerComponent
     {
         if (isServer) return;
         sortedPlanes = LocalObjectBuilder.Instance.GetSortedPlanes();
-        float floor = LocalObjectBuilder.Instance.FloorPos + FindObjectOfType<LocalPlane>().transform.localScale.y / 2f;
+        float floor = LocalObjectBuilder.Instance.FloorPos;// + FindObjectOfType<LocalPlane>().transform.localScale.y / 2f;
 
         List<Vector3> vertices = new List<Vector3>();
         vertices = Utility.CombinePolygons(sortedPlanes[0], sortedPlanes[1], 0.2f);
