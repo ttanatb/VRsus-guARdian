@@ -448,7 +448,7 @@ public class ARSetUp : PlayerComponent
         while(true)
         {
             spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
-            if (!Utility.CheckIfTooCloseToEdge(sortedPlanes[index], spawnPos, 0.2f))
+            if (!Utility.CheckIfTooCloseToEdge(sortedPlanes[index], spawnPos, 0.1f))
                 break;
         }
 
@@ -456,12 +456,12 @@ public class ARSetUp : PlayerComponent
         if (index == planeCount - 1) return spawnPos;
         for (int i = index + 1; i < planeCount; i++)
         {
-            if (Utility.CheckIfPointIsInPolygon(spawnPos, sortedPlanes[i]) || Utility.CheckIfTooCloseToEdge(sortedPlanes[i], spawnPos, 0.4f))
+            if (Utility.CheckIfPointIsInPolygon(spawnPos, sortedPlanes[i]) || Utility.CheckIfTooCloseToEdge(sortedPlanes[i], spawnPos, 0.1f))
             {
                 while (true)
                 {
                     spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
-                    if (!Utility.CheckIfTooCloseToEdge(sortedPlanes[index], spawnPos, 0.2f))
+                    if (!Utility.CheckIfTooCloseToEdge(sortedPlanes[index], spawnPos, 0.1f))
                         break;
                 }
                 i = index;
@@ -507,7 +507,7 @@ public class ARSetUp : PlayerComponent
                 {
                     if (k < relicCount)
                     {
-                        if (Mathf.Abs(spawnPos.x - relicObjList[k].transform.position.x) + Mathf.Abs(spawnPos.z - relicObjList[k].transform.position.z) < 0.3f)
+                        if (Mathf.Abs(spawnPos.x - relicObjList[k].transform.position.x) + Mathf.Abs(spawnPos.z - relicObjList[k].transform.position.z) < 0.2f)
                         {
                             spawnPos = GetRandPosNotUnderAnyOtherPlanes(i);
                             k = 0;
@@ -515,7 +515,7 @@ public class ARSetUp : PlayerComponent
                     }
                     else
                     {
-                        if (Mathf.Abs(spawnPos.x - spawnedLoc[k - relicCount].x) + Mathf.Abs(spawnPos.z - spawnedLoc[k - relicCount].z) < 0.3f)
+                        if (Mathf.Abs(spawnPos.x - spawnedLoc[k - relicCount].x) + Mathf.Abs(spawnPos.z - spawnedLoc[k - relicCount].z) < 0.2f)
                         {
                             spawnPos = GetRandPosNotUnderAnyOtherPlanes(i);
                             k = 0;
@@ -555,6 +555,8 @@ public class ARSetUp : PlayerComponent
     {
         if (isServer) return;
         sortedPlanes = LocalObjectBuilder.Instance.GetSortedPlanes();
+        float floor = LocalObjectBuilder.Instance.FloorPos + FindObjectOfType<LocalPlane>().transform.localScale.y / 2f;
+
         List<Vector3> vertices = new List<Vector3>();
         vertices = Utility.CombinePolygons(sortedPlanes[0], sortedPlanes[1], 0.2f);
         for (int i = 2; i < sortedPlanes.Count; i++)
@@ -565,7 +567,7 @@ public class ARSetUp : PlayerComponent
         for (int i = 0; i < vertices.Count; i++)
         {
             Vector3 vert = vertices[i];
-            vert.y = 0f;
+            vert.y = floor;
             vertices[i] = vert;
         }
 
