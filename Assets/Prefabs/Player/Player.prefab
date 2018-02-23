@@ -590,7 +590,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1666084624838054}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -12.170378, y: -2.0881655, z: 1.7728128}
+  m_LocalPosition: {x: 4.915001, y: -3.356968, z: 4.398224}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4302933900162672}
@@ -1089,8 +1089,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 0
   serializedVersion: 2
-  m_Size: {x: 0.03, y: 0.05621906, z: 0.02377371}
-  m_Center: {x: 0, y: 0.027859101, z: -0.0028236192}
+  m_Size: {x: 0.014915149, y: 0.05236317, z: 0.014421783}
+  m_Center: {x: -0.00018930435, y: 0.025931155, z: -0.0009271292}
 --- !u!65 &65813635598237878
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -1291,37 +1291,37 @@ MonoBehaviour:
     count: 4
     maxCount: 4
   - trap: {fileID: 1867356746107952, guid: d2bb8064afb387f4fad410add9461b0a, type: 2}
-    count: 3
-    maxCount: 3
+    count: 2
+    maxCount: 2
   relicPrefab: {fileID: 1909683740957674, guid: 1fba3092cfa8a974584836f5677d505c,
     type: 2}
   entrancePrefab: {fileID: 1638740177162806, guid: 6244c8c1573a0354fb969f4a2049dbba,
     type: 2}
   wallPrefab: {fileID: 1889715606113792, guid: 5806018cc7ad99849ae78e71dbd8185a, type: 2}
   envPropList:
-  - obj: {fileID: 1236379191104268, guid: bacfdf21af4353a4f925e4e32fbc69a0, type: 2}
+  - obj: {fileID: 1983023206395498, guid: 5dd07be943358ee4b9546e4d6591b3bd, type: 2}
     scaleRange: {x: 0.8, y: 1.2}
-  - obj: {fileID: 1714865084936148, guid: 81413f70623daef4ab63fd1931160179, type: 2}
+  - obj: {fileID: 1102057871626324, guid: 25c298c8c8691564aa5740e8d790354f, type: 2}
+    scaleRange: {x: 0.8, y: 1.2}
+  - obj: {fileID: 1773226119269276, guid: ca8b84cbb44a5704d9dc478cc3c1181d, type: 2}
+    scaleRange: {x: 0.8, y: 1.2}
+  - obj: {fileID: 1714223766784916, guid: 8f37217f5f8d8034cb4f1233e51cfc32, type: 2}
     scaleRange: {x: 0.8, y: 1.2}
   - obj: {fileID: 1449063070523832, guid: 95b8a5171a2258a448c4c1261aed066c, type: 2}
     scaleRange: {x: 0.8, y: 1.2}
-  - obj: {fileID: 1157712630293414, guid: d95cf37a0c0c95a4b99eee80c6029e41, type: 2}
+  - obj: {fileID: 1543309479513822, guid: d7c7e2006c1525d499c4f3526d43991e, type: 2}
     scaleRange: {x: 0.8, y: 1.2}
-  - obj: {fileID: 1956784543454052, guid: 8d8f86755235360489359096f87676b4, type: 2}
+  - obj: {fileID: 1364293614298260, guid: c209960c742711e49ba029706dfe5cad, type: 2}
     scaleRange: {x: 0.8, y: 1.2}
-  - obj: {fileID: 1988146244574620, guid: 46c609847361a624496ef99ce4c45523, type: 2}
+  - obj: {fileID: 1235449713257990, guid: 2d0e418581aed00488bf45153f6c8943, type: 2}
     scaleRange: {x: 0.8, y: 1.2}
-  - obj: {fileID: 1379210161247254, guid: ffb7cf63fb8569e4e93e7621de17acba, type: 2}
+  - obj: {fileID: 1597944121941250, guid: 637ddea9292829e4480ebb51e6442bea, type: 2}
     scaleRange: {x: 0.8, y: 1.2}
-  - obj: {fileID: 1110260164513998, guid: 84831d83ed68dbd4ca67ac1553f6d22b, type: 2}
+  - obj: {fileID: 1994074772451816, guid: 540fdf8fbf01b844c81ca6d2824d26c5, type: 2}
     scaleRange: {x: 0.8, y: 1.2}
-  - obj: {fileID: 1083960920304480, guid: 3e74074feb3670f46819ed745d318dc2, type: 2}
+  - obj: {fileID: 1736865989048412, guid: 4d3b524b6f1414e46843930647fbef51, type: 2}
     scaleRange: {x: 0.8, y: 1.2}
-  - obj: {fileID: 1907469137836556, guid: 8ca87f4544d75364abcd0aa17c1e9618, type: 2}
-    scaleRange: {x: 0.8, y: 1.2}
-  - obj: {fileID: 1347989651943496, guid: 9ff0b409bcb1ede408950ce357b708d4, type: 2}
-    scaleRange: {x: 0.8, y: 1.2}
-  - obj: {fileID: 1844749160616960, guid: 050167f56d226384da0f80f4d9155928, type: 2}
+  - obj: {fileID: 1714865084936148, guid: 81413f70623daef4ab63fd1931160179, type: 2}
     scaleRange: {x: 0.8, y: 1.2}
   minPlayArea: 0
 --- !u!114 &114168227184911992

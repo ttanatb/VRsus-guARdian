@@ -1,20 +1,66 @@
 fileFormatVersion: 2
-guid: 75cbad6e3d3233743ad1e4d00b32a120
-timeCreated: 1519373567
+guid: 25dfb16a3e96d3b49a79f15a4c73c387
+timeCreated: 1519145581
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2100000: mushroom_07
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: en_mushroom_07
+    100000: en_ray
+    100002: //RootNode
+    100004: head
+    100006: l_anttena
+    100008: l_anttena2
+    100010: l_anttena3
+    100012: l_fin
+    100014: l_fin2
+    100016: l_fin3
+    100018: l_rear_fin
+    100020: l_rear_fin2
+    100022: origin
+    100024: r_antenna3
+    100026: r_anttena
+    100028: r_anttena2
+    100030: r_fin
+    100032: r_fin2
+    100034: r_fin3
+    100036: r_rear_fin
+    100038: r_rear_fin2
+    100040: tail
+    100042: tail2
+    100044: tail3
+    100046: tail4
+    400000: en_ray
+    400002: //RootNode
+    400004: head
+    400006: l_anttena
+    400008: l_anttena2
+    400010: l_anttena3
+    400012: l_fin
+    400014: l_fin2
+    400016: l_fin3
+    400018: l_rear_fin
+    400020: l_rear_fin2
+    400022: origin
+    400024: r_antenna3
+    400026: r_anttena
+    400028: r_anttena2
+    400030: r_fin
+    400032: r_fin2
+    400034: r_fin3
+    400036: r_rear_fin
+    400038: r_rear_fin2
+    400040: tail
+    400042: tail2
+    400044: tail3
+    400046: tail4
+    2100000: ray
+    4300000: en_ray
+    7400000: en_ray_flying_good
     9500000: //RootNode
+    13700000: en_ray
   externalObjects: {}
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -31,14 +77,42 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
-    animationCompression: 3
+    animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: en_ray_flying_good
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 274
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
