@@ -55,12 +55,12 @@ public class HealthBar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //doesn't display if player is invulnerable
-        if (player.IsInvulnerable)
-        {
             render.enabled = false;
             bgRenderer.enabled = false;
             return;
+        //doesn't display if player is invulnerable
+        if (player.IsInvulnerable)
+        {
         }
         else
         {
