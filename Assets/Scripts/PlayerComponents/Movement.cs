@@ -20,6 +20,7 @@ public class Movement : PlayerComponent
 
     public float maxSpeed = 5f;
 
+    [SerializeField]
     private bool isPlaying = true;
 
     public float mouseSensitivity = 100.0f;
@@ -72,6 +73,7 @@ public class Movement : PlayerComponent
 
     void Start()
     {
+        isPlaying = true;
         InitObj();
         currJumpEnergy = jumpEnergyMax;
         //CmdTurnOffTrailRenderer();
