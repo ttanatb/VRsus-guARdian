@@ -1,38 +1,19 @@
 fileFormatVersion: 2
-guid: 1cc9d091b1e399c4990d45d9de9a0a43
-timeCreated: 1518903430
+guid: 072b105ba3d90104a8cf821e647214dd
+timeCreated: 1519510014
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
-    100002: elbow_l
-    100004: fingerBottom_l
-    100006: fingerMid_l
-    100008: fingerTip_l
-    100010: hand_l
-    100012: root
-    100014: shoulder_l
-    100016: thumbBottom_l
-    100018: thumbMid_l
-    100020: thumbTip_l
-    100022: wrist_l
     400000: //RootNode
-    400002: elbow_l
-    400004: fingerBottom_l
-    400006: fingerMid_l
-    400008: fingerTip_l
-    400010: hand_l
-    400012: root
-    400014: shoulder_l
-    400016: thumbBottom_l
-    400018: thumbMid_l
-    400020: thumbTip_l
-    400022: wrist_l
-    9500000: //RootNode
+    2100000: interloperHand
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: ch_interloperHand
   externalObjects: {}
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -60,7 +41,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 100
+    globalScale: 0.3
     meshCompression: 0
     addColliders: 0
     importVisibility: 1
@@ -85,7 +66,7 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
-  importAnimation: 0
+  importAnimation: 1
   copyAvatar: 0
   humanDescription:
     serializedVersion: 2
@@ -98,13 +79,13 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    rootMotionBoneName: root
+    rootMotionBoneName: 
     rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
