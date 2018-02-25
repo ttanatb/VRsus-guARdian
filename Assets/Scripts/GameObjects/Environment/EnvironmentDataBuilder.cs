@@ -14,9 +14,9 @@ public class EnvironmentDataBuilder : MonoBehaviour
     void Start()
     {
         decorList = ScriptableObject.CreateInstance(typeof(EnvironmentData)) as EnvironmentData;
-        decorList.decorDataList = new List<EnvironmentObjectData>();
-        decorList.structuresDataList = new List<EnvironmentObjectData>();
-        decorList.landMarkDataList = new List<EnvironmentObjectData>();
+        List<EnvironmentObjectData> decors = new List<EnvironmentObjectData>();
+        List<EnvironmentObjectData> structures = new List<EnvironmentObjectData>();
+        List<EnvironmentObjectData> landMarks = new List<EnvironmentObjectData>();
         GameObject[] objs = FindObjectsOfType<GameObject>();
 
         for (int i = 0; i < objs.Length; i++)
@@ -33,7 +33,7 @@ public class EnvironmentDataBuilder : MonoBehaviour
                 envObj.AddCapCols(cCol);
 
                 BoxCollider[] bCol = obj.GetComponents<BoxCollider>();
-                envObj.AddBoxCols(bCol);
+                envObj.SetBoxCols(bCol);
 
                 int childCount = obj.transform.childCount;
                 for (int j = 0; j < childCount; j++)
@@ -47,19 +47,23 @@ public class EnvironmentDataBuilder : MonoBehaviour
                 }
 
                 envObj.CalcRadius();
-                if (envObj.boxColDatas.Count == 0 && envObj.capColDatas.Count == 0)
+                if (envObj.boxColDatas.Length == 0 && envObj.capColDatas.Length == 0)
                 {
-                    decorList.decorDataList.Add(envObj);
+                    decors.Add(envObj);
                 }
                 else if (!envObj.isLandMark)
                 {
-                    decorList.structuresDataList.Add(envObj);
+                    structures.Add(envObj);
                 }
                 else
                 {
-                    decorList.landMarkDataList.Add(envObj);
+                    landMarks.Add(envObj);
                 }
             }
+
+            decorList.decorDataList = decors.ToArray();
+            decorList.structureDataList = structures.ToArray();
+            decorList.landMarkDataList = landMarks.ToArray();
         }
 #if UNITY_EDITOR
         AssetDatabase.CreateAsset(decorList, "Assets/EnvironmentAssetData/Test.asset");

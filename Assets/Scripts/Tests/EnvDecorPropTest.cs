@@ -9,7 +9,7 @@ public class EnvDecorPropTest : MonoBehaviour
 
     public void SpawnRandom()
     {
-        int count = decorListObj.decorDataList.Count;
+        int count = decorListObj.decorDataList.Length;
         float x = -2f;
         for (int i = 0; i < count; i++)
         {
@@ -21,14 +21,14 @@ public class EnvDecorPropTest : MonoBehaviour
                 Quaternion.identity).GetComponent<EnvironmentObject>();
             x += data.radius;
 
-            obj.Initialize(data);
+            obj.RpcInit(0,i);
         }
 
 
-        count = decorListObj.structuresDataList.Count;
+        count = decorListObj.structureDataList.Length;
         for (int i = 0; i < count; i++)
         {
-            EnvironmentObjectData data = decorListObj.structuresDataList[i];
+            EnvironmentObjectData data = decorListObj.structureDataList[i];
 
             x += data.radius;
             EnvironmentObject obj = Instantiate(envObjPrefab,
@@ -36,10 +36,10 @@ public class EnvDecorPropTest : MonoBehaviour
                 Quaternion.identity).GetComponent<EnvironmentObject>();
             x += data.radius;
 
-            obj.Initialize(data);
+            obj.RpcInit(1, i);
         }
 
-        count = decorListObj.landMarkDataList.Count;
+        count = decorListObj.landMarkDataList.Length;
         for (int i = 0; i < count; i++)
         {
             EnvironmentObjectData data = decorListObj.landMarkDataList[i];
@@ -50,7 +50,7 @@ public class EnvDecorPropTest : MonoBehaviour
                 Quaternion.identity).GetComponent<EnvironmentObject>();
             x += data.radius;
 
-            obj.Initialize(data);
+            obj.RpcInit(2, i);
         }
     }
 }

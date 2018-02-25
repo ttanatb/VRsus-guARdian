@@ -14,14 +14,6 @@ public class TrapCounter
     public int maxCount;        //the maximum amount of traps
 }
 
-[System.Serializable]
-public class EnvironmentalObject
-{
-    public GameObject obj;
-    [MinMaxSlider(0.8f, 1.2f)]
-    public Vector2 scaleRange;
-}
-
 /// <summary>
 /// This class takes care of the game phase, setting up the world,
 /// and setting up traps for AR
@@ -46,7 +38,10 @@ public class ARSetUp : PlayerComponent
     [Tooltip("Prefab for the wall")]
     public GameObject wallPrefab; //currently not used
 
-    public EnvironmentalObject[] envPropList;
+    [Tooltip("The asset file with a look-up array filled with environment object data")]
+    public EnvironmentData environmentData;
+
+    public GameObject envObjPrefab;
 
     [Tooltip("The minimum area to count as a play area")]
     public float minPlayArea = 1f;
@@ -421,10 +416,32 @@ public class ARSetUp : PlayerComponent
     }
 
     [Command]
-    private void CmdSpawnEnvObj(Vector3 position, int index, float rotY)
+    private void CmdSpawnEnvDecor(Vector3 position, int index, float rotY)
     {
-        GameObject obj = Instantiate(envPropList[index].obj, position, Quaternion.Euler(0f, rotY, 0f));
+        GameObject obj = Instantiate(envObjPrefab, position, Quaternion.Euler(0f, rotY, 0f));
         NetworkServer.Spawn(obj);
+        obj.GetComponent<EnvironmentObject>().RpcInit(0, index);// environmentData.decorDataList[index]);
+        if (isServer)
+        {
+            envObjList.Add(obj);
+        }
+    }
+
+    [Command]
+    private void CmdSpawnEnvStructure(Vector3 position, int index, float rotY)
+    {
+        GameObject obj = Instantiate(envObjPrefab, position, Quaternion.Euler(0f, rotY, 0f));
+        NetworkServer.Spawn(obj);
+        obj.GetComponent<EnvironmentObject>().RpcInit(1, index);// environmentData.structureDataList[index]);
+        envObjList.Add(obj);
+    }
+
+    [Command]
+    private void CmdSpawnEnvLandMark(Vector3 position, int index, float rotY)
+    {
+        GameObject obj = Instantiate(envObjPrefab, position, Quaternion.Euler(0f, rotY, 0f));
+        NetworkServer.Spawn(obj);
+        obj.GetComponent<EnvironmentObject>().RpcInit(2, index);// environmentData.landMarkDataList[index]);
         if (isServer)
             envObjList.Add(obj);
     }
@@ -445,7 +462,7 @@ public class ARSetUp : PlayerComponent
     private Vector3 GetRandPosNotUnderAnyOtherPlanes(int index)
     {
         Vector3 spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
-        while(true)
+        while (true)
         {
             spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
             if (!Utility.CheckIfTooCloseToEdge(sortedPlanes[index], spawnPos, 0.1f))
@@ -525,7 +542,9 @@ public class ARSetUp : PlayerComponent
                     yield return new WaitForSeconds(0.001f);
                 }
                 spawnedLoc.Add(spawnPos);
-                CmdSpawnEnvObj(spawnPos + Vector3.up * scale, Random.Range(0, envPropList.Length), Random.Range(0f, 360f));
+                if (Random.value < 0.5f)
+                    CmdSpawnEnvStructure(spawnPos + Vector3.up * scale, Random.Range(0, environmentData.structureDataList.Length), Random.Range(0f, 360f));
+                else CmdSpawnEnvDecor(spawnPos + Vector3.up * scale, Random.Range(0, environmentData.decorDataList.Length), Random.Range(0f, 360f));
                 yield return new WaitForSeconds(0.05f);
             }
 
@@ -574,11 +593,5 @@ public class ARSetUp : PlayerComponent
         EnvironmentCreation terrainBuilder = FindObjectOfType<EnvironmentCreation>();
         terrainBuilder.boundary = vertices;
         terrainBuilder.CreateTerrain();
-
-        //LocalPlane[] planes = FindObjectsOfType<LocalPlane>();
-        //foreach (LocalPlane plane in planes)
-        //{
-        //    plane.GetComponent<MeshRenderer>().material = terrainBuilder.GetComponent<MeshRenderer>().material;
-        //}
     }
 }

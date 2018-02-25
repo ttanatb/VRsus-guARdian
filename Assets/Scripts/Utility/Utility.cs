@@ -209,6 +209,8 @@ public class Utility
     /// <returns></returns>
     public static float DistanceToLineSegmentSqr(Vector3 point, Vector3 startingVec, Vector3 endingVec)
     {
+        point.y = startingVec.y;
+        endingVec.y = startingVec.y;
         //checks if the distance of the segment is significant enough for the calculation
         float lengthSqr = (startingVec - endingVec).sqrMagnitude;
         if (lengthSqr < 0.0001f)

@@ -82,7 +82,7 @@ MonoBehaviour:
     capColDatas: []
     radius: 0.029994408
     isLandMark: 0
-  structuresDataList:
+  structureDataList:
   - meshMatDatas:
     - mesh: {fileID: 4300000, guid: 0b2d7b0088b115642a7e09560617e13a, type: 3}
       mats:

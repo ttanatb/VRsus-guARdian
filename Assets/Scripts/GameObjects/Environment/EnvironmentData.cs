@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class EnvironmentData : ScriptableObject
 {
-    public List<EnvironmentObjectData> decorDataList;
-    public List<EnvironmentObjectData> structuresDataList;
-    public List<EnvironmentObjectData> landMarkDataList;
+    public EnvironmentObjectData[] decorDataList;
+    public EnvironmentObjectData[] structureDataList;
+    public EnvironmentObjectData[] landMarkDataList;
 }
 
 [System.Serializable]
 public struct EnvironmentObjectData
 {
-    public List<MeshMatData> meshMatDatas;// = new List<MeshMatData>();
-    public List<BoxColliderData> boxColDatas;
-    public List<CapsuleColliderData> capColDatas;
+    public MeshMatData[] meshMatDatas;// = new List<MeshMatData>();
+    int meshMatCount;// = 1;
+    public BoxColliderData[] boxColDatas;
+    public CapsuleColliderData[] capColDatas;
     public float radius;
     public bool isLandMark;
 
@@ -24,33 +25,44 @@ public struct EnvironmentObjectData
     /// <param name="radius"></param>
     public EnvironmentObjectData(float radius = 0)
     {
-        meshMatDatas = new List<MeshMatData>();
-        boxColDatas = new List<BoxColliderData>();
-        capColDatas = new List<CapsuleColliderData>();
+        meshMatDatas = new MeshMatData[1];
+        meshMatCount = 0;
+        boxColDatas = new BoxColliderData[0];
+        capColDatas = new CapsuleColliderData[0];
         this.radius = radius;
         isLandMark = false;
     }
 
     public void AddMeshMat(Mesh mesh, Material[] mats, float scale, Vector3 pos)
     {
-        meshMatDatas.Add(new MeshMatData(mesh, mats, scale, pos));
+        if (meshMatCount >= meshMatDatas.Length)
+        {
+            MeshMatData[] newArr = new MeshMatData[meshMatDatas.Length + 1];
+            meshMatDatas = newArr;
+        }
+
+        meshMatDatas[meshMatCount] = new MeshMatData(mesh, mats, scale, pos);
+        meshMatCount++;
     }
 
-    public void AddBoxCols(BoxCollider[] collider)
+    public void SetBoxCols(BoxCollider[] collider)
     {
+        boxColDatas = new BoxColliderData[collider.Length];
         for (int i = 0; i < collider.Length; i++)
         {
-            boxColDatas.Add(new BoxColliderData(collider[i].center, collider[i].size));
+            boxColDatas[i] = new BoxColliderData(collider[i].center, collider[i].size);
         }
     }
 
     public void AddCapCols(CapsuleCollider[] collider)
     {
+        capColDatas = new CapsuleColliderData[collider.Length];
         for (int i = 0; i < collider.Length; i++)
         {
-            capColDatas.Add(new CapsuleColliderData(collider[i].center,
+            capColDatas[i] = new CapsuleColliderData(collider[i].center,
                 collider[i].radius,
-                collider[i].height));
+                collider[i].height);
+
         }
     }
 
@@ -59,7 +71,7 @@ public struct EnvironmentObjectData
         float minX, minZ, maxX, maxZ;
         minX = minZ = float.MaxValue;
         maxX = maxZ = float.MinValue;
-        for (int i = 0; i < meshMatDatas.Count; i++)
+        for (int i = 0; i < meshMatDatas.Length; i++)
         {
             Bounds b = meshMatDatas[i].mesh.bounds;
             Vector3 min = b.min * meshMatDatas[i].scale + meshMatDatas[i].posOffset;

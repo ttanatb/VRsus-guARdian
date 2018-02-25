@@ -14,9 +14,6 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
     [Tooltip("The prefab for planes")]
     public GameObject planePrefab;
 
-    [Tooltip("")]
-    public EnvironmentData environmentData;
-
     //local plane objects
     [SerializeField]
     private List<GameObject> localPlanes;
