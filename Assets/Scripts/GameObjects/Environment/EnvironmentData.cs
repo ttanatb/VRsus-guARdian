@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class EnvironmentData : ScriptableObject
 {
-    public List<EnvironmentObjectData> objDataList;
+    public List<EnvironmentObjectData> decorDataList;
+    public List<EnvironmentObjectData> structuresDataList;
+    public List<EnvironmentObjectData> landMarkDataList;
 }
 
 [System.Serializable]
@@ -14,6 +16,7 @@ public struct EnvironmentObjectData
     public List<BoxColliderData> boxColDatas;
     public List<CapsuleColliderData> capColDatas;
     public float radius;
+    public bool isLandMark;
 
     /// <summary>
     /// Henlo
@@ -25,6 +28,7 @@ public struct EnvironmentObjectData
         boxColDatas = new List<BoxColliderData>();
         capColDatas = new List<CapsuleColliderData>();
         this.radius = radius;
+        isLandMark = false;
     }
 
     public void AddMeshMat(Mesh mesh, Material[] mats, float scale, Vector3 pos)

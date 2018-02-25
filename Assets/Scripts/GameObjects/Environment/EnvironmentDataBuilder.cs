@@ -14,7 +14,9 @@ public class EnvironmentDataBuilder : MonoBehaviour
     void Start()
     {
         decorList = ScriptableObject.CreateInstance(typeof(EnvironmentData)) as EnvironmentData;
-        decorList.objDataList = new List<EnvironmentObjectData>();
+        decorList.decorDataList = new List<EnvironmentObjectData>();
+        decorList.structuresDataList = new List<EnvironmentObjectData>();
+        decorList.landMarkDataList = new List<EnvironmentObjectData>();
         GameObject[] objs = FindObjectsOfType<GameObject>();
 
         for (int i = 0; i < objs.Length; i++)
@@ -28,11 +30,9 @@ public class EnvironmentDataBuilder : MonoBehaviour
                 EnvironmentObjectData envObj = new EnvironmentObjectData(0); // Mathf.Max(b.size.x, b.size.z) * scale);
 
                 CapsuleCollider[] cCol = obj.GetComponents<CapsuleCollider>();
-                Debug.Log(cCol.Length);
                 envObj.AddCapCols(cCol);
 
                 BoxCollider[] bCol = obj.GetComponents<BoxCollider>();
-                Debug.Log(bCol.Length);
                 envObj.AddBoxCols(bCol);
 
                 int childCount = obj.transform.childCount;
@@ -47,7 +47,18 @@ public class EnvironmentDataBuilder : MonoBehaviour
                 }
 
                 envObj.CalcRadius();
-                decorList.objDataList.Add(envObj);
+                if (envObj.boxColDatas.Count == 0 && envObj.capColDatas.Count == 0)
+                {
+                    decorList.decorDataList.Add(envObj);
+                }
+                else if (!envObj.isLandMark)
+                {
+                    decorList.structuresDataList.Add(envObj);
+                }
+                else
+                {
+                    decorList.landMarkDataList.Add(envObj);
+                }
             }
         }
 #if UNITY_EDITOR
