@@ -8,12 +8,13 @@ ModelImporter:
     100000: //RootNode
     400000: //RootNode
     2100000: vase1
+    2100002: vase
     2300000: //RootNode
     3300000: //RootNode
     4300000: en_vase
   externalObjects: {}
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
     materialLocation: 1

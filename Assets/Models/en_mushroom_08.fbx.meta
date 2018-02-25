@@ -8,12 +8,13 @@ ModelImporter:
     100000: //RootNode
     400000: //RootNode
     2100000: mushrrom_08
+    2100002: mushroom_08
     2300000: //RootNode
     3300000: //RootNode
     4300000: en_mushroom_08
   externalObjects: {}
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
     materialLocation: 1
