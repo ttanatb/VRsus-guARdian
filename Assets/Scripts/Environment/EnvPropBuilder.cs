@@ -12,25 +12,40 @@ public class EnvPropBuilder : MonoBehaviour
     void Start()
     {
         decorList = ScriptableObject.CreateInstance(typeof(EnvDecorList)) as EnvDecorList;
+        decorList.propDataList = new List<DecorEnvObj>();
         GameObject[] objs = FindObjectsOfType<GameObject>();
-        if (decorList.decorPrefabList == null)
-        {
-            decorList.decorPrefabList = new List<DecorEnvObj>();
-        }
 
-        decorList.decorPrefabList.Clear();
         for (int i = 0; i < objs.Length; i++)
         {
             GameObject obj = objs[i];
-            Debug.Log(obj.name);
+            if (obj.transform.parent != null) continue;
+
             if (obj.name.Substring(0, 3) == "en_")
             {
-                Mesh mesh = obj.GetComponentInChildren<MeshFilter>().sharedMesh;
-                Bounds b = mesh.bounds;
-                float scale = obj.transform.GetChild(0).localScale.x;
-                decorList.decorPrefabList.Add(new DecorEnvObj(mesh, 
-                    obj.GetComponentInChildren<MeshRenderer>().sharedMaterial,
-                    Mathf.Max(b.size.x, b.size.z) * scale));
+                Debug.Log("Working on " + obj.name);
+                DecorEnvObj envObj = new DecorEnvObj(0); // Mathf.Max(b.size.x, b.size.z) * scale);
+
+                CapsuleCollider[] cCol = obj.GetComponents<CapsuleCollider>();
+                Debug.Log(cCol.Length);
+                envObj.AddCapCols(cCol);
+
+                BoxCollider[] bCol = obj.GetComponents<BoxCollider>();
+                Debug.Log(bCol.Length);
+                envObj.AddBoxCols(bCol);
+
+                int childCount = obj.transform.childCount;
+                for (int j = 0; j < childCount; j++)
+                {
+                    Transform child = obj.transform.GetChild(j);
+                    if (!child.GetComponent<MeshRenderer>()) continue;
+
+                    envObj.AddMeshMat(child.GetComponent<MeshFilter>().sharedMesh,
+                        child.GetComponent<MeshRenderer>().sharedMaterials,
+                        child.localScale.x, child.localPosition);
+                }
+
+                envObj.CalcRadius();
+                decorList.propDataList.Add(envObj);
             }
         }
 

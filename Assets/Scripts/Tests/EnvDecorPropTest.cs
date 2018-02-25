@@ -9,9 +9,19 @@ public class EnvDecorPropTest : MonoBehaviour
 
     public void SpawnRandom()
     {
-        EnvDecorObj obj = Instantiate(envObjPrefab, 
-            new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f)), 
-            Quaternion.identity).GetComponent<EnvDecorObj>();
-        obj.Initialize(decorListObj.decorPrefabList[Random.Range(0, decorListObj.decorPrefabList.Count)]);
+        int count = decorListObj.propDataList.Count;
+        float x = -2f;
+        for (int i = 0; i < count; i++)
+        {
+            DecorEnvObj data = decorListObj.propDataList[i];
+
+            x += data.radius;
+            EnvDecorObj obj = Instantiate(envObjPrefab,
+                new Vector3(x, 0f, 0f), 
+                Quaternion.identity).GetComponent<EnvDecorObj>();
+            x += data.radius;
+
+            obj.Initialize(data); // decorListObj.propDataList[Random.Range(0, decorListObj.propDataList.Count)]);
+        }
     }
 }
