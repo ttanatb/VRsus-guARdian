@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnvDecorList : ScriptableObject
+public class EnvironmentData : ScriptableObject
 {
-    public List<DecorEnvObj> propDataList;
+    public List<EnvironmentObjectData> objDataList;
 }
 
 [System.Serializable]
-public struct DecorEnvObj
+public struct EnvironmentObjectData
 {
     public List<MeshMatData> meshMatDatas;// = new List<MeshMatData>();
     public List<BoxColliderData> boxColDatas;
@@ -19,7 +19,7 @@ public struct DecorEnvObj
     /// Henlo
     /// </summary>
     /// <param name="radius"></param>
-    public DecorEnvObj(float radius = 0)
+    public EnvironmentObjectData(float radius = 0)
     {
         meshMatDatas = new List<MeshMatData>();
         boxColDatas = new List<BoxColliderData>();

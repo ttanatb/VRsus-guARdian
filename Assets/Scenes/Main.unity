@@ -150,7 +150,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4845456975480698, guid: 1608384a963ef024f9b7ba7eefb96753, type: 2}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 23562778157233052, guid: 1608384a963ef024f9b7ba7eefb96753,
         type: 2}
@@ -433,7 +433,8 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114782453071472088, guid: 385e9b11460257a448971729f0afeae0, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 385e9b11460257a448971729f0afeae0, type: 2}
   m_IsPrefabParent: 0
 --- !u!21 &491575562
@@ -528,11 +529,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mountains: {fileID: 0}
   boundary: []
-  yMax: 6
-  yMin: 0
-  yVariance: 1.5
+  yMax: 10
+  yMin: 2
+  yVariance: 1
   layerWidth: 2
-  peakOffset: 2
+  peakOffset: 3
   extrudeTimes: 6
   plainFilter: {fileID: 994483896}
   minCliffSides: 2
@@ -632,7 +633,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!21 &850205906
 Material:

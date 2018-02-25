@@ -1,18 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
-public class EnvPropBuilder : MonoBehaviour
+public class EnvironmentDataBuilder : MonoBehaviour
 {
-
-    public EnvDecorList decorList;
+    public EnvironmentData decorList;
 
     // Use this for initialization
     void Start()
     {
-        decorList = ScriptableObject.CreateInstance(typeof(EnvDecorList)) as EnvDecorList;
-        decorList.propDataList = new List<DecorEnvObj>();
+        decorList = ScriptableObject.CreateInstance(typeof(EnvironmentData)) as EnvironmentData;
+        decorList.objDataList = new List<EnvironmentObjectData>();
         GameObject[] objs = FindObjectsOfType<GameObject>();
 
         for (int i = 0; i < objs.Length; i++)
@@ -23,7 +25,7 @@ public class EnvPropBuilder : MonoBehaviour
             if (obj.name.Substring(0, 3) == "en_")
             {
                 Debug.Log("Working on " + obj.name);
-                DecorEnvObj envObj = new DecorEnvObj(0); // Mathf.Max(b.size.x, b.size.z) * scale);
+                EnvironmentObjectData envObj = new EnvironmentObjectData(0); // Mathf.Max(b.size.x, b.size.z) * scale);
 
                 CapsuleCollider[] cCol = obj.GetComponents<CapsuleCollider>();
                 Debug.Log(cCol.Length);
@@ -45,11 +47,12 @@ public class EnvPropBuilder : MonoBehaviour
                 }
 
                 envObj.CalcRadius();
-                decorList.propDataList.Add(envObj);
+                decorList.objDataList.Add(envObj);
             }
         }
-
+#if UNITY_EDITOR
         AssetDatabase.CreateAsset(decorList, "Assets/EnvironmentAssetData/Test.asset");
         AssetDatabase.SaveAssets();
+#endif
     }
 }

@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class EnvDecorPropTest : MonoBehaviour
 {
-    public EnvDecorList decorListObj;
+    public EnvironmentData decorListObj;
     public GameObject envObjPrefab;
 
     public void SpawnRandom()
     {
-        int count = decorListObj.propDataList.Count;
+        int count = decorListObj.objDataList.Count;
         float x = -2f;
         for (int i = 0; i < count; i++)
         {
-            DecorEnvObj data = decorListObj.propDataList[i];
+            EnvironmentObjectData data = decorListObj.objDataList[i];
 
             x += data.radius;
-            EnvDecorObj obj = Instantiate(envObjPrefab,
+            EnvironmentObject obj = Instantiate(envObjPrefab,
                 new Vector3(x, 0f, 0f), 
-                Quaternion.identity).GetComponent<EnvDecorObj>();
+                Quaternion.identity).GetComponent<EnvironmentObject>();
             x += data.radius;
 
-            obj.Initialize(data); // decorListObj.propDataList[Random.Range(0, decorListObj.propDataList.Count)]);
+            obj.Initialize(data); 
         }
     }
 }

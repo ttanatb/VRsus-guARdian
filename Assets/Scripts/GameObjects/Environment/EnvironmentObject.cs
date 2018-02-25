@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class EnvDecorObj : MonoBehaviour
+public class EnvironmentObject : MonoBehaviour
 {
     private float radius;
 
@@ -14,7 +14,7 @@ public class EnvDecorObj : MonoBehaviour
         set { radius = value; }
     }
 
-    public void Initialize(DecorEnvObj decorEnvObj)
+    public void Initialize(EnvironmentObjectData decorEnvObj)
     {
         int count = decorEnvObj.capColDatas.Count;
         bool collider = false;

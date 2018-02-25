@@ -6,7 +6,6 @@ using UnityEngine.Networking;
 public class NetworkedGameManager : NetworkManager
 {
     public bool isArtTest = false;
-    public GameObject gameManagerPrefab;
 
     private void Start()
     {
