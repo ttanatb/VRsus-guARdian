@@ -29,7 +29,7 @@ public class Grappling : Launchable
 
             Player.transform.position = Vector3.Slerp(startPosition, transform.position, percent);
 
-            if (Player.transform.position == transform.position)
+            if (percent >= 1.0f)
             {
                 Destroy(gameObject);
             }
