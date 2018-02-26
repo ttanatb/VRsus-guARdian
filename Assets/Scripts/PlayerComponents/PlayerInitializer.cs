@@ -40,16 +40,16 @@ public class PlayerInitializer : NetworkBehaviour
             if (isServer)
                 PlayerType = PlayerType.AR;
             else PlayerType = PlayerType.VR;
-
+        
             EnableCameraAndAudioListener();
         }
-
+        
         else
         {
             if (isServer)
                 PlayerType = PlayerType.VR;
             else PlayerType = PlayerType.AR;
-
+        
             EnablePlayerRenderers();
         }
 
