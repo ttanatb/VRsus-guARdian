@@ -213,11 +213,30 @@ public class Utility
         endingVec.y = startingVec.y;
         //checks if the distance of the segment is significant enough for the calculation
         float lengthSqr = (startingVec - endingVec).sqrMagnitude;
-        if (lengthSqr < 0.0001f)
+        if (lengthSqr < 0.00001f)
             return (point - startingVec).sqrMagnitude;
 
         //project and return distanceSqr
-        Vector3 projection = Vector3.Project(point - startingVec, endingVec - startingVec) + startingVec;
+        Vector3 projection = Vector3.Project(point - startingVec, endingVec - startingVec);// + startingVec;
+        if (projection.sqrMagnitude > lengthSqr || Vector3.Dot(projection, endingVec - startingVec) < 0f)
+        {
+            float dist1 = (point - startingVec).sqrMagnitude;
+            float dist2 = (point - endingVec).sqrMagnitude;
+
+            if (dist1 < dist2)
+            {
+                //Debug.DrawLine(point, startingVec);
+                return dist1;
+            }
+            else
+            {
+                //Debug.DrawLine(point, endingVec);
+                return dist2;
+            }
+        }
+
+        projection += startingVec;
+        //Debug.DrawLine(point, projection);
         return (point - projection).sqrMagnitude;
     }
 
@@ -351,14 +370,14 @@ public class Utility
             {
                 if (combined.Contains(p1segment2))
                     break;
-                    //return combined;
+                //return combined;
                 else combined.Add(p1segment2);
             }
             else
             {
                 if (combined.Contains(closestIntersection))
                     break;
-                    //return combined;
+                //return combined;
                 else combined.Add(closestIntersection);
 
                 int index = -1;
@@ -457,6 +476,21 @@ public class Utility
         return false;
     }
 
+
+    public static Vector3 GetRandPosInPlaneAndFarFromEdge(List<Vector3> plane, float radius, float maxTries)
+    {
+        int tries = 0;
+        Vector3 spawnPos = GetRandomPointInPlane(plane);
+        while (true)
+        {
+            tries++;
+            if (!CheckIfTooCloseToEdge(plane, spawnPos, radius))
+                return spawnPos;
+            else if (tries > maxTries)
+                return Vector3.one * float.MaxValue;
+        }
+
+    }
 }
 
 /// <summary>

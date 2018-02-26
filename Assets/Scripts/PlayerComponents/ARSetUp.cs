@@ -459,29 +459,26 @@ public class ARSetUp : PlayerComponent
             entranceObjList.Add(e);
         }
     }
-    private Vector3 GetRandPosNotUnderAnyOtherPlanes(int index)
+    private Vector3 GetRandPosNotUnderAnyOtherPlanes(int index, float radius, int maxTries)
     {
-        Vector3 spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
-        while (true)
-        {
-            spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
-            if (!Utility.CheckIfTooCloseToEdge(sortedPlanes[index], spawnPos, 0.1f))
-                break;
-        }
+        Vector3 spawnPos = Utility.GetRandPosInPlaneAndFarFromEdge(sortedPlanes[index], radius, maxTries);
+        if (spawnPos.x > float.MaxValue / 2f) return spawnPos;
 
         int planeCount = sortedPlanes.Count;
-        if (index == planeCount - 1) return spawnPos;
-        for (int i = index + 1; i < planeCount; i++)
+        int tries = 0;
+        if (index != planeCount - 1)
         {
-            if (Utility.CheckIfPointIsInPolygon(spawnPos, sortedPlanes[i]) || Utility.CheckIfTooCloseToEdge(sortedPlanes[i], spawnPos, 0.1f))
+            for (int i = index + 1; i < planeCount; i++)
             {
-                while (true)
+                if (Utility.CheckIfPointIsInPolygon(spawnPos, sortedPlanes[i]) || Utility.CheckIfTooCloseToEdge(sortedPlanes[i], spawnPos, radius))
                 {
-                    spawnPos = Utility.GetRandomPointInPlane(sortedPlanes[index]);
-                    if (!Utility.CheckIfTooCloseToEdge(sortedPlanes[index], spawnPos, 0.1f))
-                        break;
+                    spawnPos = Utility.GetRandPosInPlaneAndFarFromEdge(sortedPlanes[index], radius, maxTries);
+
+                    tries++;
+                    if (tries > maxTries || spawnPos.x > float.MaxValue / 2f) return spawnPos;
+
+                    i = index;
                 }
-                i = index;
             }
         }
         return spawnPos;
@@ -502,55 +499,129 @@ public class ARSetUp : PlayerComponent
         }
 
         usedIndecies.Add(largestPlaneIndex);
-        CmdSpawnRelic(GetRandPosNotUnderAnyOtherPlanes(0) + Vector3.up * scale);
-        CmdSpawnRelic(GetRandPosNotUnderAnyOtherPlanes(largestPlaneIndex) + Vector3.up * scale);
+
+        Vector3 position = GetRandPosNotUnderAnyOtherPlanes(0, 0.1f, 10);
+        if (position.x > float.MaxValue / 2f)
+            position = Utility.GetRandomPointInPlane(sortedPlanes[0]);
+
+        CmdSpawnRelic(position + Vector3.up * scale);
+
+        position = GetRandPosNotUnderAnyOtherPlanes(largestPlaneIndex, 0.1f, 10);
+        if (position.x > float.MaxValue / 2f)
+            position = Utility.GetRandomPointInPlane(sortedPlanes[largestPlaneIndex]);
+
+        CmdSpawnRelic(position + Vector3.up * scale);
     }
 
-    System.Collections.IEnumerator SpawnEnvObjs()
+    /// <summary>
+    /// Coroutine for spawning environment objects
+    /// </summary>
+    private System.Collections.IEnumerator SpawnEnvObjs()
     {
         int planeCount = sortedPlanes.Count;
         int relicCount = relicObjList.Count;
-        List<Vector3> spawnedLoc = new List<Vector3>();
+        List<Vector3> spawnedList = new List<Vector3>();
         for (int i = 0; i < planeCount; i++)
         {
-            int spawnCount = (int)(Utility.GetAreaSqr(sortedPlanes[i]));
-            spawnCount = Mathf.Clamp(spawnCount, 1, 6);
-            spawnedLoc.Clear();
-            for (int j = 0; j < spawnCount; j++)
-            {
-                Vector3 spawnPos = GetRandPosNotUnderAnyOtherPlanes(i);
-                int totalCount = relicCount + spawnedLoc.Count;
-                for (int k = 0; k < totalCount; k++)
-                {
-                    if (k < relicCount)
-                    {
-                        if (Mathf.Abs(spawnPos.x - relicObjList[k].transform.position.x) + Mathf.Abs(spawnPos.z - relicObjList[k].transform.position.z) < 0.2f)
-                        {
-                            spawnPos = GetRandPosNotUnderAnyOtherPlanes(i);
-                            k = 0;
-                        }
-                    }
-                    else
-                    {
-                        if (Mathf.Abs(spawnPos.x - spawnedLoc[k - relicCount].x) + Mathf.Abs(spawnPos.z - spawnedLoc[k - relicCount].z) < 0.2f)
-                        {
-                            spawnPos = GetRandPosNotUnderAnyOtherPlanes(i);
-                            k = 0;
-                        }
-                    }
+            spawnedList.Clear();
 
-                    yield return new WaitForSeconds(0.001f);
+            /*
+            float threshold = 3f;
+            if (Utility.GetAreaSqr(sortedPlanes[i]) > threshold)
+            {
+                int rndmIndex = Random.Range(0, environmentData.landMarkDataList.Length);
+                float radius = environmentData.landMarkDataList[rndmIndex].radius;
+
+                Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, spawnedList);
+
+                CmdSpawnEnvLandMark(spawnPos + Vector3.up * scale, rndmIndex, Random.Range(0f, 360f));
+                spawnPos.y = radius;
+                spawnedList.Add(spawnPos);
+
+                yield return new WaitForSeconds(0.001f);
+            }
+            */
+
+            int structureSpawnCount = (int)(Utility.GetAreaSqr(sortedPlanes[i]) * 2.0f);
+            structureSpawnCount = Mathf.Clamp(structureSpawnCount, 2, 20);
+            for (int j = 0; j < structureSpawnCount; j++)
+            {
+                int rndmIndex = Random.Range(0, environmentData.structureDataList.Length);
+                float radius = environmentData.structureDataList[rndmIndex].radius;
+
+                Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, spawnedList, 10);
+                if (spawnPos.x > float.MaxValue / 2f) continue;
+                else
+                {
+                    CmdSpawnEnvStructure(spawnPos + Vector3.up * scale, rndmIndex, Random.Range(0f, 360f));
+                    spawnPos.y = radius;
+                    spawnedList.Add(spawnPos);
                 }
-                spawnedLoc.Add(spawnPos);
-                if (Random.value < 0.5f)
-                    CmdSpawnEnvStructure(spawnPos + Vector3.up * scale, Random.Range(0, environmentData.structureDataList.Length), Random.Range(0f, 360f));
-                else CmdSpawnEnvDecor(spawnPos + Vector3.up * scale, Random.Range(0, environmentData.decorDataList.Length), Random.Range(0f, 360f));
-                yield return new WaitForSeconds(0.05f);
+
+                yield return new WaitForSeconds(0.001f);
             }
 
-            yield return new WaitForSeconds(0.05f);
+            int decorSpawnCount = (int)(Utility.GetAreaSqr(sortedPlanes[i]) * 1.0f);
+            decorSpawnCount = Mathf.Clamp(decorSpawnCount, 5, 10);
+            for (int j = 0; j < decorSpawnCount; j++)
+            {
 
+                int rndmIndex = Random.Range(0, environmentData.decorDataList.Length);
+                float radius = environmentData.decorDataList[rndmIndex].radius;
+
+                Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, spawnedList, 5);
+                if (spawnPos.x > float.MaxValue / 2f) continue;
+                else
+                {
+                    CmdSpawnEnvDecor(spawnPos + Vector3.up * scale, rndmIndex, Random.Range(0f, 360f));
+                    spawnPos.y = radius;
+                    spawnedList.Add(spawnPos);
+                }
+
+                yield return new WaitForSeconds(0.001f);
+            }
         }
+
+        yield return null;
+    }
+
+    private Vector3 GetEnvObjSpawnPos(float radius, int planeIndex, int relicCount, List<Vector3> spawnedList, int maxTries)
+    {
+        Vector3 spawnPos = GetRandPosNotUnderAnyOtherPlanes(planeIndex, radius, maxTries);
+        int countOfObjToCheckFor = relicCount + spawnedList.Count;
+        int tries = 0;
+        for (int k = 0; k < countOfObjToCheckFor; k++)
+        {
+            if (k < relicCount)
+            {
+                if (Mathf.Pow(spawnPos.x - relicObjList[k].transform.position.x, 2f) +
+                    Mathf.Pow(spawnPos.z - relicObjList[k].transform.position.z, 2f) <
+                    Mathf.Pow(radius + 0.2f, 2f))
+                {
+                    spawnPos = GetRandPosNotUnderAnyOtherPlanes(planeIndex, radius, maxTries);
+                    if (spawnPos.x > float.MaxValue / 2f) return spawnPos;
+                    k = 0;
+                }
+            }
+            else
+            {
+                int index = k - relicCount;
+                if (Mathf.Pow(spawnPos.x - spawnedList[index].x, 2f) +
+                    Mathf.Pow(spawnPos.z - spawnedList[index].z, 2f) <
+                    Mathf.Pow(spawnedList[index].y + radius, 2f))
+                {
+                    spawnPos = GetRandPosNotUnderAnyOtherPlanes(planeIndex, radius, maxTries);
+                    if (spawnPos.x > float.MaxValue / 2f) return spawnPos;
+
+                    k = 0;
+                    tries++;
+
+                    if (tries > maxTries) return Vector3.one * float.MaxValue;
+                }
+            }
+        }
+
+        return spawnPos;
     }
 
     private void SpawnEntrances()
@@ -558,7 +629,7 @@ public class ARSetUp : PlayerComponent
         for (int i = 1; i < sortedPlanes.Count; i++)
         {
             if (usedIndecies.Contains(i)) continue;
-            else CmdSpawnEntrance(GetRandPosNotUnderAnyOtherPlanes(i) + Vector3.up * scale);
+            else CmdSpawnEntrance(GetRandPosNotUnderAnyOtherPlanes(i, 0.1f, int.MaxValue) + Vector3.up * scale);
         }
     }
 
