@@ -5,4 +5,5 @@ using UnityEngine;
 public class Launchable : MonoBehaviour
 {
     public GameObject Player;
+    public string button;
 }

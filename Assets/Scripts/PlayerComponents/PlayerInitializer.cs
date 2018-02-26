@@ -21,6 +21,8 @@ public class PlayerInitializer : NetworkBehaviour
     public GameObject ARCamera;
     public GameObject VRCamera;
 
+    public Collider VRCollider;
+
     [SerializeField]
     [SyncVar]
     private int playerType;
@@ -64,7 +66,7 @@ public class PlayerInitializer : NetworkBehaviour
             gameObject.layer = LayerMask.NameToLayer("VRPlayer");
 
             GetComponent<NetworkTransformChild>().target = VRAvatar.transform;
-            VRAvatar.GetComponent<Collider>().enabled = true;
+            VRCollider.enabled = true;
         }
 
         InitComponents();

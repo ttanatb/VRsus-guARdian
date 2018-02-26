@@ -421,6 +421,39 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!21 &739670141
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Sprites/Default
+  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AlphaTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - PixelSnap: 0
+    - _EnableExternalAlpha: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &957836683 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1454309444057426, guid: 3ea427f79cecd28488a33e68d057765a,
@@ -479,100 +512,20 @@ Prefab:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 114990235969364044, guid: 2b88d74d2980d2f419f42467c2ea53f3,
-        type: 2}
-      propertyPath: m_AssetId.i0
-      value: 43
-      objectReference: {fileID: 0}
-    - target: {fileID: 114990235969364044, guid: 2b88d74d2980d2f419f42467c2ea53f3,
-        type: 2}
-      propertyPath: m_AssetId.i1
-      value: 136
-      objectReference: {fileID: 0}
-    - target: {fileID: 114990235969364044, guid: 2b88d74d2980d2f419f42467c2ea53f3,
-        type: 2}
-      propertyPath: m_AssetId.i2
-      value: 215
-      objectReference: {fileID: 0}
-    - target: {fileID: 114990235969364044, guid: 2b88d74d2980d2f419f42467c2ea53f3,
-        type: 2}
-      propertyPath: m_AssetId.i3
-      value: 77
-      objectReference: {fileID: 0}
-    - target: {fileID: 114990235969364044, guid: 2b88d74d2980d2f419f42467c2ea53f3,
-        type: 2}
-      propertyPath: m_AssetId.i4
-      value: 41
-      objectReference: {fileID: 0}
-    - target: {fileID: 114990235969364044, guid: 2b88d74d2980d2f419f42467c2ea53f3,
-        type: 2}
-      propertyPath: m_AssetId.i5
-      value: 128
-      objectReference: {fileID: 0}
-    - target: {fileID: 114990235969364044, guid: 2b88d74d2980d2f419f42467c2ea53f3,
-        type: 2}
-      propertyPath: m_AssetId.i6
-      value: 210
-      objectReference: {fileID: 0}
-    - target: {fileID: 114990235969364044, guid: 2b88d74d2980d2f419f42467c2ea53f3,
-        type: 2}
-      propertyPath: m_AssetId.i7
-      value: 244
-      objectReference: {fileID: 0}
-    - target: {fileID: 114990235969364044, guid: 2b88d74d2980d2f419f42467c2ea53f3,
-        type: 2}
-      propertyPath: m_AssetId.i8
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 114990235969364044, guid: 2b88d74d2980d2f419f42467c2ea53f3,
-        type: 2}
-      propertyPath: m_AssetId.i9
-      value: 244
-      objectReference: {fileID: 0}
-    - target: {fileID: 114990235969364044, guid: 2b88d74d2980d2f419f42467c2ea53f3,
-        type: 2}
-      propertyPath: m_AssetId.i10
-      value: 36
-      objectReference: {fileID: 0}
-    - target: {fileID: 114990235969364044, guid: 2b88d74d2980d2f419f42467c2ea53f3,
-        type: 2}
-      propertyPath: m_AssetId.i11
-      value: 103
-      objectReference: {fileID: 0}
-    - target: {fileID: 114990235969364044, guid: 2b88d74d2980d2f419f42467c2ea53f3,
-        type: 2}
-      propertyPath: m_AssetId.i12
-      value: 194
-      objectReference: {fileID: 0}
-    - target: {fileID: 114990235969364044, guid: 2b88d74d2980d2f419f42467c2ea53f3,
-        type: 2}
-      propertyPath: m_AssetId.i13
-      value: 234
-      objectReference: {fileID: 0}
-    - target: {fileID: 114990235969364044, guid: 2b88d74d2980d2f419f42467c2ea53f3,
-        type: 2}
-      propertyPath: m_AssetId.i14
-      value: 83
-      objectReference: {fileID: 0}
-    - target: {fileID: 114990235969364044, guid: 2b88d74d2980d2f419f42467c2ea53f3,
-        type: 2}
-      propertyPath: m_AssetId.i15
-      value: 243
-      objectReference: {fileID: 0}
     - target: {fileID: 23882320121821962, guid: 2b88d74d2980d2f419f42467c2ea53f3,
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 1939570484}
+      objectReference: {fileID: 739670141}
     - target: {fileID: 33239801426502594, guid: 2b88d74d2980d2f419f42467c2ea53f3,
         type: 2}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 1411897654}
+      objectReference: {fileID: 1283397641}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2b88d74d2980d2f419f42467c2ea53f3, type: 2}
   m_IsPrefabParent: 0
---- !u!43 &1411897654
+--- !u!43 &1283397641
 Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -702,39 +655,6 @@ Mesh:
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
   m_MeshOptimized: 0
---- !u!21 &1939570484
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Sprites/Default
-  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _AlphaTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - PixelSnap: 0
-    - _EnableExternalAlpha: 0
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1985337487
 GameObject:
   m_ObjectHideFlags: 0
