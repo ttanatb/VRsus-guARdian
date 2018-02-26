@@ -21,7 +21,7 @@ public class EnvDecorPropTest : MonoBehaviour
                 Quaternion.identity).GetComponent<EnvironmentObject>();
             x += data.radius;
 
-            obj.RpcInit(0,i);
+            obj.Init(0,i);
         }
 
 
@@ -36,7 +36,7 @@ public class EnvDecorPropTest : MonoBehaviour
                 Quaternion.identity).GetComponent<EnvironmentObject>();
             x += data.radius;
 
-            obj.RpcInit(1, i);
+            obj.Init(1, i);
         }
 
         count = decorListObj.landMarkDataList.Length;
@@ -50,7 +50,7 @@ public class EnvDecorPropTest : MonoBehaviour
                 Quaternion.identity).GetComponent<EnvironmentObject>();
             x += data.radius;
 
-            obj.RpcInit(2, i);
+            obj.Init(2, i);
         }
     }
 }

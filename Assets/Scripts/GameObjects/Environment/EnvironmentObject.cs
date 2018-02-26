@@ -22,6 +22,8 @@ public class EnvironmentObject : NetworkBehaviour
 
     private void Init()
     {
+        transform.localScale = Vector3.one;
+
         int count = environmentObjectData.capColDatas.Length;
         bool collider = false;
         for (int i = 0; i < count; i++)
@@ -70,7 +72,6 @@ public class EnvironmentObject : NetworkBehaviour
         }
 
         radius = environmentObjectData.radius;
-
     }
 
     [ClientRpc]
@@ -90,6 +91,24 @@ public class EnvironmentObject : NetworkBehaviour
         }
 
         Invoke("Init", 5f);
+    }
+
+    public void Init(int type, int index)
+    {
+        switch (type)
+        {
+            case 0:
+                environmentObjectData = environmentData.decorDataList[index];
+                break;
+            case 1:
+                environmentObjectData = environmentData.structureDataList[index];
+                break;
+            default:
+                environmentObjectData = environmentData.landMarkDataList[index];
+                break;
+        }
+
+        Init();
     }
 
     private void OnDrawGizmos()

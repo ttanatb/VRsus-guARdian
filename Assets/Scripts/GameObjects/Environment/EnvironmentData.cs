@@ -38,31 +38,50 @@ public struct EnvironmentObjectData
         if (meshMatCount >= meshMatDatas.Length)
         {
             MeshMatData[] newArr = new MeshMatData[meshMatDatas.Length + 1];
+            for(int i = 0; i < meshMatDatas.Length; i++)
+            {
+                newArr[i] = meshMatDatas[i];
+            }
             meshMatDatas = newArr;
         }
 
         meshMatDatas[meshMatCount] = new MeshMatData(mesh, mats, scale, pos);
         meshMatCount++;
-    }
 
-    public void SetBoxCols(BoxCollider[] collider)
-    {
-        boxColDatas = new BoxColliderData[collider.Length];
-        for (int i = 0; i < collider.Length; i++)
+        for (int i = 0; i < meshMatDatas.Length; i++)
         {
-            boxColDatas[i] = new BoxColliderData(collider[i].center, collider[i].size);
+            Debug.Log("Added " + meshMatDatas[i].mesh + ", " + meshMatDatas[i].mats[0]);
         }
     }
 
-    public void AddCapCols(CapsuleCollider[] collider)
+    public void SetBoxCols(BoxCollider[] collider, float scale, Vector3 offset)
     {
-        capColDatas = new CapsuleColliderData[collider.Length];
+        BoxColliderData[] newBoxColDatas = new BoxColliderData[collider.Length + boxColDatas.Length];
         for (int i = 0; i < collider.Length; i++)
         {
-            capColDatas[i] = new CapsuleColliderData(collider[i].center,
-                collider[i].radius,
-                collider[i].height);
+            newBoxColDatas[i] = new BoxColliderData(collider[i].center * scale + offset, collider[i].size * scale);
+        }
 
+        for (int i = collider.Length; i < newBoxColDatas.Length; i++)
+        {
+            newBoxColDatas[i] = boxColDatas[i - collider.Length];
+        }
+    }
+
+    public void AddCapCols(CapsuleCollider[] collider, float scale, Vector3 offset)
+    {
+        CapsuleColliderData[] newCapColDatas = new CapsuleColliderData[collider.Length + capColDatas.Length];
+        for (int i = 0; i < collider.Length; i++)
+        {
+            newCapColDatas[i] = new CapsuleColliderData(collider[i].center * scale + offset,
+                collider[i].radius * scale,
+                collider[i].height * scale);
+
+        }
+
+        for (int i = collider.Length; i < newCapColDatas.Length; i++)
+        {
+            newCapColDatas[i] = capColDatas[i - collider.Length];
         }
     }
 
@@ -77,14 +96,14 @@ public struct EnvironmentObjectData
             Vector3 min = b.min * meshMatDatas[i].scale + meshMatDatas[i].posOffset;
             Vector3 max = b.max * meshMatDatas[i].scale + meshMatDatas[i].posOffset;
 
-            if (min.x < minX) minX = min.x;
-            if (max.x > maxX) maxX = max.x;
+            minX = Mathf.Min(minX, min.x);
+            maxX = Mathf.Max(maxX, max.x);
 
-            if (min.z < minZ) minZ = min.z;
-            if (max.z > maxZ) maxZ = max.z;
+            minZ = Mathf.Min(minZ, min.z);
+            maxZ = Mathf.Max(maxZ, max.z);
         }
 
-        radius = Mathf.Max(maxX - minX, maxZ - minZ) / 2f;
+        radius = Mathf.Max(Mathf.Abs(maxX), Mathf.Abs(minX), Mathf.Abs(minZ), Mathf.Abs(maxZ));
     }
 }
 

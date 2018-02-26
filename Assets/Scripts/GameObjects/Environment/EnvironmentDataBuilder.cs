@@ -30,20 +30,41 @@ public class EnvironmentDataBuilder : MonoBehaviour
                 EnvironmentObjectData envObj = new EnvironmentObjectData(0); // Mathf.Max(b.size.x, b.size.z) * scale);
 
                 CapsuleCollider[] cCol = obj.GetComponents<CapsuleCollider>();
-                envObj.AddCapCols(cCol);
+                envObj.AddCapCols(cCol, obj.transform.localScale.x, Vector3.zero);
 
                 BoxCollider[] bCol = obj.GetComponents<BoxCollider>();
-                envObj.SetBoxCols(bCol);
+                envObj.SetBoxCols(bCol, obj.transform.localScale.x, Vector3.zero);
 
                 int childCount = obj.transform.childCount;
+                Debug.Log(obj.name + " has " + childCount + " children");
                 for (int j = 0; j < childCount; j++)
                 {
                     Transform child = obj.transform.GetChild(j);
-                    if (!child.GetComponent<MeshRenderer>()) continue;
+                    Debug.Log("Working with " + child.name);
+                    MeshRenderer mRenderer = child.GetComponent<MeshRenderer>();
+                    if (mRenderer)
+                    {
+                        Debug.Log("Getting mesh/mat from " + child.name);
+                        envObj.AddMeshMat(child.GetComponent<MeshFilter>().sharedMesh,
+                            mRenderer.sharedMaterials,
+                            child.localScale.x * obj.transform.localScale.x, child.localPosition);
+                    }
+                    else
+                    {
+                        Debug.Log(child.name + " has no mesh/mat");
+                    }
 
-                    envObj.AddMeshMat(child.GetComponent<MeshFilter>().sharedMesh,
-                        child.GetComponent<MeshRenderer>().sharedMaterials,
-                        child.localScale.x, child.localPosition);
+                    if (child.GetComponent<Collider>())
+                    {
+                        envObj.AddCapCols(child.GetComponents<CapsuleCollider>(), child.localScale.x, child.localPosition);
+                        envObj.SetBoxCols(child.GetComponents<BoxCollider>(), child.localScale.x, child.localPosition);
+                    }
+                }
+
+                MeshRenderer objMeshRenderer = obj.GetComponent<MeshRenderer>();
+                if (objMeshRenderer)
+                {
+                    envObj.AddMeshMat(obj.GetComponent<MeshFilter>().sharedMesh, objMeshRenderer.sharedMaterials, obj.transform.localScale.x, transform.position);
                 }
 
                 envObj.CalcRadius();
@@ -69,5 +90,7 @@ public class EnvironmentDataBuilder : MonoBehaviour
         AssetDatabase.CreateAsset(decorList, "Assets/EnvironmentAssetData/Test.asset");
         AssetDatabase.SaveAssets();
 #endif
+
+        Debug.Log("Done building Test.asset!");
     }
 }
