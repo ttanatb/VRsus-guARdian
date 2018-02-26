@@ -130,3 +130,4 @@ MonoBehaviour:
     m_Bits: 256
   collisionCheckDistance: 2
   playerTravelTime: 1
+  lifetime: 5

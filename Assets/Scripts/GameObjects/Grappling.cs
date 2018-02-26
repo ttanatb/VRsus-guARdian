@@ -8,10 +8,16 @@ public class Grappling : Launchable
     public LayerMask collisionLayers;
     public float collisionCheckDistance;
     public float playerTravelTime;
+    public float lifetime;
 
     private bool attached = false;
     private float startTime;
     private Vector3 startPosition;
+
+    void Start()
+    {
+        startTime = Time.time;
+    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -31,6 +37,10 @@ public class Grappling : Launchable
         else
         {
             transform.position += transform.forward * speed;
+            if (Time.time - startTime > lifetime)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 
