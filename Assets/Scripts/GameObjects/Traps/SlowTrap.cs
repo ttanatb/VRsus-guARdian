@@ -6,7 +6,6 @@ using UnityEngine.Networking;
 public class SlowTrap : TrapDefense
 {
     public float radius = 5f;
-    private float radiusSqr;
     public MeshRenderer areaRenderer;
     private SphereCollider radiusCollider;
     private bool isActive = false;
@@ -21,7 +20,6 @@ public class SlowTrap : TrapDefense
     public override void OnStartServer()
     {
         GetComponent<MeshRenderer>().enabled = true;
-        radiusSqr = Mathf.Pow(radius, 2);
         radiusCollider = gameObject.AddComponent<SphereCollider>();
         radiusCollider.radius = radius;
         radiusCollider.isTrigger = true;

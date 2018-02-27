@@ -41,6 +41,9 @@ public class Movement : PlayerComponent
 
     public float CurrJumpEnergy { get { return currJumpEnergy; } }
 
+    public GameObject leftController;
+    public GameObject rightController;
+
     // Use this for initialization
     void Awake()
     {
@@ -180,7 +183,9 @@ public class Movement : PlayerComponent
 
     private void FixedUpdate()
     {
-        if (rigidBody && isPlaying && isLocalPlayer)
+        if (!isLocalPlayer) return;
+
+        if (rigidBody && isPlaying)
         {
             if (!UnityEngine.XR.XRSettings.enabled)
             {
@@ -216,25 +221,29 @@ public class Movement : PlayerComponent
             }
             else
             {
-                Vector3 movement = Vector3.zero;
+                Vector3 movementX = Vector3.zero;
+                Vector3 movementY = Vector3.zero;
 
                 if (Input.GetAxis("VRLeftHorizontal") != 0 || Input.GetAxis("VRLeftVertical") != 0)
                 {
-                    movement = transform.Find("[CameraRig]").Find("Controller (left)").right * Input.GetAxis("VRLeftHorizontal");
+                    movementX = leftController.transform.right * Input.GetAxis("VRLeftHorizontal") * movementSpeed;
 
-                    movement = (movement + transform.Find("[CameraRig]").Find("Controller (left)").forward * Input.GetAxis("VRLeftVertical")) * movementSpeed;
+                    movementY = (leftController.transform.forward * Input.GetAxis("VRLeftVertical")) * movementSpeed;
                 }
                 else if (Input.GetAxis("VRRightHorizontal") != 0 || Input.GetAxis("VRRightVertical") != 0)
                 {
-                    movement = transform.Find("[CameraRig]").Find("Controller (right)").right * Input.GetAxis("VRRightHorizontal");
+                    movementX = rightController.transform.right * Input.GetAxis("VRRightHorizontal") * movementSpeed;
 
-                    movement = (movement + transform.Find("[CameraRig]").Find("Controller (right)").forward * Input.GetAxis("VRRightVertical")) * movementSpeed;
+                    movementY = (rightController.transform.forward * Input.GetAxis("VRRightVertical")) * movementSpeed;
                 }
 
                 if (slowTimer > 0f)
-                    movement *= Mathf.Lerp(1.0f, slowFactor, slowTimer / MAX_SLOW_TIME);
+                {
+                    movementX *= Mathf.Lerp(1.0f, slowFactor, slowTimer / MAX_SLOW_TIME);
+                    movementY *= Mathf.Lerp(1.0f, slowFactor, slowTimer / MAX_SLOW_TIME);
+                }
 
-                rigidBody.MovePosition(movement + transform.position);
+                rigidBody.MovePosition(movementX + movementY + transform.position);
             }
         }
     }

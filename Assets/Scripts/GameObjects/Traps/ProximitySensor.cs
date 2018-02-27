@@ -10,7 +10,6 @@ public class ProximitySensor : TrapDefense
 {
     #region Fields
     public float radius = 3;
-    private float radiusSqr;
     private ParticleSystem alertParticles;
     public MeshRenderer radiusRenderer;
     private MeshRenderer meshRenderer;
@@ -44,7 +43,6 @@ public class ProximitySensor : TrapDefense
         }
 
         //calc radius sqr
-        radiusSqr = Mathf.Pow(radius, 2);
         transform.GetChild(0).localScale *= radius * 2;// transform.localScale.x;
         radiusCollider = gameObject.AddComponent<SphereCollider>();
         radiusCollider.radius = radius;
