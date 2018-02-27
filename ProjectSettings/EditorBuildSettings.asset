@@ -6,5 +6,5 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/MainDifferentPlayerSpawning.unity
-    guid: 25e867fee66dd3a48a6ecc7fd6017b6f
+    path: Assets/Scenes/Main.unity
+    guid: ea95106cc5508c24f94a8a61b4b473ef
