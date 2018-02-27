@@ -5,13 +5,13 @@
 /// 
 /// Author: Tanat Boozayaangool
 /// </summary>
-public class LaserParticle : MonoBehaviour
+public class LaserParticle : SingletonMonoBehaviour<LaserParticle>
 {
     private ParticleSystem particles;
 
-    // Use this for initialization
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         particles = GetComponent<ParticleSystem>();
     }
 

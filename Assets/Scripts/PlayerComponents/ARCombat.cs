@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 /// 
 /// Author: Tanat Boozayaangool
 /// </summary>
-public class ARCombat : Combat
+public class ARCombat : PlayerComponent
 {
     #region Fields
     //public fields
@@ -60,8 +60,8 @@ public class ARCombat : Combat
         InitObj();
 
         laser.enabled = true;
-        laserParticle = FindObjectOfType<LaserParticle>();
-        avatar = GetComponent<PlayerInitializer>().ARAvatar.transform;
+        laserParticle = LaserParticle.Instance;
+        avatar = GetComponent<PlayerInitializer>().avatar.transform;
     }
 
     protected override void InitObj()
@@ -144,21 +144,15 @@ public class ARCombat : Combat
             if (Physics.Raycast(avatar.position, -avatar.forward, out hit, layerMaxDist, laserLayerMask))
             {
                 laserPoint = hit.point;
-
-                //Needs rework
                 if (hit.transform.tag == "Player")
                 {
-                    Combat combat = hit.transform.GetComponent<Combat>();
-                    if (!combat)
-                        combat = hit.transform.GetComponent<CameraAvatar>().RootPlayer;
-
+                    VRCombat combat = hit.transform.GetComponent<VRCombat>();
                     combat.TakeDamage();
                 }
             }
 
             //puts it at the furthest distance
-            else
-                laserPoint = avatar.position + avatar.forward * layerMaxDist;
+            else laserPoint = avatar.position + avatar.forward * layerMaxDist;
 
             //updates timer
             laserTimer += Time.deltaTime;

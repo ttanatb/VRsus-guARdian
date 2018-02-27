@@ -66,6 +66,8 @@ public struct EnvironmentObjectData
         {
             newBoxColDatas[i] = boxColDatas[i - collider.Length];
         }
+
+        boxColDatas = newBoxColDatas;
     }
 
     public void AddCapCols(CapsuleCollider[] collider, float scale, Vector3 offset)
@@ -83,6 +85,8 @@ public struct EnvironmentObjectData
         {
             newCapColDatas[i] = capColDatas[i - collider.Length];
         }
+
+        capColDatas = newCapColDatas;
     }
 
     public void CalcRadius()

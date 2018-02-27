@@ -52,7 +52,7 @@ public class SlowTrap : TrapDefense
         if (!isServer) return;
         if (other.tag == "Player")
         {
-            other.GetComponent<CameraAvatar>().RootPlayer.GetComponent<Movement>().RpcSlow();
+            other.transform.parent.GetComponent<Movement>().RpcSlow();
         }
     }
 

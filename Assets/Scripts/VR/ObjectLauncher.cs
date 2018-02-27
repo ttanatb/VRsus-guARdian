@@ -6,8 +6,8 @@ public class ObjectLauncher : MonoBehaviour {
 
     public GameObject player;
     public GameObject launchObject;
-    public float force;
-    public string button;
+    public float force = 5;
+    public string button = "Sprint";
 	
 	// Update is called once per frame
 	void Update () {

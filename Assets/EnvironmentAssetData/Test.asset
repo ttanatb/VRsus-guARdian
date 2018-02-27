@@ -13,26 +13,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   decorDataList:
   - meshMatDatas:
-    - mesh: {fileID: 4300000, guid: 0b2d7b0088b115642a7e09560617e13a, type: 3}
-      mats:
-      - {fileID: 2100000, guid: 9161e11776e80024f8c8da856f91003d, type: 2}
-      scale: 3.2227895
-      posOffset: {x: 0, y: 0, z: 0}
-    boxColDatas: []
-    capColDatas: []
-    radius: 0.10880958
-    isLandMark: 0
-  - meshMatDatas:
-    - mesh: {fileID: 4300000, guid: 87c51e63c0fb1a4429570d628cd88a3d, type: 3}
-      mats:
-      - {fileID: 2100000, guid: 735bcf9c78694644496fdd98bbbde0e3, type: 2}
-      scale: 1.8236457
-      posOffset: {x: 0, y: 0, z: 0}
-    boxColDatas: []
-    capColDatas: []
-    radius: 0.3694171
-    isLandMark: 0
-  - meshMatDatas:
     - mesh: {fileID: 4300000, guid: 30509994b124a974c99388c5f7fec882, type: 3}
       mats:
       - {fileID: 2100000, guid: 755da051ce3b5634a8d6d2a9e7ee9d24, type: 2}
@@ -41,16 +21,6 @@ MonoBehaviour:
     boxColDatas: []
     capColDatas: []
     radius: 0.032283116
-    isLandMark: 0
-  - meshMatDatas:
-    - mesh: {fileID: 4300002, guid: 03d47412d33ebc14ebc64fe18285729e, type: 3}
-      mats:
-      - {fileID: 2100000, guid: 99284c110cd450b4a9e9711b94505165, type: 2}
-      scale: 2.8939154
-      posOffset: {x: 0, y: 0, z: 0}
-    boxColDatas: []
-    capColDatas: []
-    radius: 0.63396037
     isLandMark: 0
   - meshMatDatas:
     - mesh: {fileID: 4300000, guid: bb612604c3ca3ae469317c6da373c13a, type: 3}
@@ -77,10 +47,10 @@ MonoBehaviour:
       mats:
       - {fileID: 2100000, guid: e7228ce86c47e664eb87d7a30a0c0ff9, type: 2}
       scale: 0.2271585
-      posOffset: {x: 0.038, y: 0, z: 0}
+      posOffset: {x: 0, y: 0, z: 0}
     boxColDatas: []
     capColDatas: []
-    radius: 0.11113149
+    radius: 0.07313149
     isLandMark: 0
   - meshMatDatas:
     - mesh: {fileID: 4300000, guid: d84c5b6cf9cd5d14f9c1c74c045380b4, type: 3}
@@ -112,20 +82,80 @@ MonoBehaviour:
     capColDatas: []
     radius: 0.03268226
     isLandMark: 0
+  structureDataList:
+  - meshMatDatas:
+    - mesh: {fileID: 4300000, guid: 0b2d7b0088b115642a7e09560617e13a, type: 3}
+      mats:
+      - {fileID: 2100000, guid: 9161e11776e80024f8c8da856f91003d, type: 2}
+      scale: 3.2227895
+      posOffset: {x: 0, y: 0, z: 0}
+    boxColDatas:
+    - center: {x: 0.0038175583, y: 0.15394688, z: 0.0044960976}
+      size: {x: 0.18427658, y: 0.34241676, z: 0.20614529}
+    - center: {x: -0.0021300316, y: 0.3284647, z: 0.0049386024}
+      size: {x: 0.08650589, y: 0.6710926, z: 0.089063644}
+    capColDatas: []
+    radius: 0.10880958
+    isLandMark: 0
+  - meshMatDatas:
+    - mesh: {fileID: 4300000, guid: 87c51e63c0fb1a4429570d628cd88a3d, type: 3}
+      mats:
+      - {fileID: 2100000, guid: 735bcf9c78694644496fdd98bbbde0e3, type: 2}
+      scale: 1.8236457
+      posOffset: {x: 0, y: 0, z: 0}
+    boxColDatas:
+    - center: {x: -0.07315993, y: 0.52233744, z: 0.15609735}
+      size: {x: 0.38180113, y: 0.240242, z: 0.2801572}
+    - center: {x: 0.09429002, y: 0.38821268, z: -0.022702694}
+      size: {x: 0.18264437, y: 0.2111454, z: 0.1508112}
+    capColDatas:
+    - center: {x: 0.0060305595, y: 0.13864088, z: 0.021735668}
+      radius: 0.049800396
+      height: 0.35116768
+    radius: 0.3694171
+    isLandMark: 0
+  - meshMatDatas:
+    - mesh: {fileID: 4300002, guid: 03d47412d33ebc14ebc64fe18285729e, type: 3}
+      mats:
+      - {fileID: 2100000, guid: 99284c110cd450b4a9e9711b94505165, type: 2}
+      scale: 2.8939154
+      posOffset: {x: 0, y: 0, z: 0}
+    boxColDatas:
+    - center: {x: 0.18308592, y: 0.3308897, z: 0.13525629}
+      size: {x: 0.23229313, y: 0.20899391, z: 0.27472842}
+    - center: {x: -0.21055365, y: 0.45659232, z: -0.03273785}
+      size: {x: 0.32871628, y: 0.3002305, z: 0.5029278}
+    capColDatas:
+    - center: {x: 0.018281221, y: 0.09299263, z: 0}
+      radius: 0.049945116
+      height: 0.28499442
+    radius: 0.63396037
+    isLandMark: 0
   - meshMatDatas:
     - mesh: {fileID: 4300000, guid: 718f6570a04471d4187026e41bbf268e, type: 3}
       mats:
       - {fileID: 2100000, guid: e66996a8b9888934fb4d4314378b5766, type: 2}
       scale: 4.993232
-      posOffset: {x: -0.581, y: 0, z: 0}
+      posOffset: {x: 0, y: 0, z: 0}
+    boxColDatas:
+    - center: {x: 0.000000037202476, y: 0.39448783, z: 0.0035101}
+      size: {x: 0.41565058, y: 0.78897566, z: 0.47293222}
+    capColDatas: []
+    radius: 0.23997621
+    isLandMark: 0
+  - meshMatDatas:
     - mesh: {fileID: 4300000, guid: ecca421610a779a43b93175a30510db2, type: 3}
       mats:
       - {fileID: 2100000, guid: 2966810d46de5544cbf5057a07464ea7, type: 2}
       scale: 1.4165971
       posOffset: {x: 0, y: 0, z: 0}
-    boxColDatas: []
-    capColDatas: []
-    radius: 0.7888253
+    boxColDatas:
+    - center: {x: 0.13252468, y: 0.37098932, z: -0.021762706}
+      size: {x: 0.35594425, y: 0.23459911, z: 0.17567511}
+    capColDatas:
+    - center: {x: 0.12644744, y: 0.14232524, z: -0.010799706}
+      radius: 0.030913591
+      height: 0.29267725
+    radius: 0.39756438
     isLandMark: 0
-  structureDataList: []
   landMarkDataList: []

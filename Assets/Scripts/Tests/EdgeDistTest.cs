@@ -22,5 +22,9 @@ public class EdgeDistTest : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        if (tooClose)
+        {
+
+        }
     }
 }

@@ -31,10 +31,7 @@ public class Relic : NetworkBehaviour
 
         if (other.gameObject.tag == "Player")
         {
-            VRCombat combat = other.gameObject.GetComponent<VRCombat>();
-            if (!combat)
-                combat = other.gameObject.GetComponent<CameraAvatar>().RootPlayer.GetComponent<VRCombat>();
-
+            VRCombat combat = other.transform.parent.GetComponent<VRCombat>();
             if (!combat.IsInvulnerable)
             {
                 hasBeenStolen = true;

@@ -366,6 +366,7 @@ public class ARSetUp : PlayerComponent
                 sortedPlanes = LocalObjectBuilder.Instance.GetSortedPlanes();
                 scale = FindObjectOfType<LocalPlane>().transform.localScale.y / 2;
                 SpawnRelics();
+                SpawnEntrances();
                 StartCoroutine("SpawnEnvObjs");
                 RpcBuildTerrain();
                 break;
@@ -374,7 +375,6 @@ public class ARSetUp : PlayerComponent
                 currentlySelectedTrap = null;
                 TogglePreviouslySelectedTrap();
                 foreach (TrapDefense trap in trapObjList) trap.TransitionToPlayPhase();
-                SpawnEntrances();
 
                 VRTransition vrTransition = FindObjectOfType<VRTransition>();
                 if (vrTransition)
@@ -558,7 +558,7 @@ public class ARSetUp : PlayerComponent
                     spawnedList.Add(spawnPos);
                 }
 
-                yield return new WaitForSeconds(0.001f);
+                yield return new WaitForSeconds(0.01f);
             }
 
             int decorSpawnCount = (int)(Utility.GetAreaSqr(sortedPlanes[i]) * 1.0f);
@@ -578,8 +578,11 @@ public class ARSetUp : PlayerComponent
                     spawnedList.Add(spawnPos);
                 }
 
-                yield return new WaitForSeconds(0.001f);
+                yield return new WaitForSeconds(0.01f);
             }
+
+            yield return new WaitForSeconds(0.01f);
+
         }
 
         yield return null;
@@ -629,7 +632,12 @@ public class ARSetUp : PlayerComponent
         for (int i = 1; i < sortedPlanes.Count; i++)
         {
             if (usedIndecies.Contains(i)) continue;
-            else CmdSpawnEntrance(GetRandPosNotUnderAnyOtherPlanes(i, 0.1f, int.MaxValue) + Vector3.up * scale);
+
+            Vector3 position = GetRandPosNotUnderAnyOtherPlanes(i, 0.2f, 10);
+            if (position.x > float.MaxValue / 2f)
+                position = Utility.GetRandomPointInPlane(sortedPlanes[0]);
+
+            CmdSpawnEntrance(position + Vector3.up * scale);
         }
     }
 

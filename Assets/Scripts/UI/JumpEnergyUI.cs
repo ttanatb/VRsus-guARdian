@@ -34,16 +34,16 @@ public class JumpEnergyUI : MonoBehaviour
     void Update()
     {
         //calculate percentage
-        float energyPercentage = player.CurrJumpEnergy / player.jumpEnergyMax;
-        if (energyPercentage < 0f)
-            energyPercentage = 0f;
-        else if (energyPercentage > 1f)
-            energyPercentage = 1f;
+        //float energyPercentage = player.CurrJumpEnergy / player.jumpEnergyMax;
+        //if (energyPercentage < 0f)
+        //    energyPercentage = 0f;
+        //else if (energyPercentage > 1f)
+        //    energyPercentage = 1f;
 
-        //set the scale
-        Vector3 scale = healthBarPivot.localScale;
-        scale.x = Mathf.Lerp(scale.x, energyPercentage, Time.deltaTime * 20f);
-        healthBarPivot.localScale = scale;
+        ////set the scale
+        //Vector3 scale = healthBarPivot.localScale;
+        //scale.x = Mathf.Lerp(scale.x, energyPercentage, Time.deltaTime * 20f);
+        //healthBarPivot.localScale = scale;
     }
     #endregion
 }
