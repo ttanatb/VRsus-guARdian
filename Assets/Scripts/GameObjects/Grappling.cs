@@ -128,7 +128,7 @@ public class Grappling : MonoBehaviour //: Launchable
 
     private void StartRetraction()
     {
-        Debug.Log("Grappling Hook is retracting");
+        //Debug.Log("Grappling Hook is retracting");
         playerMovement.EnableMovement();
         rBody.velocity = -rBody.velocity;
         timer = 0f;// Time.time;
@@ -138,7 +138,7 @@ public class Grappling : MonoBehaviour //: Launchable
 
     private void LetGo()    //let go of the hookshot while traveling
     {
-        Debug.Log("Player let go of grappling hook while traveling");
+        //Debug.Log("Player let go of grappling hook while traveling");
         rBody.isKinematic = false;
         playerRBody.useGravity = true;
         StartRetraction();
@@ -146,7 +146,7 @@ public class Grappling : MonoBehaviour //: Launchable
 
     private void Detach()
     {
-        Debug.Log("Player detaching himself from the wall");
+        //Debug.Log("Player detaching himself from the wall");
         playerRBody.useGravity = true;
         if (Input.GetButton("Jump"))
         {
@@ -159,7 +159,7 @@ public class Grappling : MonoBehaviour //: Launchable
     {
         if (Input.GetButtonDown(button) && !playerMovement.IsSlowed)
         {
-            Debug.Log("Player shot the grappling hook");
+            //Debug.Log("Player shot the grappling hook");
             if (otherGrappling.state == 1) otherGrappling.StartRetraction();
             else if (otherGrappling.state == 2) otherGrappling.LetGo();
 
@@ -180,7 +180,7 @@ public class Grappling : MonoBehaviour //: Launchable
 
         if (collisionLayers == (collisionLayers | (1 << collision.collider.gameObject.layer)))
         {
-            Debug.Log("Grappling hook attached itself to the wall");
+            //Debug.Log("Grappling hook attached itself to the wall");
             if (otherGrappling.state == 3)
             {
                 otherGrappling.LetGo();

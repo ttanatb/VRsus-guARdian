@@ -26,14 +26,14 @@ public class NetworkedGameManager : NetworkManager
 
     public override void OnClientConnect(NetworkConnection conn)
     {
-        Debug.Log("OnClientConnect is called -- now sending data about:");
-        switch (index)
-        {
-            case 0: Debug.Log("Default Player"); break;
-            case 1: Debug.Log("AR Player"); break;
-            case 2: Debug.Log("VR Player"); break;
-            case 3: Debug.Log("PC Player"); break;
-        }
+        //Debug.Log("OnClientConnect is called -- now sending data about:");
+        //switch (index)
+        //{
+        //    case 0: Debug.Log("Default Player"); break;
+        //    case 1: Debug.Log("AR Player"); break;
+        //    case 2: Debug.Log("VR Player"); break;
+        //    case 3: Debug.Log("PC Player"); break;
+        //}
 
 
         IntegerMessage msg = new IntegerMessage(index);
@@ -43,21 +43,21 @@ public class NetworkedGameManager : NetworkManager
 
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId, NetworkReader extraMessageReader)
     {
-        Debug.Log("OnServerAddPlayer is called -- now adding...");
+        //Debug.Log("OnServerAddPlayer is called -- now adding...");
 
         int playerIndex = 0;
         if (extraMessageReader.Length > 0)
         {
             playerIndex = extraMessageReader.ReadMessage<IntegerMessage>().value;
-            Debug.Log("playerIndex is now " + playerIndex);
+            //Debug.Log("playerIndex is now " + playerIndex);
         }
-        switch (playerIndex)
-        {
-            case 0: Debug.Log("Default Player"); break;
-            case 1: Debug.Log("AR Player"); break;
-            case 2: Debug.Log("VR Player"); break;
-            case 3: Debug.Log("PC Player"); break;
-        }
+        //switch (playerIndex)
+        //{
+        //    case 0: Debug.Log("Default Player"); break;
+        //    case 1: Debug.Log("AR Player"); break;
+        //    case 2: Debug.Log("VR Player"); break;
+        //    case 3: Debug.Log("PC Player"); break;
+        //}
 
         GameObject playerObj = Instantiate(playerPrefabs[playerIndex], Vector3.zero, Quaternion.identity);
         NetworkServer.AddPlayerForConnection(conn, playerObj, playerControllerId);
@@ -65,7 +65,7 @@ public class NetworkedGameManager : NetworkManager
 
     public override void OnStartHost()
     {
-        Debug.Log("OnStartHost is Called!");
+        //Debug.Log("OnStartHost is Called!");
         if (isHookshotTest)
             index = 3;
         else index = 1;
@@ -74,7 +74,7 @@ public class NetworkedGameManager : NetworkManager
 
     public override void OnStartClient(NetworkClient client)
     {
-        Debug.Log("OnStartClient is Called!");
+        //Debug.Log("OnStartClient is Called!");
         if (index == -1)
         {
             if (UnityEngine.XR.XRSettings.enabled) index = 2;
