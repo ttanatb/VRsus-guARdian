@@ -1,16 +1,16 @@
 fileFormatVersion: 2
-guid: 24f9a42c3183c2d49ad38b8e352ed080
-timeCreated: 1519373564
-licenseType: Free
+guid: d7eef549c5ecc2b458bb487fe7de7be8
+timeCreated: 1519777734
+licenseType: Pro
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
     400000: //RootNode
-    2100000: decoy
+    2100000: proximitySensor
     2300000: //RootNode
     3300000: //RootNode
-    4300000: ga_decoy
+    4300000: tr_proximitySensor
   externalObjects: {}
   materials:
     importMaterials: 0
@@ -60,7 +60,7 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 0
+    useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
