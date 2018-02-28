@@ -33,6 +33,14 @@ public class Movement : PlayerComponent
     public GameObject leftController;
     public GameObject rightController;
 
+    public GameObject grapplePrefab;
+
+
+    public bool IsSlowed
+    {
+        get { return slowTimer > 0f; }
+    }
+
     // Use this for initialization
     void Awake()
     {
@@ -54,6 +62,20 @@ public class Movement : PlayerComponent
     {
         isPlaying = true;
         InitObj();
+
+        if (playerType == PlayerType.PC && isLocalPlayer)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Grappling left = Instantiate(grapplePrefab).GetComponent<Grappling>();
+            Grappling right = Instantiate(grapplePrefab).GetComponent<Grappling>();
+
+            left.player = gameObject;
+            right.player = gameObject;
+            left.button = "Fire2";
+            right.button = "Fire3";
+            left.otherGrappling = right;
+            right.otherGrappling = left;
+        }
     }
 
     // Update is called once per frame
@@ -147,46 +169,47 @@ public class Movement : PlayerComponent
                     Vector3 newPos = transform.position + movement;
                     transform.position = newPos;
                 }
+
+                if (Input.GetButton("Jump")) Jump();
             }
         }
     }
 
     public void DisableMovement()
     {
-        //throw new NotImplementedException();
         isPlaying = false;
-        if (rBody)
-        {
-            rBody.isKinematic = true;
-        }
     }
 
     public void EnableMovement()
     {
-        //throw new NotImplementedException();
         isPlaying = true;
-        if (rBody)
+    }
+
+    public void Jump()
+    {
+        if (isOnFloor)
         {
-            rBody.isKinematic = false;
+            rBody.AddForce(Vector3.up * 2f, ForceMode.VelocityChange);
+            isOnFloor = false;
         }
     }
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if ((collision.gameObject.tag == "Platform") &&
-    //        (transform.position.y > collision.transform.position.y + collision.transform.localScale.y / 2.1f))
-    //    {
-    //        isOnFloor = true;
-    //    }
-    //}
+    private void OnCollisionEnter(Collision collision)
+    {
+        if ((collision.gameObject.tag == "Platform") &&
+            (transform.position.y > collision.transform.position.y + collision.transform.localScale.y / 2.1f))
+        {
+            isOnFloor = true;
+        }
+    }
 
-    //private void OnCollisionExit(Collision collision)
-    //{
-    //    if (collision.gameObject.tag == "Platform")
-    //    {
-    //        isOnFloor = false;
-    //    }
-    //}
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "Platform")
+        {
+            isOnFloor = false;
+        }
+    }
 
     //[Command]
     //private void CmdTurnOnTrailRenderer()

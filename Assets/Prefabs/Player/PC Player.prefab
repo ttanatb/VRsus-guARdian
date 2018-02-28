@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4113566872201430}
   - component: {fileID: 33571569265416340}
   - component: {fileID: 23068389947900114}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Plane
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 20680594579613456}
   - component: {fileID: 124410602532411594}
   - component: {fileID: 81175471303152914}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: PC Camera
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 33736783778643084}
   - component: {fileID: 23198167243113450}
   - component: {fileID: 95680901961470694}
-  - component: {fileID: 136207388465946996}
+  - component: {fileID: 135533050043412630}
   m_Layer: 11
   m_Name: PC Avatar
   m_TagString: Player
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 114350762494479826}
   - component: {fileID: 114075082641424110}
   - component: {fileID: 114912979153586058}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: PC Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -150,7 +150,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1272844262855460}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.8459114, y: -4.866592, z: 3.0851183}
+  m_LocalPosition: {x: 0.5265771, y: 1000.4246, z: -0.6436999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4863418878657274}
@@ -433,7 +433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144ccfada75bd37409f392fcb9e82622, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 6
+  movementSpeed: 4
   sprintFactor: 1.8
   maxSpeed: 999
   mouseSensitivity: 80
@@ -442,6 +442,8 @@ MonoBehaviour:
   isOnFloor: 0
   leftController: {fileID: 0}
   rightController: {fileID: 0}
+  grapplePrefab: {fileID: 1617336623288622, guid: ac272ad3e742d1e4099a0d1a5b10fbaa,
+    type: 2}
 --- !u!114 &114209850317222902
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -548,8 +550,6 @@ MonoBehaviour:
     type: 2}
   HurtScreenPrefab: {fileID: 1629627864760112, guid: 78673a8e31d0e5e4d9ea031915f3c24b,
     type: 2}
-  grapplePrefab: {fileID: 1617336623288622, guid: ac272ad3e742d1e4099a0d1a5b10fbaa,
-    type: 2}
 --- !u!124 &124410602532411594
 Behaviour:
   m_ObjectHideFlags: 1
@@ -557,8 +557,8 @@ Behaviour:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1064722355016630}
   m_Enabled: 1
---- !u!136 &136207388465946996
-CapsuleCollider:
+--- !u!135 &135533050043412630
+SphereCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -566,7 +566,6 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
+  serializedVersion: 2
   m_Radius: 0.015
-  m_Height: 0.05621906
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.027859101, z: 0}
+  m_Center: {x: 0, y: 0.025, z: -0.001}

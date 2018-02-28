@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0629a2895bf0ef498115790139cf48e, type: 3}
-  m_Name: Test
+  m_Name: Basic
   m_EditorClassIdentifier: 
   decorDataList:
   - meshMatDatas:

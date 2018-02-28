@@ -149,6 +149,7 @@ MonoBehaviour:
   isNetworkActive: 0
   matchMaker: {fileID: 0}
   isArtTest: 0
+  isHookshotTest: 0
   playerPrefabs:
   - {fileID: 1666084624838054, guid: 98fa7a9db562b2a4f965f52845853882, type: 2}
   - {fileID: 1344648828105818, guid: d4e23da9db8d66b4495342d6ab5e54cd, type: 2}

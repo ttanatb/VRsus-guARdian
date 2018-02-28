@@ -7,6 +7,7 @@ using UnityEngine.Networking.NetworkSystem;
 public class NetworkedGameManager : NetworkManager
 {
     public bool isArtTest = false;
+    public bool isHookshotTest = false;
     public GameObject[] playerPrefabs;
 
     private int index = -1;
@@ -17,10 +18,10 @@ public class NetworkedGameManager : NetworkManager
 
     private void Start()
     {
-        if (isArtTest)
+        if (isArtTest || isHookshotTest)
         {
             StartHost();
-        }
+        } 
     }
 
     public override void OnClientConnect(NetworkConnection conn)
@@ -65,7 +66,9 @@ public class NetworkedGameManager : NetworkManager
     public override void OnStartHost()
     {
         Debug.Log("OnStartHost is Called!");
-        index = 1;
+        if (isHookshotTest)
+            index = 3;
+        else index = 1;
         base.OnStartHost();
     }
 

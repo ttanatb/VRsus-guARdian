@@ -43,8 +43,6 @@ public class VRCombat : PlayerComponent
     [SyncVar]
     private int relicCount = 0;
 
-    public GameObject grapplePrefab;
-
     public bool IsInvulnerable { get { return isInvulnerable; } }
     #endregion
 
@@ -67,9 +65,6 @@ public class VRCombat : PlayerComponent
                 hurtFlashes[i] = Instantiate(HurtScreenPrefab, canvas).GetComponent<HurtFlash>();
 
             CanvasManager.Instance.InitHealthEnergyBar(this);
-            ObjectLauncher launcher = gameObject.AddComponent<ObjectLauncher>();
-            launcher.player = gameObject;
-            launcher.launchObject = grapplePrefab;
         }
     }
 
