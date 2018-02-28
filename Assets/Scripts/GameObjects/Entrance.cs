@@ -12,10 +12,12 @@ public class Entrance : NetworkBehaviour
     //Field(s)
     private ARSetUp manager;
     private Renderer mRenderer;
+    private BoxCollider bCollider;
 
     private void Awake()
     {
         mRenderer = GetComponent<MeshRenderer>();
+        bCollider = GetComponent<BoxCollider>();
     }
 
     //Init
@@ -40,10 +42,7 @@ public class Entrance : NetworkBehaviour
         //
         if (other.gameObject.tag == "Player")
         {
-            VRCombat combat = other.gameObject.GetComponent<VRCombat>();
-            if (!combat)
-                combat = other.gameObject.GetComponent<CameraAvatar>().RootPlayer.GetComponent<VRCombat>();
-
+            VRCombat combat = other.transform.parent.GetComponent<VRCombat>();
             if (!combat.IsInvulnerable && combat.GetRelicCount() == 2 && manager.CurrGamePhase != GamePhase.Over)
                 Win(combat);
         }
@@ -65,6 +64,7 @@ public class Entrance : NetworkBehaviour
         if (mRenderer)
         {
             mRenderer.enabled = true;
+            bCollider.enabled = true;
         }
     }
     public void Deactivate()
@@ -72,6 +72,7 @@ public class Entrance : NetworkBehaviour
         if (mRenderer)
         {
             mRenderer.enabled = false;
+            bCollider.enabled = false;
         }
     }
 

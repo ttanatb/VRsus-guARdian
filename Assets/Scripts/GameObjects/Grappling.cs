@@ -22,7 +22,7 @@ public class Grappling : Launchable
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (Input.GetButtonDown("LeftTrigger") || Input.GetButtonDown("RightTrigger"))
+        if (Input.GetButtonDown(button) || Input.GetButtonDown("LeftTrigger") || Input.GetButtonDown("RightTrigger"))
         {
             Destroy(gameObject);
         }
@@ -33,9 +33,13 @@ public class Grappling : Launchable
             if (percent > 1.0f) percent = 1.0f;
 
             Player.transform.position = Vector3.Lerp(startPosition, transform.position, percent);
-
+            Player.GetComponent<Rigidbody>().useGravity = false;
             if (percent >= 1.0f && !Input.GetButton(button))
             {
+                Player.GetComponent<Rigidbody>().useGravity = true;
+                if (Player.GetComponent<PlayerInitializer>().playerType == PlayerType.PC)
+                    Player.GetComponent<Rigidbody>().AddForce(Vector3.up * 5f, ForceMode.VelocityChange);
+
                 Destroy(gameObject);
             }
         }

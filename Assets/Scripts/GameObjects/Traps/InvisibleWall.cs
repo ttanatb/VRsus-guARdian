@@ -11,7 +11,7 @@ public class InvisibleWall : TrapDefense
     //fields
     bool isActive = false;
 
-    public override string TrapName { get { return "Invisible Wall"; } }
+    public override string TrapName { get { return "Rising Wall"; } }
 
     private Animator animator;
     private ParticleSystem particles;

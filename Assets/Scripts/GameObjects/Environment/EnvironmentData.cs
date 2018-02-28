@@ -18,6 +18,7 @@ public struct EnvironmentObjectData
     public CapsuleColliderData[] capColDatas;
     public float radius;
     public bool isLandMark;
+    public float rotY;
 
     /// <summary>
     /// Henlo
@@ -27,13 +28,14 @@ public struct EnvironmentObjectData
     {
         meshMatDatas = new MeshMatData[1];
         meshMatCount = 0;
+        rotY = 0;
         boxColDatas = new BoxColliderData[0];
         capColDatas = new CapsuleColliderData[0];
         this.radius = radius;
         isLandMark = false;
     }
 
-    public void AddMeshMat(Mesh mesh, Material[] mats, float scale, Vector3 pos)
+    public void AddMeshMat(Mesh mesh, Material[] mats, float scale, Vector3 pos, Quaternion rot)
     {
         if (meshMatCount >= meshMatDatas.Length)
         {
@@ -45,7 +47,7 @@ public struct EnvironmentObjectData
             meshMatDatas = newArr;
         }
 
-        meshMatDatas[meshMatCount] = new MeshMatData(mesh, mats, scale, pos);
+        meshMatDatas[meshMatCount] = new MeshMatData(mesh, mats, scale, pos, rot);
         meshMatCount++;
 
         for (int i = 0; i < meshMatDatas.Length; i++)
@@ -66,6 +68,8 @@ public struct EnvironmentObjectData
         {
             newBoxColDatas[i] = boxColDatas[i - collider.Length];
         }
+
+        boxColDatas = newBoxColDatas;
     }
 
     public void AddCapCols(CapsuleCollider[] collider, float scale, Vector3 offset)
@@ -83,6 +87,8 @@ public struct EnvironmentObjectData
         {
             newCapColDatas[i] = capColDatas[i - collider.Length];
         }
+
+        capColDatas = newCapColDatas;
     }
 
     public void CalcRadius()
@@ -114,13 +120,15 @@ public struct MeshMatData
     public Material[] mats;
     public float scale;
     public Vector3 posOffset;
+    public Quaternion rotation;
 
-    public MeshMatData(Mesh mesh, Material[] mats, float scale, Vector3 pos)
+    public MeshMatData(Mesh mesh, Material[] mats, float scale, Vector3 pos, Quaternion rotation)
     {
         this.mesh = mesh;
         this.mats = mats;
         this.scale = scale;
         posOffset = pos;
+        this.rotation = rotation;
     }
 }
 

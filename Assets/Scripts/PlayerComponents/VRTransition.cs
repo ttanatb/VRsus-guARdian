@@ -53,7 +53,7 @@ public class VRTransition : PlayerComponent
         if (isLocalPlayer)
         {
             InitObj(); //creates top-view camera
-            fpsCamera = GetComponent<PlayerInitializer>().VRCamera.GetComponent<Camera>();
+            fpsCamera = GetComponent<PlayerInitializer>().cameraToEnable;
 
             //adjusts the black plane
             Color c = topViewCamObj.transform.GetChild(0).GetComponent<Renderer>().material.color;
@@ -66,7 +66,7 @@ public class VRTransition : PlayerComponent
             SwitchToFPSCam();
             //Invoke("SwitchToFPSCam", 1.75f);
             transform.position = new Vector3(0.759f, 1005f, -0.659f);
-            movement.SwitchToPlaying();
+            movement.EnableMovement();
         }
     }
 
@@ -167,7 +167,7 @@ public class VRTransition : PlayerComponent
         switchingCam = true;
 
         if (movement)
-            movement.SwitchOutOfPlaying();
+            movement.DisableMovement();
 
         IEnumerator fadeOut = FadeOut(fpsCamera, topViewCam, true);
         IEnumerator fadeIn = FadeIn(topViewCam, fpsCamera);
@@ -275,7 +275,7 @@ public class VRTransition : PlayerComponent
         if (!isUsingTopViewCam)
         {
             if (movement)
-                movement.SwitchToPlaying();
+                movement.EnableMovement();
         }
     }
     #endregion

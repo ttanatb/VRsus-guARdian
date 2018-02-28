@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 /// 
 /// Author: Tanat Boozayaangool
 /// </summary>
-public class VRCombat : Combat
+public class VRCombat : PlayerComponent
 {
     #region Fields & Getter
     //reference to components
@@ -43,6 +43,8 @@ public class VRCombat : Combat
     [SyncVar]
     private int relicCount = 0;
 
+    public GameObject grapplePrefab;
+
     public bool IsInvulnerable { get { return isInvulnerable; } }
     #endregion
 
@@ -50,7 +52,7 @@ public class VRCombat : Combat
     private void Start()
     {
         canvas = CanvasManager.Instance.transform;
-        avatar = player.VRAvatar.transform;
+        avatar = player.avatar.transform;
 
         if (!isLocalPlayer)
         {
@@ -65,6 +67,9 @@ public class VRCombat : Combat
                 hurtFlashes[i] = Instantiate(HurtScreenPrefab, canvas).GetComponent<HurtFlash>();
 
             CanvasManager.Instance.InitHealthEnergyBar(this);
+            ObjectLauncher launcher = gameObject.AddComponent<ObjectLauncher>();
+            launcher.player = gameObject;
+            launcher.launchObject = grapplePrefab;
         }
     }
 
@@ -94,7 +99,7 @@ public class VRCombat : Combat
     #endregion
 
     [Server]
-    public override void TakeDamage()
+    public void TakeDamage()
     {
         if (!isServer || isInvulnerable)
             return;
@@ -147,7 +152,7 @@ public class VRCombat : Combat
     IEnumerator Flash(float waitTime)
     {
         //turn this to a fading sort of thing?
-        foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
+        foreach (Renderer r in player.avatar.GetComponentsInChildren<Renderer>())
         {
             r.enabled = false;
         }
@@ -162,7 +167,7 @@ public class VRCombat : Combat
 
         healthBar.GetComponent<Renderer>().enabled = true;
 
-        foreach (Renderer r in player.VRAvatar.GetComponentsInChildren<Renderer>())
+        foreach (Renderer r in player.avatar.GetComponentsInChildren<Renderer>())
         {
             r.enabled = true;
         }

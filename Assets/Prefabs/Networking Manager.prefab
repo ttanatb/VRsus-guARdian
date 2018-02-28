@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4698483435041224}
   - component: {fileID: 114455738654136604}
   - component: {fileID: 114755221778035868}
-  - component: {fileID: 114782453071472088}
   m_Layer: 0
   m_Name: Networking Manager
   m_TagString: Untagged
@@ -90,19 +89,10 @@ MonoBehaviour:
   - {fileID: 1867356746107952, guid: d2bb8064afb387f4fad410add9461b0a, type: 2}
   - {fileID: 1638740177162806, guid: 6244c8c1573a0354fb969f4a2049dbba, type: 2}
   - {fileID: 1909683740957674, guid: 1fba3092cfa8a974584836f5677d505c, type: 2}
-  - {fileID: 1714223766784916, guid: 8f37217f5f8d8034cb4f1233e51cfc32, type: 2}
-  - {fileID: 1449063070523832, guid: 95b8a5171a2258a448c4c1261aed066c, type: 2}
-  - {fileID: 1983023206395498, guid: 5dd07be943358ee4b9546e4d6591b3bd, type: 2}
-  - {fileID: 1102057871626324, guid: 25c298c8c8691564aa5740e8d790354f, type: 2}
-  - {fileID: 1773226119269276, guid: ca8b84cbb44a5704d9dc478cc3c1181d, type: 2}
-  - {fileID: 1543309479513822, guid: d7c7e2006c1525d499c4f3526d43991e, type: 2}
-  - {fileID: 1364293614298260, guid: c209960c742711e49ba029706dfe5cad, type: 2}
-  - {fileID: 1235449713257990, guid: 2d0e418581aed00488bf45153f6c8943, type: 2}
-  - {fileID: 1236379191104268, guid: bacfdf21af4353a4f925e4e32fbc69a0, type: 2}
-  - {fileID: 1736865989048412, guid: 4d3b524b6f1414e46843930647fbef51, type: 2}
-  - {fileID: 1994074772451816, guid: 540fdf8fbf01b844c81ca6d2824d26c5, type: 2}
-  - {fileID: 1714865084936148, guid: 81413f70623daef4ab63fd1931160179, type: 2}
-  - {fileID: 1597944121941250, guid: 637ddea9292829e4480ebb51e6442bea, type: 2}
+  - {fileID: 1955769541861086, guid: 65ec847e51651244b936d7619bb92e7f, type: 2}
+  - {fileID: 1272844262855460, guid: e23082a0aee7ca2458e4cf6615198c59, type: 2}
+  - {fileID: 1344648828105818, guid: d4e23da9db8d66b4495342d6ab5e54cd, type: 2}
+  - {fileID: 1743894219128570, guid: 5565a48e367c22e40bf1620a63e2d373, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -145,7 +135,7 @@ MonoBehaviour:
     m_MaxTimerTimeout: 12000
     m_MinNetSimulatorTimeout: 1
     m_MaxNetSimulatorTimeout: 12000
-  m_Channels: 
+  m_Channels: 0500000000000000
   m_UseWebSockets: 0
   m_UseSimulator: 0
   m_SimulatedLatency: 1
@@ -159,16 +149,8 @@ MonoBehaviour:
   isNetworkActive: 0
   matchMaker: {fileID: 0}
   isArtTest: 0
-  gameManagerPrefab: {fileID: 1382758021586370, guid: 667006c3335635744ab8c37ea92efe1b,
-    type: 2}
---- !u!114 &114782453071472088
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1004519341674348}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95c2f17ce9742644cae982c9762e23fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  playerPrefabs:
+  - {fileID: 1666084624838054, guid: 98fa7a9db562b2a4f965f52845853882, type: 2}
+  - {fileID: 1344648828105818, guid: d4e23da9db8d66b4495342d6ab5e54cd, type: 2}
+  - {fileID: 1743894219128570, guid: 5565a48e367c22e40bf1620a63e2d373, type: 2}
+  - {fileID: 1272844262855460, guid: e23082a0aee7ca2458e4cf6615198c59, type: 2}

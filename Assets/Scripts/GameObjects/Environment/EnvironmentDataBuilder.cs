@@ -47,7 +47,9 @@ public class EnvironmentDataBuilder : MonoBehaviour
                         Debug.Log("Getting mesh/mat from " + child.name);
                         envObj.AddMeshMat(child.GetComponent<MeshFilter>().sharedMesh,
                             mRenderer.sharedMaterials,
-                            child.localScale.x * obj.transform.localScale.x, child.localPosition);
+                            child.localScale.x * obj.transform.localScale.x, 
+                            child.localPosition,
+                            child.localRotation);
                     }
                     else
                     {
@@ -64,7 +66,11 @@ public class EnvironmentDataBuilder : MonoBehaviour
                 MeshRenderer objMeshRenderer = obj.GetComponent<MeshRenderer>();
                 if (objMeshRenderer)
                 {
-                    envObj.AddMeshMat(obj.GetComponent<MeshFilter>().sharedMesh, objMeshRenderer.sharedMaterials, obj.transform.localScale.x, transform.position);
+                    envObj.AddMeshMat(obj.GetComponent<MeshFilter>().sharedMesh, 
+                        objMeshRenderer.sharedMaterials, 
+                        obj.transform.localScale.x, 
+                        Vector3.zero,
+                        obj.transform.localRotation);
                 }
 
                 envObj.CalcRadius();

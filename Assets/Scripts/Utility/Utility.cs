@@ -418,38 +418,6 @@ public class Utility
         return combined;
     }
 
-    /*
-    int startingj = j;
-    for (j = j + 1; j - startingj <= polygon2Count; j++)
-    {
-        if (j > polygon2Count - 1)
-            p1segment1 = polygon2[j - polygon2Count];
-        else p1segment1 = polygon2[j];
-        if (j + 1 > polygon2Count - 1)
-            p1segment2 = polygon2[j - polygon2Count + 1];
-        else p1segment2 = polygon2[j + 1];
-        for (int k = 0; k < polygon1Count; k++)
-        {
-            p2segment1 = polygon1[k];
-            if (k == polygon1Count - 1)
-                p2segment2 = polygon1[0];
-            else p2segment2 = polygon1[k + 1];
-
-            didIntersect = CheckIntersectionBetweenSegments(p1segment1, p1segment2, p2segment1, p2segment2, out intersectionPt);
-            if (didIntersect)
-            {
-                combined.Add(intersectionPt);
-                combined.Add(p2segment2);
-                i = k + 1;
-                break;
-            }
-        }
-
-        if (!didIntersect)
-            combined.Add(p1segment2);
-        else break;
-    }
-    */
     public static bool CheckIntersectionBetweenSegments(Vector3 s1v1, Vector3 s1v2, Vector3 s2v1, Vector3 s2v2, out Vector3 intersectingPos)
     {
         //https://stackoverflow.com/questions/563198/whats-the-most-efficent-way-to-calculate-where-two-line-segments-intersect
@@ -499,7 +467,8 @@ public class Utility
 public enum PlayerType
 {
     AR = 0,
-    VR = 1
+    VR = 1,
+    PC = 2
 }
 
 /// <summary>

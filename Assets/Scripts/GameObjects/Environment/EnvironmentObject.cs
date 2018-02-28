@@ -22,8 +22,6 @@ public class EnvironmentObject : NetworkBehaviour
 
     private void Init()
     {
-        transform.localScale = Vector3.one;
-
         int count = environmentObjectData.capColDatas.Length;
         bool collider = false;
         for (int i = 0; i < count; i++)
@@ -53,10 +51,6 @@ public class EnvironmentObject : NetworkBehaviour
         }
 
 
-        anim = GetComponent<Animator>();
-        anim.SetTrigger("StartEntrance");
-
-        pSystem.Play();
 
         count = environmentObjectData.meshMatDatas.Length;
         for (int i = 0; i < count; i++)
@@ -72,6 +66,10 @@ public class EnvironmentObject : NetworkBehaviour
         }
 
         radius = environmentObjectData.radius;
+
+        anim = GetComponent<Animator>();
+        anim.SetTrigger("StartEntrance");
+        pSystem.Play();
     }
 
     [ClientRpc]

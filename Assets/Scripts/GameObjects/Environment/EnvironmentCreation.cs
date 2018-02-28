@@ -89,7 +89,6 @@ public class EnvironmentCreation : MonoBehaviour
             for (int v = 0; v < boundary.Count; v++)
             {
                 Vector2 temp = new Vector2(boundary[v].x, boundary[v].z);
-
                 boundaryFlat[v] = temp;
             }
 
@@ -106,6 +105,48 @@ public class EnvironmentCreation : MonoBehaviour
             GetComponent<MeshFilter>().sharedMesh = mountains;
             plainFilter.sharedMesh = plains;
             GetComponent<MeshCollider>().sharedMesh = plains;
+
+            Mesh boundaryMesh = new Mesh();
+            List<Vector3> boundaryVerts = new List<Vector3>();
+            List<int> boundaryindices = new List<int>();
+            for (int i = 0; i < boundary.Count; i++)
+            {
+                int counter = boundaryVerts.Count;
+
+                boundaryVerts.Add(boundary[i]);
+                boundaryVerts.Add(boundary[i] + Vector3.up * 10f);
+
+                boundaryindices.Add(counter);
+                boundaryindices.Add(counter + 1);
+                if (i == boundary.Count - 1)
+                {
+                    boundaryindices.Add(0);
+                    boundaryindices.Add(0);
+                }
+                else
+                {
+                    boundaryindices.Add(counter + 2);
+                    boundaryindices.Add(counter + 2);
+                }
+
+                boundaryindices.Add(counter + 1);
+                if (i == boundary.Count - 1)
+                    boundaryindices.Add(1);
+                else
+                    boundaryindices.Add(counter + 3);
+            }
+
+            boundaryMesh.SetVertices(boundaryVerts);
+            boundaryMesh.SetIndices(boundaryindices.ToArray(), MeshTopology.Triangles, 0);
+
+            boundaryMesh.RecalculateBounds();
+            boundaryMesh.RecalculateNormals();
+            boundaryMesh.RecalculateTangents();
+            boundaryMesh.UploadMeshData(false);
+
+
+            MeshCollider meshCollider = gameObject.AddComponent<MeshCollider>();
+            meshCollider.sharedMesh = boundaryMesh;
         }
     }
 
