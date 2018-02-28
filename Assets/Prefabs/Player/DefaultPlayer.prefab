@@ -243,7 +243,7 @@ GameObject:
   - component: {fileID: 114524035639896454}
   - component: {fileID: 114206823788106614}
   m_Layer: 0
-  m_Name: Player
+  m_Name: DefaultPlayer
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1040,6 +1040,7 @@ MonoBehaviour:
     type: 2}
   HurtScreenPrefab: {fileID: 1629627864760112, guid: 78673a8e31d0e5e4d9ea031915f3c24b,
     type: 2}
+  grapplePrefab: {fileID: 0}
 --- !u!114 &114266302944641672
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1133,19 +1134,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144ccfada75bd37409f392fcb9e82622, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpCost: 4
-  jumpEnergyMax: 11
-  energyRegainRate: 3
-  jumpFactor: 13
   movementSpeed: 5
   sprintFactor: 1.8
   maxSpeed: 999
-  isPlaying: 1
   mouseSensitivity: 80
   clampAngle: 80
-  frameCounter: 5
   slowFactor: 0.5
   isOnFloor: 0
+  leftController: {fileID: 0}
+  rightController: {fileID: 0}
 --- !u!114 &114620430664255440
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1157,13 +1154,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d4f317d6d5fa8442957db3a76795051, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ARRenderersOnlyForVR: []
-  VRRenderersOnlyForAR: []
-  ARAvatar: {fileID: 1892182133614008}
-  VRAvatar: {fileID: 1079477224142834}
-  ARCamera: {fileID: 1392955217157932}
-  VRCamera: {fileID: 1709192861115414}
   playerType: 0
+  renderersToDisbale: []
+  cameraToEnable: {fileID: 0}
+  avatar: {fileID: 0}
 --- !u!114 &114820524358042512
 MonoBehaviour:
   m_ObjectHideFlags: 1
