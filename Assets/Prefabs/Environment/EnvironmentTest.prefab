@@ -167,6 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mountains: {fileID: 0}
+  plains: {fileID: 0}
   boundary:
   - {x: 6, y: 0, z: 5}
   - {x: 6, y: 0, z: 0}
@@ -186,6 +187,7 @@ MonoBehaviour:
   layerWidth: 2
   peakOffset: 2
   extrudeTimes: 6
+  groundYVariance: 0.2
   plainFilter: {fileID: 33596758012003198}
   minCliffSides: 2
   maxCliffSides: 4
