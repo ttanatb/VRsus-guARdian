@@ -6,6 +6,7 @@ public class EnvironmentCreation : MonoBehaviour
 {
 
     public Mesh mountains;
+    public Mesh plains;
     public List<Vector3> boundary;
     public float yMax;
     public float yMin;
@@ -13,8 +14,9 @@ public class EnvironmentCreation : MonoBehaviour
     public float layerWidth;
     public int peakOffset;
     public int extrudeTimes;
+    public float groundYVariance;
 
-    //public MeshFilter plainFilter;
+    public MeshFilter plainFilter;
 
     public int minCliffSides;
     public int maxCliffSides;
@@ -73,7 +75,7 @@ public class EnvironmentCreation : MonoBehaviour
             mountains.RecalculateTangents();
             mountains.UploadMeshData(false);
 
-            //plains = new Mesh();
+            plains = new Mesh();
             boundaryFlat = new Vector2[boundary.Count];
 
             for (int v = 0; v < boundary.Count; v++)
@@ -83,18 +85,36 @@ public class EnvironmentCreation : MonoBehaviour
             }
 
             Triangulator triangulator = new Triangulator(boundaryFlat);
-            //plains.SetVertices(boundary);
-            //int[] indices = triangulator.Triangulate();
-            //plains.SetTriangles(indices, 0);
-            //
-            //plains.RecalculateBounds();
-            //plains.RecalculateNormals();
-            //plains.RecalculateTangents();
-            //plains.UploadMeshData(false);
+            plains.SetVertices(boundary);
+            int[] indices = triangulator.Triangulate();
+            plains.SetTriangles(indices, 0);
+            
+            plains.RecalculateBounds();
+            plains.RecalculateNormals();
+            plains.RecalculateTangents();
+            plains.UploadMeshData(false);
+
+            MeshHelper.Subdivide(plains, 9);
+
+            List<Vector3> tempPlainVerts = new List<Vector3>();
+            plains.GetVertices(tempPlainVerts);
+
+            for (int i = 0; i < tempPlainVerts.Count; i++)
+            {
+                Vector3 temp = tempPlainVerts[i];
+                temp.y += Random.Range(0, groundYVariance);
+                tempPlainVerts[i] = temp;
+            }
+
+            plains.SetVertices(tempPlainVerts);
+            plains.RecalculateBounds();
+            plains.RecalculateNormals();
+            plains.RecalculateTangents();
+            plains.UploadMeshData(false);
 
             GetComponent<MeshFilter>().sharedMesh = mountains;
-            //plainFilter.sharedMesh = plains;
-            //GetComponent<MeshCollider>().sharedMesh = plains;
+            plainFilter.sharedMesh = plains;
+            GetComponent<MeshCollider>().sharedMesh = plains;
 
             Mesh boundaryMesh = new Mesh();
             List<Vector3> boundaryVerts = new List<Vector3>();
