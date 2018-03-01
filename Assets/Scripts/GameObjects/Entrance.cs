@@ -11,12 +11,12 @@ public class Entrance : NetworkBehaviour
 {
     //Field(s)
     private ARSetUp manager;
-    private Renderer mRenderer;
     private BoxCollider bCollider;
+    private ParticleSystem pSystem;
 
     private void Awake()
     {
-        mRenderer = GetComponent<MeshRenderer>();
+        pSystem = GetComponentInChildren<ParticleSystem>();
         bCollider = GetComponent<BoxCollider>();
     }
 
@@ -24,11 +24,6 @@ public class Entrance : NetworkBehaviour
     public override void OnStartServer()
     {
         manager = FindObjectOfType<ARSetUp>();
-        if (!mRenderer)
-        {
-            mRenderer = GetComponent<MeshRenderer>();
-        }
-        mRenderer.enabled = false;
     }
 
     /// <summary>
@@ -61,19 +56,13 @@ public class Entrance : NetworkBehaviour
     [ClientRpc]
     public void RpcActivate()
     {
-        if (mRenderer)
-        {
-            mRenderer.enabled = true;
-            bCollider.enabled = true;
-        }
+        pSystem.Play();
+        bCollider.enabled = true;
     }
     public void Deactivate()
     {
-        if (mRenderer)
-        {
-            mRenderer.enabled = false;
-            bCollider.enabled = false;
-        }
+        pSystem.Stop();
+        bCollider.enabled = false;
     }
 
     /// <summary>

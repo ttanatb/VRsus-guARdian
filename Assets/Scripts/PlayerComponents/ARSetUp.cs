@@ -449,7 +449,7 @@ public class ARSetUp : PlayerComponent
     [Command]
     private void CmdSpawnEntrance(Vector3 position)
     {
-        GameObject obj = Instantiate(entrancePrefab, position + entrancePrefab.transform.localScale / 2f, Quaternion.identity);
+        GameObject obj = Instantiate(entrancePrefab, position, Quaternion.identity);
         NetworkServer.Spawn(obj);
 
         if (isServer)
@@ -504,13 +504,13 @@ public class ARSetUp : PlayerComponent
         if (position.x > float.MaxValue / 2f)
             position = Utility.GetRandomPointInPlane(sortedPlanes[0]);
 
-        CmdSpawnRelic(position + Vector3.up * scale);
+        CmdSpawnRelic(position); // + Vector3.up * scale);
 
         position = GetRandPosNotUnderAnyOtherPlanes(largestPlaneIndex, 0.1f, 10);
         if (position.x > float.MaxValue / 2f)
             position = Utility.GetRandomPointInPlane(sortedPlanes[largestPlaneIndex]);
 
-        CmdSpawnRelic(position + Vector3.up * scale);
+        CmdSpawnRelic(position); // + Vector3.up * scale);
     }
 
     /// <summary>
@@ -553,7 +553,7 @@ public class ARSetUp : PlayerComponent
                 if (spawnPos.x > float.MaxValue / 2f) continue;
                 else
                 {
-                    CmdSpawnEnvStructure(spawnPos + Vector3.up * scale, rndmIndex, Random.Range(0f, 360f));
+                    CmdSpawnEnvStructure(spawnPos, rndmIndex, Random.Range(0f, 360f));
                     spawnPos.y = radius;
                     spawnedList.Add(spawnPos);
                 }
@@ -573,7 +573,7 @@ public class ARSetUp : PlayerComponent
                 if (spawnPos.x > float.MaxValue / 2f) continue;
                 else
                 {
-                    CmdSpawnEnvDecor(spawnPos + Vector3.up * scale, rndmIndex, Random.Range(0f, 360f));
+                    CmdSpawnEnvDecor(spawnPos, rndmIndex, Random.Range(0f, 360f));
                     spawnPos.y = radius;
                     spawnedList.Add(spawnPos);
                 }
@@ -635,9 +635,9 @@ public class ARSetUp : PlayerComponent
 
             Vector3 position = GetRandPosNotUnderAnyOtherPlanes(i, 0.2f, 10);
             if (position.x > float.MaxValue / 2f)
-                position = Utility.GetRandomPointInPlane(sortedPlanes[0]);
+                position = Utility.GetRandomPointInPlane(sortedPlanes[i]);
 
-            CmdSpawnEntrance(position + Vector3.up * scale);
+            CmdSpawnEntrance(position);
         }
     }
 
@@ -669,7 +669,7 @@ public class ARSetUp : PlayerComponent
             vertices[i] = vert;
         }
 
-        EnvironmentCreation terrainBuilder = FindObjectOfType<EnvironmentCreation>();
+        EnvironmentCreation terrainBuilder = LocalObjectBuilder.Instance.GetComponent<EnvironmentCreation>();
         terrainBuilder.boundary = vertices;
         terrainBuilder.CreateTerrain();
     }

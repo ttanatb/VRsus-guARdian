@@ -20,9 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4806924276533724}
   - component: {fileID: 20366697857954726}
-  - component: {fileID: 124445084714918592}
-  - component: {fileID: 92481740039241186}
-  - component: {fileID: 81346609187498416}
   m_Layer: 0
   m_Name: Top-View Camera
   m_TagString: Untagged
@@ -94,7 +91,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 41
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 1
   m_Depth: 0
   m_CullingMask:
@@ -166,24 +163,3 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!81 &81346609187498416
-AudioListener:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1273436356252126}
-  m_Enabled: 0
---- !u!92 &92481740039241186
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1273436356252126}
-  m_Enabled: 1
---- !u!124 &124445084714918592
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1273436356252126}
-  m_Enabled: 1

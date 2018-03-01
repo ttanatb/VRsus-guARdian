@@ -34,6 +34,8 @@ public class Grappling : MonoBehaviour //: Launchable
     private Vector3 force;
 
     private LineRenderer lineRenderer;
+    public Transform playerAnchor;
+    public Transform spawnPos;
 
     void Start()
     {
@@ -68,7 +70,7 @@ public class Grappling : MonoBehaviour //: Launchable
         else
         {
             lineRenderer.SetPosition(0, transform.position);
-            lineRenderer.SetPosition(1, player.transform.position - Vector3.up * 0.05f);
+            lineRenderer.SetPosition(1, playerAnchor.position);
 
             if (state == 1)    //updates lifetime if its shooting out
             {
@@ -108,7 +110,7 @@ public class Grappling : MonoBehaviour //: Launchable
     {
         force = (transform.position - player.transform.position).normalized * playerTravelSpeed;
         playerRBody.AddForce(force);
-        if ((transform.position - player.transform.position).sqrMagnitude < 0.05f)
+        if ((transform.position - player.transform.position).sqrMagnitude < 0.01f)
         {
             state = 3;
             playerRBody.velocity = Vector3.zero;
@@ -117,8 +119,8 @@ public class Grappling : MonoBehaviour //: Launchable
 
     private void RetractHookshot()  //the hookshot travels back to the player
     {
-        transform.position = Vector3.Lerp(transform.position, player.transform.position, 0.2f);
-        if ((transform.position - player.transform.position).sqrMagnitude < 0.01f || timer > lifetime)
+        transform.position = Vector3.Lerp(transform.position, playerAnchor.position, 0.2f);
+        if ((playerAnchor.position - transform.position).sqrMagnitude < 0.02f || timer > lifetime)
         {
             state = 0;
             transform.position = Vector3.one * 1000f;
@@ -163,8 +165,8 @@ public class Grappling : MonoBehaviour //: Launchable
             if (otherGrappling.state == 1) otherGrappling.StartRetraction();
             else if (otherGrappling.state == 2) otherGrappling.LetGo();
 
-            transform.position = player.transform.position;
-            transform.forward = player.transform.forward;
+            transform.position = spawnPos.position;
+            transform.forward = spawnPos.forward;
 
             rBody.velocity = transform.forward * speed;
             rBody.isKinematic = false;
@@ -193,6 +195,10 @@ public class Grappling : MonoBehaviour //: Launchable
 
             playerRBody.useGravity = false;
             timer = 0f;// Time.time;
+        }
+        else
+        {
+            StartRetraction();
         }
     }
 }

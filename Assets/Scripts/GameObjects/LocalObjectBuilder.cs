@@ -143,14 +143,15 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
         for (int i = 0; i < localPlanes.Count; i++)
         {
             int insertionIndex = 0;
-            float yPos = localPlanes[i].transform.position.y;
+            List<Vector3> thisPlane = Utility.CreateVerticesFromPlane(localPlanes[i]);
+            float yPos = thisPlane[0].y;
             for(; insertionIndex < sortedList.Count; insertionIndex++)
             {
                 float thisYPos = sortedList[insertionIndex][0].y; //.transform.position.y;
                 if (yPos < thisYPos)
                     break;
             }
-            sortedList.Insert(insertionIndex, Utility.CreateVerticesFromPlane(localPlanes[i]));
+            sortedList.Insert(insertionIndex, thisPlane);
         }
 
         return sortedList;

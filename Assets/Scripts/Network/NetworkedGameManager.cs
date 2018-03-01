@@ -10,6 +10,10 @@ public class NetworkedGameManager : NetworkManager
     public bool isHookshotTest = false;
     public GameObject[] playerPrefabs;
 
+    public GameObject practiceAreaPrefab;
+    private GameObject practiceAreaObj;
+    private PraticeArea practiceArea;
+
     private int index = -1;
     // 0 - Default Player
     // 1 - AR Player
@@ -21,7 +25,7 @@ public class NetworkedGameManager : NetworkManager
         if (isArtTest || isHookshotTest)
         {
             StartHost();
-        } 
+        }
     }
 
     public override void OnClientConnect(NetworkConnection conn)
@@ -43,7 +47,7 @@ public class NetworkedGameManager : NetworkManager
 
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId, NetworkReader extraMessageReader)
     {
-        //Debug.Log("OnServerAddPlayer is called -- now adding...");
+        Debug.Log("OnServerAddPlayer is called -- now adding...");
 
         int playerIndex = 0;
         if (extraMessageReader.Length > 0)
@@ -59,7 +63,15 @@ public class NetworkedGameManager : NetworkManager
         //    case 3: Debug.Log("PC Player"); break;
         //}
 
-        GameObject playerObj = Instantiate(playerPrefabs[playerIndex], Vector3.zero, Quaternion.identity);
+        Vector3 position = Vector3.zero;
+        if (playerIndex != 1)
+        {
+            position = practiceArea.spawnPos.position;
+        }
+        else 
+            NetworkServer.Spawn(practiceAreaObj);
+
+        GameObject playerObj = Instantiate(playerPrefabs[playerIndex], position, Quaternion.identity);
         NetworkServer.AddPlayerForConnection(conn, playerObj, playerControllerId);
     }
 
@@ -70,6 +82,16 @@ public class NetworkedGameManager : NetworkManager
             index = 3;
         else index = 1;
         base.OnStartHost();
+
+    }
+
+    public override void OnStartServer()
+    {
+        Debug.Log("On start server");
+        base.OnStartServer();
+        practiceAreaObj = Instantiate(practiceAreaPrefab);
+        practiceArea = practiceAreaObj.GetComponent<PraticeArea>();
+        //NetworkServer.Spawn(practiceAreaObj);
     }
 
     public override void OnStartClient(NetworkClient client)
@@ -81,17 +103,5 @@ public class NetworkedGameManager : NetworkManager
             else index = 3;
         }
         base.OnStartClient(client);
-    }
-
-    public override void OnServerConnect(NetworkConnection conn)
-    {
-        //Debug.Log("Player number " + (numPlayers + 1) + " has connected to the server");
-        base.OnServerConnect(conn);
-    }
-
-    public override void OnServerDisconnect(NetworkConnection conn)
-    {
-        //Debug.Log("Someone disconnected. " + numPlayers + " players are left ");
-        base.OnServerDisconnect(conn);
     }
 }

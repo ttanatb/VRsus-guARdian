@@ -65,7 +65,6 @@ public class VRTransition : PlayerComponent
             //SwitchToTopViewCam();
             SwitchToFPSCam();
             //Invoke("SwitchToFPSCam", 1.75f);
-            transform.position = new Vector3(0.759f, 1005f, -0.659f);
             movement.EnableMovement();
         }
     }

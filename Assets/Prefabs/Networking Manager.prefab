@@ -70,7 +70,7 @@ MonoBehaviour:
   m_NetworkPort: 7777
   m_ServerBindToIP: 0
   m_ServerBindAddress: 
-  m_NetworkAddress: 127.0.0.1
+  m_NetworkAddress: 129.21.133.45
   m_DontDestroyOnLoad: 1
   m_RunInBackground: 1
   m_ScriptCRCCheck: 1
@@ -93,6 +93,7 @@ MonoBehaviour:
   - {fileID: 1272844262855460, guid: e23082a0aee7ca2458e4cf6615198c59, type: 2}
   - {fileID: 1344648828105818, guid: d4e23da9db8d66b4495342d6ab5e54cd, type: 2}
   - {fileID: 1743894219128570, guid: 5565a48e367c22e40bf1620a63e2d373, type: 2}
+  - {fileID: 1955563525364230, guid: 1608384a963ef024f9b7ba7eefb96753, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -155,3 +156,5 @@ MonoBehaviour:
   - {fileID: 1344648828105818, guid: d4e23da9db8d66b4495342d6ab5e54cd, type: 2}
   - {fileID: 1743894219128570, guid: 5565a48e367c22e40bf1620a63e2d373, type: 2}
   - {fileID: 1272844262855460, guid: e23082a0aee7ca2458e4cf6615198c59, type: 2}
+  practiceAreaPrefab: {fileID: 1955563525364230, guid: 1608384a963ef024f9b7ba7eefb96753,
+    type: 2}

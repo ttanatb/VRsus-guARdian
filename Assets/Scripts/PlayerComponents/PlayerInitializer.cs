@@ -15,6 +15,8 @@ public class PlayerInitializer : NetworkBehaviour
     public Renderer[] renderersToDisbale;
     public Camera cameraToEnable;
 
+    public Camera[] camerasToDisable;
+
     public GameObject avatar;
 
     public PlayerType PlayerType
@@ -33,9 +35,19 @@ public class PlayerInitializer : NetworkBehaviour
             renderersToDisbale[i].enabled = false;
 
         //Enables its camera and audio listenrs
-        cameraToEnable.enabled = true;
-        cameraToEnable.GetComponent<AudioListener>().enabled = true;
-        cameraToEnable.gameObject.tag = "MainCamera";
+        if (cameraToEnable)
+        {
+            cameraToEnable.enabled = true;
+            cameraToEnable.GetComponent<AudioListener>().enabled = true;
+            cameraToEnable.gameObject.tag = "MainCamera";
+        }
+
+
+
+        if (playerType != PlayerType.VR)
+        {
+            UnityEngine.XR.XRSettings.enabled = false;
+        }
 
         switch (playerType)
         {
@@ -52,7 +64,7 @@ public class PlayerInitializer : NetworkBehaviour
 
                 cameraToEnable.clearFlags = CameraClearFlags.Skybox;
                 cameraToEnable.nearClipPlane = 0.01f;
-                cameraToEnable.farClipPlane = 1000f;
+                cameraToEnable.farClipPlane = 75f;
                 cameraToEnable.allowHDR = true;
                 cameraToEnable.depth = 0;
 #endif
@@ -72,6 +84,14 @@ public class PlayerInitializer : NetworkBehaviour
         {
             components[i].InitMemberFields(playerType, this);
             components[i].enabled = true;
+        }
+
+        if (!isLocalPlayer)
+        {
+            for (int i = 0; i < camerasToDisable.Length; i++)
+            {
+                camerasToDisable[i].enabled = false;
+            }
         }
     }
     #endregion

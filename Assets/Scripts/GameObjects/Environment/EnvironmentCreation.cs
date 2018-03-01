@@ -14,7 +14,7 @@ public class EnvironmentCreation : MonoBehaviour
     public int peakOffset;
     public int extrudeTimes;
 
-    public MeshFilter plainFilter;
+    //public MeshFilter plainFilter;
 
     public int minCliffSides;
     public int maxCliffSides;
@@ -28,18 +28,8 @@ public class EnvironmentCreation : MonoBehaviour
     private int tripleAngles;
     private int layers;
 
-    private Mesh plains;
+    //private Mesh plains;
     private Vector2[] boundaryFlat;
-
-    private void Start()
-    {
-#if !UNITY_IOS
-        gameObject.AddComponent<MeshFilter>();
-        Rigidbody rb = gameObject.AddComponent<Rigidbody>();
-        rb.isKinematic = true;
-        gameObject.AddComponent<MeshCollider>();
-#endif
-    }
 
     public void CreateTerrain()
     {
@@ -83,7 +73,7 @@ public class EnvironmentCreation : MonoBehaviour
             mountains.RecalculateTangents();
             mountains.UploadMeshData(false);
 
-            plains = new Mesh();
+            //plains = new Mesh();
             boundaryFlat = new Vector2[boundary.Count];
 
             for (int v = 0; v < boundary.Count; v++)
@@ -93,18 +83,18 @@ public class EnvironmentCreation : MonoBehaviour
             }
 
             Triangulator triangulator = new Triangulator(boundaryFlat);
-            plains.SetVertices(boundary);
-            int[] indices = triangulator.Triangulate();
-            plains.SetTriangles(indices, 0);
-
-            plains.RecalculateBounds();
-            plains.RecalculateNormals();
-            plains.RecalculateTangents();
-            plains.UploadMeshData(false);
+            //plains.SetVertices(boundary);
+            //int[] indices = triangulator.Triangulate();
+            //plains.SetTriangles(indices, 0);
+            //
+            //plains.RecalculateBounds();
+            //plains.RecalculateNormals();
+            //plains.RecalculateTangents();
+            //plains.UploadMeshData(false);
 
             GetComponent<MeshFilter>().sharedMesh = mountains;
-            plainFilter.sharedMesh = plains;
-            GetComponent<MeshCollider>().sharedMesh = plains;
+            //plainFilter.sharedMesh = plains;
+            //GetComponent<MeshCollider>().sharedMesh = plains;
 
             Mesh boundaryMesh = new Mesh();
             List<Vector3> boundaryVerts = new List<Vector3>();
@@ -136,6 +126,11 @@ public class EnvironmentCreation : MonoBehaviour
                     boundaryindices.Add(counter + 3);
             }
 
+            for (int i = 0; i < boundaryVerts.Count; i++)
+            {
+                //boundaryVerts[i] = boundaryVerts[i] - transform.position; 
+            }
+
             boundaryMesh.SetVertices(boundaryVerts);
             boundaryMesh.SetIndices(boundaryindices.ToArray(), MeshTopology.Triangles, 0);
 
@@ -143,7 +138,6 @@ public class EnvironmentCreation : MonoBehaviour
             boundaryMesh.RecalculateNormals();
             boundaryMesh.RecalculateTangents();
             boundaryMesh.UploadMeshData(false);
-
 
             MeshCollider meshCollider = gameObject.AddComponent<MeshCollider>();
             meshCollider.sharedMesh = boundaryMesh;

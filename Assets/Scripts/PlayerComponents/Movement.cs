@@ -63,7 +63,7 @@ public class Movement : PlayerComponent
         isPlaying = true;
         InitObj();
 
-        if (playerType == PlayerType.PC && isLocalPlayer)
+        if ((playerType == PlayerType.PC || playerType == PlayerType.VR) && isLocalPlayer)
         {
             Cursor.lockState = CursorLockMode.Locked;
             Grappling left = Instantiate(grapplePrefab).GetComponent<Grappling>();
@@ -71,10 +71,22 @@ public class Movement : PlayerComponent
 
             left.player = gameObject;
             right.player = gameObject;
+            left.playerAnchor = leftController.transform;
+            right.playerAnchor = rightController.transform;
             left.button = "Fire2";
             right.button = "Fire3";
             left.otherGrappling = right;
             right.otherGrappling = left;
+            if (playerType == PlayerType.PC)
+            {
+                left.spawnPos = transform;
+                right.spawnPos = transform;
+            }
+            else
+            {
+                left.spawnPos  = leftController.transform;
+                right.spawnPos = rightController.transform;
+            }
         }
     }
 
@@ -87,7 +99,6 @@ public class Movement : PlayerComponent
             transform.position = startingPos;
         }
 
-        if (!isPlaying) return;
         slowTimer -= Time.deltaTime;
         if (playerType != PlayerType.VR)
         {

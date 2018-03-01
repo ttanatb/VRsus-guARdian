@@ -34,10 +34,10 @@ public class Utility
         List<Vector3> vertices = new List<Vector3>
         {
             //add the corners of the plane;
-            new Vector3(-planeScale.x, 0f, planeScale.z),
-            new Vector3(planeScale.x, 0f, planeScale.z),
-            new Vector3(planeScale.x, 0f, -planeScale.z),
-            new Vector3(-planeScale.x, 0f, -planeScale.z)
+            new Vector3(-planeScale.x, planeScale.y, planeScale.z),
+            new Vector3(planeScale.x, planeScale.y, planeScale.z),
+            new Vector3(planeScale.x, planeScale.y, -planeScale.z),
+            new Vector3(-planeScale.x, planeScale.y, -planeScale.z)
         };
 
         //loop through to rotate and translate accordingly
