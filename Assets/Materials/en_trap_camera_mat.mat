@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: en_trap_camera_mat
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: cc5c9e4673e35ea41a299ca1e362f54c, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -74,3 +74,4 @@ Material:
     m_Colors:
     - _Color: {r: 0.47848183, g: 0.49726903, b: 0.86764705, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SpecCol: {r: 1, g: 1, b: 1, a: 1}
