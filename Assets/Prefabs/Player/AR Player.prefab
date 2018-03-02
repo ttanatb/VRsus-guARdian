@@ -489,7 +489,7 @@ MonoBehaviour:
   entrancePrefab: {fileID: 1638740177162806, guid: 6244c8c1573a0354fb969f4a2049dbba,
     type: 2}
   wallPrefab: {fileID: 0}
-  environmentData: {fileID: 11400000, guid: f897cd199a7dd6e4a8baaa374ffb64a8, type: 2}
+  environmentData: {fileID: 11400000, guid: ddc3dd1b07965154597c2a4506de1c4a, type: 2}
   envObjPrefab: {fileID: 1955769541861086, guid: 65ec847e51651244b936d7619bb92e7f,
     type: 2}
   minPlayArea: 0
@@ -539,6 +539,7 @@ MonoBehaviour:
   - {fileID: 23542918094245972}
   - {fileID: 137702098708757872}
   cameraToEnable: {fileID: 20586400908853146}
+  camerasToDisable: []
   avatar: {fileID: 1540765997631438}
 --- !u!114 &114655120174981896
 MonoBehaviour:
@@ -592,6 +593,7 @@ MonoBehaviour:
   isOnFloor: 0
   leftController: {fileID: 0}
   rightController: {fileID: 0}
+  grapplePrefab: {fileID: 0}
 --- !u!114 &114908136868724798
 MonoBehaviour:
   m_ObjectHideFlags: 1

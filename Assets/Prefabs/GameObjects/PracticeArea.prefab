@@ -549,6 +549,7 @@ GameObject:
   - component: {fileID: 114013788674196566}
   - component: {fileID: 54484320933865718}
   - component: {fileID: 114877876061502356}
+  - component: {fileID: 64843545832053980}
   m_Layer: 0
   m_Name: PracticeArea
   m_TagString: Untagged
@@ -1672,6 +1673,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!64 &64843545832053980
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1955563525364230}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 0}
 --- !u!65 &65018876990020492
 BoxCollider:
   m_ObjectHideFlags: 1
