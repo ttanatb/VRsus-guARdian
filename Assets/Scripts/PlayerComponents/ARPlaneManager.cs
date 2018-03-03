@@ -68,11 +68,11 @@ public class ARPlaneManager : PlayerComponent
             }
 
             //removes a plane from the list
-            if (m_ARPlane.Count > UnityARAnchorManager.Instance.planeAnchorMap.Count)
+            if (m_ARPlane.Count > UnityARAnchorManager.Instance.PlaneAnchorMap.Count)
             {
                 for (int i = 0; i < m_ARPlane.Count; i++)
                 {
-                    if (!UnityARAnchorManager.Instance.planeAnchorMap.ContainsKey(m_ARPlane[i].identifier))
+                    if (!UnityARAnchorManager.Instance.PlaneAnchorMap.ContainsKey(m_ARPlane[i].identifier))
                     {
                         ServerRemovePlane(i);
                         break;
@@ -83,9 +83,9 @@ public class ARPlaneManager : PlayerComponent
             float area = 0; //for calculation of  total area
             
             //go through all planes found by ARkit
-            foreach (string s in UnityARAnchorManager.Instance.planeAnchorMap.Keys)
+            foreach (string s in UnityARAnchorManager.Instance.PlaneAnchorMap.Keys)
             {
-                Transform plane = UnityARAnchorManager.Instance.planeAnchorMap[s].gameObject.transform.GetChild(0);
+                Transform plane = UnityARAnchorManager.Instance.PlaneAnchorMap[s].gameObject.transform.GetChild(0);
 
                 //if plane has already been added
                 if (CheckIfContains(s))

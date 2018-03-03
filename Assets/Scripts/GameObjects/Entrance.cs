@@ -35,9 +35,12 @@ public class Entrance : NetworkBehaviour
             return;
 
         //
-        if (other.gameObject.tag == "Player")
+        if (other.CompareTag("Player"))
         {
-            VRCombat combat = other.transform.parent.GetComponent<VRCombat>();
+            VRCombat combat = other.GetComponent<VRCombat>();
+            if(!combat) 
+                combat = other.transform.parent.GetComponent<VRCombat>();
+
             if (!combat.IsInvulnerable && combat.GetRelicCount() == 2 && manager.CurrGamePhase != GamePhase.Over)
                 Win(combat);
         }

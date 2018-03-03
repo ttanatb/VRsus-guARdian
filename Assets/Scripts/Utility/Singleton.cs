@@ -5,7 +5,7 @@
 public class Singleton<T> where T : Singleton<T>
 {
     //instance of the singleton
-    private static T instance;
+    protected static T instance;
     public static T Instance { get { return instance; } }
 
     //constructor

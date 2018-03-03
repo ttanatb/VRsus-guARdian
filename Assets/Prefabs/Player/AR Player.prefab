@@ -61,6 +61,7 @@ GameObject:
   - component: {fileID: 114909993582410828}
   - component: {fileID: 120260024140074728}
   - component: {fileID: 114781550108192186}
+  - component: {fileID: 114722010961099726}
   m_Layer: 16
   m_Name: AR Player
   m_TagString: ARPlayer
@@ -96,6 +97,22 @@ GameObject:
   m_Layer: 16
   m_Name: AR Avatar
   m_TagString: ARPlayer
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1562763467201344
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4632301092774370}
+  - component: {fileID: 108302986008289754}
+  m_Layer: 16
+  m_Name: Spotlight
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -202,7 +219,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1344648828105818}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.6725984, y: -5.3472667, z: -2.8835535}
+  m_LocalPosition: {x: -1.1134974, y: -1.5762439, z: 3.496297}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4642376331814632}
@@ -320,6 +337,19 @@ Transform:
   m_Father: {fileID: 4642376331814632}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4632301092774370
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1562763467201344}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4642376331814632}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!4 &4642376331814632
 Transform:
   m_ObjectHideFlags: 1
@@ -332,6 +362,7 @@ Transform:
   m_Children:
   - {fileID: 4195927803568510}
   - {fileID: 4578992633432360}
+  - {fileID: 4632301092774370}
   m_Father: {fileID: 4146187003778684}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
@@ -461,6 +492,42 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!108 &108302986008289754
+Light:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1562763467201344}
+  m_Enabled: 1
+  serializedVersion: 8
+  m_Type: 0
+  m_Color: {r: 0.52205884, g: 0.17607243, b: 0.08061204, a: 1}
+  m_Intensity: 5
+  m_Range: 10
+  m_SpotAngle: 30
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 1
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_Lightmapping: 4
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
 --- !u!114 &114034712502135718
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -489,7 +556,7 @@ MonoBehaviour:
   entrancePrefab: {fileID: 1638740177162806, guid: 6244c8c1573a0354fb969f4a2049dbba,
     type: 2}
   wallPrefab: {fileID: 0}
-  environmentData: {fileID: 11400000, guid: f897cd199a7dd6e4a8baaa374ffb64a8, type: 2}
+  environmentData: {fileID: 11400000, guid: ddc3dd1b07965154597c2a4506de1c4a, type: 2}
   envObjPrefab: {fileID: 1955769541861086, guid: 65ec847e51651244b936d7619bb92e7f,
     type: 2}
   minPlayArea: 0
@@ -538,7 +605,9 @@ MonoBehaviour:
   - {fileID: 137370650496486082}
   - {fileID: 23542918094245972}
   - {fileID: 137702098708757872}
+  renderersToEnable: []
   cameraToEnable: {fileID: 20586400908853146}
+  camerasToDisable: []
   avatar: {fileID: 1540765997631438}
 --- !u!114 &114655120174981896
 MonoBehaviour:
@@ -572,6 +641,26 @@ MonoBehaviour:
     i15: 205
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
+--- !u!114 &114722010961099726
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1344648828105818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 730475ee64f9a894bbac0d9e6f22e813, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mode: 1
+  sensitivityDepth: 3
+  sensitivityNormals: 0.3
+  lumThreshold: 0.2
+  edgeExp: 1
+  sampleDist: 0.5
+  edgesOnly: 0.05
+  edgesOnlyBgColor: {r: 0.625, g: 0.21599263, b: 0.21599263, a: 1}
+  edgeDetectShader: {fileID: 4800000, guid: 0d1644bdf064147baa97f235fc5b4903, type: 3}
 --- !u!114 &114781550108192186
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -592,6 +681,7 @@ MonoBehaviour:
   isOnFloor: 0
   leftController: {fileID: 0}
   rightController: {fileID: 0}
+  grapplePrefab: {fileID: 0}
 --- !u!114 &114908136868724798
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -626,7 +716,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   laserLayerMask:
     serializedVersion: 2
-    m_Bits: 6913
+    m_Bits: 6401
   layerMaxDist: 4
   laserDuration: 1
   laserCoolDown: 2

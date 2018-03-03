@@ -9,17 +9,22 @@ public class SlowTrap : TrapDefense
     public MeshRenderer areaRenderer;
     private SphereCollider radiusCollider;
     private bool isActive = false;
+    private BoxCollider selectorCollider;
+
+    public MeshRenderer swampMeshRenderer;
 
     public override string TrapName { get { return "Slow Trap"; } }
 
     private void Start()
     {
-        transform.GetChild(0).localScale *= radius * 2;// transform.localScale.x;
+        swampMeshRenderer = GetComponent<MeshRenderer>();
+        transform.GetChild(0).localScale *= radius * 2f / 10f;
     }
 
     public override void OnStartServer()
     {
-        GetComponent<MeshRenderer>().enabled = true;
+        swampMeshRenderer.enabled = true;
+        selectorCollider = GetComponent<BoxCollider>();
         radiusCollider = gameObject.AddComponent<SphereCollider>();
         radiusCollider.radius = radius;
         radiusCollider.isTrigger = true;
@@ -35,6 +40,7 @@ public class SlowTrap : TrapDefense
     public override void TransitionToPlayPhase()
     {
         radiusCollider.enabled = true;
+        selectorCollider.enabled = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -52,7 +58,9 @@ public class SlowTrap : TrapDefense
         if (!isServer) return;
         if (other.tag == "Player")
         {
-            other.transform.parent.GetComponent<Movement>().RpcSlow();
+            Movement movement = other.transform.parent.GetComponent<Movement>();
+            if (movement.isOnFloor)
+                movement.RpcSlow();
         }
     }
 
@@ -60,6 +68,6 @@ public class SlowTrap : TrapDefense
     private void RpcVisualizeTrap()
     {
         areaRenderer.enabled = true; //replace with playing anim
-        GetComponent<MeshRenderer>().enabled = true;
+        swampMeshRenderer.enabled = true;
     }
 }

@@ -36,6 +36,7 @@ public class Grappling : MonoBehaviour //: Launchable
     private LineRenderer lineRenderer;
     public Transform playerAnchor;
     public Transform spawnPos;
+    public Animator animController;
 
     void Start()
     {
@@ -93,6 +94,7 @@ public class Grappling : MonoBehaviour //: Launchable
         {
             if (!Input.GetButton(button))
             {
+                animController.SetBool("isFlying", false);
                 LetGo();
             }
             else
@@ -114,6 +116,8 @@ public class Grappling : MonoBehaviour //: Launchable
         {
             state = 3;
             playerRBody.velocity = Vector3.zero;
+            animController.SetBool("isClinging", true);
+            animController.SetBool("isFlying", false);
         }
     }
 
@@ -150,6 +154,7 @@ public class Grappling : MonoBehaviour //: Launchable
     {
         //Debug.Log("Player detaching himself from the wall");
         playerRBody.useGravity = true;
+        animController.SetBool("isClinging", false);
         if (Input.GetButton("Jump"))
         {
             playerRBody.AddForce(Vector3.up * 5f, ForceMode.VelocityChange);
@@ -165,8 +170,8 @@ public class Grappling : MonoBehaviour //: Launchable
             if (otherGrappling.state == 1) otherGrappling.StartRetraction();
             else if (otherGrappling.state == 2) otherGrappling.LetGo();
 
-            transform.position = spawnPos.position;
-            transform.forward = spawnPos.forward;
+            transform.position = playerAnchor.position;
+            transform.forward = playerAnchor.forward;
 
             rBody.velocity = transform.forward * speed;
             rBody.isKinematic = false;
@@ -186,6 +191,7 @@ public class Grappling : MonoBehaviour //: Launchable
             if (otherGrappling.state == 3)
             {
                 otherGrappling.LetGo();
+                animController.SetBool("isClinging", false);
             }
 
             state = 2;
@@ -195,6 +201,7 @@ public class Grappling : MonoBehaviour //: Launchable
 
             playerRBody.useGravity = false;
             timer = 0f;// Time.time;
+            animController.SetBool("isFlying", true);
         }
         else
         {

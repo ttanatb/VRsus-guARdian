@@ -36,7 +36,6 @@ GameObject:
   - component: {fileID: 4237326480463020}
   - component: {fileID: 33142260546690046}
   - component: {fileID: 23814854249169764}
-  - component: {fileID: 114317722141250428}
   - component: {fileID: 65800000450294604}
   - component: {fileID: 95235712919448432}
   m_Layer: 11
@@ -291,7 +290,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4771258708668900}
-  - component: {fileID: 114308307379242520}
   - component: {fileID: 95020331211152496}
   - component: {fileID: 65104860581132892}
   m_Layer: 0
@@ -517,7 +515,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1666084624838054}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6.6165104, y: -3.7263548, z: 0.09010646}
+  m_LocalPosition: {x: 5.9718623, y: -7.2085767, z: 1.8301017}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4302933900162672}
@@ -998,7 +996,7 @@ MonoBehaviour:
     type: 2}
   entrancePrefab: {fileID: 1638740177162806, guid: 6244c8c1573a0354fb969f4a2049dbba,
     type: 2}
-  wallPrefab: {fileID: 1889715606113792, guid: 5806018cc7ad99849ae78e71dbd8185a, type: 2}
+  wallPrefab: {fileID: 0}
   environmentData: {fileID: 11400000, guid: f897cd199a7dd6e4a8baaa374ffb64a8, type: 2}
   envObjPrefab: {fileID: 1955769541861086, guid: 65ec847e51651244b936d7619bb92e7f,
     type: 2}
@@ -1014,14 +1012,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4783aa07b0ecac4b9fb7cced2b18b93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  topViewCamPrefab: {fileID: 1273436356252126, guid: 05c27be8ab2962d458494da2347c3e2d,
-    type: 2}
   fadeSpeed: 0.1
   waitTime: 1.2
-  mask:
-    serializedVersion: 2
-    m_Bits: 512
-  startingPos: {x: 0, y: 0, z: 0}
 --- !u!114 &114206823788106614
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1040,7 +1032,6 @@ MonoBehaviour:
     type: 2}
   HurtScreenPrefab: {fileID: 1629627864760112, guid: 78673a8e31d0e5e4d9ea031915f3c24b,
     type: 2}
-  grapplePrefab: {fileID: 0}
 --- !u!114 &114266302944641672
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1073,28 +1064,6 @@ MonoBehaviour:
     i15: 130
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
---- !u!114 &114308307379242520
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1892182133614008}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92cdcb985d909f242847756f7b79fdb6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114317722141250428
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1079477224142834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92cdcb985d909f242847756f7b79fdb6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114396026375543622
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1143,6 +1112,8 @@ MonoBehaviour:
   isOnFloor: 0
   leftController: {fileID: 0}
   rightController: {fileID: 0}
+  grapplePrefab: {fileID: 0}
+  cameraTransform: {fileID: 0}
 --- !u!114 &114620430664255440
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1156,7 +1127,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerType: 0
   renderersToDisbale: []
+  renderersToEnable: []
   cameraToEnable: {fileID: 0}
+  camerasToDisable: []
   avatar: {fileID: 0}
 --- !u!114 &114820524358042512
 MonoBehaviour:

@@ -62,6 +62,10 @@ public class ARSetUp : PlayerComponent
     private List<Entrance> entranceObjList;// = new List<Entrance>();
     private List<GameObject> envObjList;
 
+    private ARCombat combat;
+
+    private PraticeArea practiceArea;
+
     private float scale;
     /// <summary>
     /// Gets the current phase of the game
@@ -84,6 +88,7 @@ public class ARSetUp : PlayerComponent
         {
             InitObj();
             CanvasManager.Instance.SetUpUI(this);
+            practiceArea = FindObjectOfType<PraticeArea>();
         }
     }
 
@@ -98,6 +103,8 @@ public class ARSetUp : PlayerComponent
     {
         foreach (TrapCounter t in trapList)
             t.maxCount = t.count;
+
+        combat = GetComponent<ARCombat>();
     }
 
     protected override void InitObj()
@@ -294,13 +301,13 @@ public class ARSetUp : PlayerComponent
         }
         else
         {
-            if (UnityARAnchorManager.Instance.planeAnchorMap.Count < 0)
+            if (UnityARAnchorManager.Instance.PlaneAnchorMap.Count < 0)
                 return false;
 
-            foreach (string key in UnityARAnchorManager.Instance.planeAnchorMap.Keys)
+            foreach (string key in UnityARAnchorManager.Instance.PlaneAnchorMap.Keys)
             {
-                float planeArea = UnityARAnchorManager.Instance.planeAnchorMap[key].gameObject.transform.GetChild(0).localScale.x *
-                    UnityARAnchorManager.Instance.planeAnchorMap[key].gameObject.transform.GetChild(0).localScale.z;
+                float planeArea = UnityARAnchorManager.Instance.PlaneAnchorMap[key].gameObject.transform.GetChild(0).localScale.x *
+                    UnityARAnchorManager.Instance.PlaneAnchorMap[key].gameObject.transform.GetChild(0).localScale.z;
 
                 area += planeArea;
             }
@@ -377,13 +384,9 @@ public class ARSetUp : PlayerComponent
                 foreach (TrapDefense trap in trapObjList) trap.TransitionToPlayPhase();
 
                 VRTransition vrTransition = FindObjectOfType<VRTransition>();
-                if (vrTransition)
-                    vrTransition.RpcSwitchToTopViewCam();
-                RpcSetMessage();
-                ARCombat combat = GetComponent<ARCombat>();
+                    practiceArea.RpcActivateEntrance(entranceObjList[Random.Range(0, entranceObjList.Count)].transform.position);
                 if (combat != null)
                     combat.IsShootingEnabled = true;
-
 #if UNITY_IOS
                 UnityARAnchorManager.Instance.TogglePlaneMaterial();
 #endif
@@ -459,6 +462,7 @@ public class ARSetUp : PlayerComponent
             entranceObjList.Add(e);
         }
     }
+
     private Vector3 GetRandPosNotUnderAnyOtherPlanes(int index, float radius, int maxTries)
     {
         Vector3 spawnPos = Utility.GetRandPosInPlaneAndFarFromEdge(sortedPlanes[index], radius, maxTries);
@@ -520,6 +524,7 @@ public class ARSetUp : PlayerComponent
     {
         int planeCount = sortedPlanes.Count;
         int relicCount = relicObjList.Count;
+        int entranceCount = entranceObjList.Count;
         List<Vector3> spawnedList = new List<Vector3>();
         for (int i = 0; i < planeCount; i++)
         {
@@ -542,14 +547,14 @@ public class ARSetUp : PlayerComponent
             }
             */
 
-            int structureSpawnCount = (int)(Utility.GetAreaSqr(sortedPlanes[i]) * 2.0f);
-            structureSpawnCount = Mathf.Clamp(structureSpawnCount, 2, 20);
+            int structureSpawnCount = (int)(Utility.GetAreaSqr(sortedPlanes[i]) * 4.0f);
+            structureSpawnCount = Mathf.Clamp(structureSpawnCount, 6, 30);
             for (int j = 0; j < structureSpawnCount; j++)
             {
                 int rndmIndex = Random.Range(0, environmentData.structureDataList.Length);
                 float radius = environmentData.structureDataList[rndmIndex].radius;
 
-                Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, spawnedList, 10);
+                Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, entranceCount, spawnedList, 5);
                 if (spawnPos.x > float.MaxValue / 2f) continue;
                 else
                 {
@@ -562,14 +567,14 @@ public class ARSetUp : PlayerComponent
             }
 
             int decorSpawnCount = (int)(Utility.GetAreaSqr(sortedPlanes[i]) * 1.0f);
-            decorSpawnCount = Mathf.Clamp(decorSpawnCount, 5, 10);
+            decorSpawnCount = Mathf.Clamp(decorSpawnCount, 2, 6);
             for (int j = 0; j < decorSpawnCount; j++)
             {
 
                 int rndmIndex = Random.Range(0, environmentData.decorDataList.Length);
                 float radius = environmentData.decorDataList[rndmIndex].radius;
 
-                Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, spawnedList, 5);
+                Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, entranceCount, spawnedList, 5);
                 if (spawnPos.x > float.MaxValue / 2f) continue;
                 else
                 {
@@ -588,10 +593,10 @@ public class ARSetUp : PlayerComponent
         yield return null;
     }
 
-    private Vector3 GetEnvObjSpawnPos(float radius, int planeIndex, int relicCount, List<Vector3> spawnedList, int maxTries)
+    private Vector3 GetEnvObjSpawnPos(float radius, int planeIndex, int relicCount, int entranceCount, List<Vector3> spawnedList, int maxTries)
     {
         Vector3 spawnPos = GetRandPosNotUnderAnyOtherPlanes(planeIndex, radius, maxTries);
-        int countOfObjToCheckFor = relicCount + spawnedList.Count;
+        int countOfObjToCheckFor = relicCount + entranceCount + spawnedList.Count;
         int tries = 0;
         for (int k = 0; k < countOfObjToCheckFor; k++)
         {
@@ -606,9 +611,21 @@ public class ARSetUp : PlayerComponent
                     k = 0;
                 }
             }
-            else
+            else if (k - relicCount < entranceCount)
             {
                 int index = k - relicCount;
+                if (Mathf.Pow(spawnPos.x - entranceObjList[index].transform.position.x, 2f) +
+                    Mathf.Pow(spawnPos.z - entranceObjList[index].transform.position.z, 2f) <
+                    Mathf.Pow(radius + 0.2f, 2f))
+                {
+                    spawnPos = GetRandPosNotUnderAnyOtherPlanes(planeIndex, radius, maxTries);
+                    if (spawnPos.x > float.MaxValue / 2f) return spawnPos;
+                    k = 0;
+                }
+            }
+            else
+            {
+                int index = k - relicCount - entranceCount;
                 if (Mathf.Pow(spawnPos.x - spawnedList[index].x, 2f) +
                     Mathf.Pow(spawnPos.z - spawnedList[index].z, 2f) <
                     Mathf.Pow(spawnedList[index].y + radius, 2f))
@@ -645,7 +662,6 @@ public class ARSetUp : PlayerComponent
     private void RpcSetMessage()
     {
         if (isServer) return;
-        CanvasManager.Instance.SetMessage("Click one of the white boxes to choose where to spawn from");
     }
 
     [ClientRpc]

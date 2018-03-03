@@ -13,6 +13,7 @@ public class PlayerInitializer : NetworkBehaviour
     #region Fields
     public PlayerType playerType;
     public Renderer[] renderersToDisbale;
+    public Renderer[] renderersToEnable;
     public Camera cameraToEnable;
 
     public Camera[] camerasToDisable;
@@ -33,6 +34,11 @@ public class PlayerInitializer : NetworkBehaviour
         int count = renderersToDisbale.Length;
         for (int i = 0; i < count; i++)
             renderersToDisbale[i].enabled = false;
+
+
+        count = renderersToEnable.Length;
+        for (int i = 0; i < count; i++)
+            renderersToEnable[i].enabled = true;
 
         //Enables its camera and audio listenrs
         if (cameraToEnable)
