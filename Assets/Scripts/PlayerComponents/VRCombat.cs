@@ -36,8 +36,15 @@ public class VRCombat : PlayerComponent
     //visual feedback for getting hurt
     public GameObject HurtScreenPrefab;
     private HurtFlash[] hurtFlashes;
-    private int hurtFlashCount = 7;
+    private int hurtFlashCount = 1;
     private int hurtFlashIndex = 0;
+
+    private Renderer[] playerRenderers;
+
+    private float timer = 0f;
+    private float fadeSpeed = 0.1f;
+    private Color transparent = new Color(1, 1, 1, 0);
+    private Color solid = new Color(1, 1, 1, 0);
 
     //relic stuff
     [SyncVar]
@@ -52,18 +59,17 @@ public class VRCombat : PlayerComponent
         canvas = CanvasManager.Instance.transform;
         avatar = player.avatar.transform;
 
+        playerRenderers = player.renderersToDisbale;
         if (!isLocalPlayer)
         {
-            //physical health bar
-            healthBar = Instantiate(healthBarPrefab).GetComponent<HealthBar>();
-            healthBar.Init(this, playerType, avatar);
+            //healthBar = Instantiate(healthBarPrefab).GetComponent<HealthBar>();
+            //healthBar.Init(this, playerType, avatar);
         }
         else
         {
             hurtFlashes = new HurtFlash[hurtFlashCount];
             for (int i = 0; i < hurtFlashCount; i++)
                 hurtFlashes[i] = Instantiate(HurtScreenPrefab, canvas).GetComponent<HurtFlash>();
-
             CanvasManager.Instance.InitHealthEnergyBar(this);
         }
     }
@@ -92,6 +98,18 @@ public class VRCombat : PlayerComponent
         }
     }
     #endregion
+
+    private void Update()
+    {
+        if (isServer)
+        {
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                IEnumerator flash = Flash(MAX_INVUL_TIME);
+                StartCoroutine(flash);
+            }
+        }
+    }
 
     [Server]
     public void TakeDamage()
@@ -147,30 +165,28 @@ public class VRCombat : PlayerComponent
     IEnumerator Flash(float waitTime)
     {
         //turn this to a fading sort of thing?
-        foreach (Renderer r in player.avatar.GetComponentsInChildren<Renderer>())
+        while (timer < 1f)
         {
-            r.enabled = false;
+            timer += fadeSpeed;
+            for (int i = 0; i < playerRenderers.Length; i++)
+            {
+                playerRenderers[i].material.SetColor("_Color", Color.Lerp(solid, transparent, timer));
+            }
+            yield return new WaitForEndOfFrame();
         }
-        foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
-        {
-            r.enabled = false;
-        }
-        healthBar.gameObject.SetActive(false);
 
-        //starts the next coroutine
+        //waits before fading in
         yield return new WaitForSeconds(waitTime);
 
-        healthBar.GetComponent<Renderer>().enabled = true;
-
-        foreach (Renderer r in player.avatar.GetComponentsInChildren<Renderer>())
+        while (timer < 2f)
         {
-            r.enabled = true;
+            timer += fadeSpeed;
+            for (int i = 0; i < playerRenderers.Length; i++)
+            {
+                playerRenderers[i].material.SetColor("_Color", Color.Lerp(transparent, solid, timer - 1f));
+            }
+            yield return new WaitForEndOfFrame();
         }
-        foreach (Renderer r in healthBar.GetComponentsInChildren<Renderer>())
-        {
-            r.enabled = true;
-        }
-        healthBar.gameObject.SetActive(true);
 
         isInvulnerable = false;
     }

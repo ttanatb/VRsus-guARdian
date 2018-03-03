@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -10,14 +11,7 @@ using UnityEngine.Networking;
 public class VRTransition : PlayerComponent
 {
     #region Fields
-    private bool isUsingTopViewCam = false;         //if currently in placing mode
-    private bool switchingCam = false;               //if switching in/out of placing mode
-
     //cameras
-    public GameObject topViewCamPrefab;
-    private GameObject topViewCamObj;
-
-    private Camera topViewCam;
     private Camera fpsCamera;
 
     //the speed of fading
@@ -29,20 +23,15 @@ public class VRTransition : PlayerComponent
 
     //player renderer
     private Movement movement;
-    public LayerMask mask;
+    private MeshRenderer blackPlaneFader;
+    private float timer = 0f;
 
-    public Vector3 startingPos;
+    private Color transparent = new Color(0, 0, 0, 0);
+    private Color black = new Color(0, 0, 0, 1);
     #endregion
 
     #region Init & Destruction
-    protected override void InitObj()
-    {
-        if (!topViewCamObj)
-            topViewCamObj = Instantiate(topViewCamPrefab);
-
-        if (!topViewCam && topViewCamObj)
-            topViewCam = topViewCamObj.GetComponent<Camera>();
-    }
+    protected override void InitObj() { }
 
     /// <summary>
     /// Initialization
@@ -52,41 +41,11 @@ public class VRTransition : PlayerComponent
         //only initializes if isLocalPlayer
         if (isLocalPlayer)
         {
-            InitObj(); //creates top-view camera
             fpsCamera = GetComponent<PlayerInitializer>().cameraToEnable;
-
-            //adjusts the black plane
-            Color c = topViewCamObj.transform.GetChild(0).GetComponent<Renderer>().material.color;
-            c.a = 1f;
-            topViewCamObj.transform.GetChild(0).GetComponent<Renderer>().material.color = c;
-
+            blackPlaneFader = fpsCamera.transform.GetChild(0).GetComponent<MeshRenderer>();
             movement = GetComponent<Movement>();
 
-            //SwitchToTopViewCam();
-            SwitchToFPSCam();
-            //Invoke("SwitchToFPSCam", 1.75f);
-            movement.EnableMovement();
         }
-    }
-
-    private void OnDestroy()
-    {
-        if (topViewCamObj)
-        {
-            Destroy(topViewCamObj);
-        }
-    }
-    #endregion
-
-    #region Life Cycle
-    // Update is called once per frame
-    void Update()
-    {
-        if (!isLocalPlayer || switchingCam || !isUsingTopViewCam)
-            return;
-
-        CheckClickOnEntrance();
-        UpdateTopViewCameraMovement();
     }
     #endregion
 
@@ -95,9 +54,11 @@ public class VRTransition : PlayerComponent
     /// Function to call from the server to force camera transition
     /// </summary>
     [ClientRpc]
-    public void RpcSwitchToTopViewCam()
+    public void RpcSpawnRandom(Vector3 position)
     {
-        SwitchToTopViewCam();
+        if (!isServer)
+            CanvasManager.Instance.SetMessage("Click one of the white boxes to choose where to spawn from");
+        FadeOutAndIn(position);
     }
     #endregion
 
@@ -105,30 +66,6 @@ public class VRTransition : PlayerComponent
     /// <summary>
     /// Checks if user has clicked (selected) on an entrance to start at
     /// </summary>
-    private void CheckClickOnEntrance()
-    {
-        //check left click
-        if (Input.GetMouseButtonUp(0))
-        {
-            //raycasts from click
-            RaycastHit hitInfo;
-            Ray ray = topViewCam.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hitInfo, float.MaxValue, mask))
-            {
-                //switches to the location
-                SwitchToFPSCam();
-                transform.position = hitInfo.point;
-                startingPos = hitInfo.point;
-                CmdSetIntruderMessage();
-                Entrance[] entrances = FindObjectsOfType<Entrance>();
-                foreach(Entrance e in entrances)
-                {
-                    e.Deactivate();
-                }
-            }
-        }
-    }
-
     [Command]
     private void CmdSetIntruderMessage()
     {
@@ -137,60 +74,22 @@ public class VRTransition : PlayerComponent
     }
 
     /// <summary>
-    /// Moves the screen around according to mouse movement
-    /// </summary>
-    private void UpdateTopViewCameraMovement()
-    {
-        float zoom = -Input.GetAxis("Mouse ScrollWheel");
-        float horizontal = Input.GetAxis("Mouse X");
-        float vertical = Input.GetAxis("Mouse Y");
-
-        horizontal *= 0.02f;
-        vertical *= 0.02f;
-
-        //adjusts cam position and size
-        topViewCam.transform.position = topViewCam.transform.position +
-            horizontal * topViewCam.transform.right +
-            vertical * topViewCam.transform.up;
-        topViewCam.orthographicSize += zoom;
-    }
-
-    /// <summary>
     /// Function to switch into placing mode
     /// </summary>
-    private void SwitchToTopViewCam()
+    private void FadeOutAndIn(Vector3 newPos)
     {
-        if (!isLocalPlayer || isUsingTopViewCam) return;
+        if (!isLocalPlayer) return;
 
         StopAllCoroutines();
-        switchingCam = true;
 
         if (movement)
             movement.DisableMovement();
 
-        IEnumerator fadeOut = FadeOut(fpsCamera, topViewCam, true);
-        IEnumerator fadeIn = FadeIn(topViewCam, fpsCamera);
-
-        StartCoroutine(fadeOut);
-        StartCoroutine(fadeIn);
-    }
-
-    /// <summary>
-    /// Function to fade cameras and switch to a FPS camera
-    /// </summary>
-    private void SwitchToFPSCam()
-    {
-        if (!isLocalPlayer || !isUsingTopViewCam) return;
-
-        StopAllCoroutines();
-        switchingCam = true;
-
-        IEnumerator fadeOut = FadeOut(topViewCam, fpsCamera, false);
-        IEnumerator fadeIn = FadeIn(fpsCamera, topViewCam);
-
-        StartCoroutine(fadeIn);
+        IEnumerator fadeOut = Fade(newPos); 
+        timer = 0;
         StartCoroutine(fadeOut);
     }
+
 
     /// <summary>
     /// Fades out a camera and then switches it
@@ -199,83 +98,31 @@ public class VRTransition : PlayerComponent
     /// <param name="camToSwitchTo">To other cam to switch to</param>
     /// <param name="adjustTopViewCam">Whether or not the topViewCamera should adjust its position</param>
     /// <returns></returns>
-    private IEnumerator FadeOut(Camera cameraToFadeOut, Camera camToSwitchTo, bool adjustTopViewCam)
+    private IEnumerator Fade(Vector3 newPos)
     {
-        //gets the 'screen' in front of the camera to fake the fading
-        Renderer rend = cameraToFadeOut.transform.GetChild(0).GetComponent<Renderer>();
-        Color c = rend.material.color;
-        float alpha = rend.material.color.a;
-
-        //adjusts the alpha to fade
-        for (; alpha < 1f; alpha += fadeSpeed)
+        while (timer < 1f)
         {
-            c.a = alpha;
-            rend.material.color = c;
-
-            yield return null;
-        }
-
-        //sets it at 1
-        c.a = 1;
-        rend.material.color = c;
-
-        //repositions the top-view camera
-        if (adjustTopViewCam)
-        {
-            Vector3 avgPos = LocalObjectBuilder.Instance.GetAveragePos();
-            Vector3 topViewPos = camToSwitchTo.transform.position;
-            topViewPos.x = avgPos.x;
-            topViewPos.z = avgPos.z;
-            camToSwitchTo.transform.position = topViewPos;
+            timer += fadeSpeed;
+            blackPlaneFader.material.SetColor("_Color", Color.Lerp(transparent, black, timer));
+            yield return new WaitForEndOfFrame();
         }
 
         //waits before fading in
         yield return new WaitForSeconds(waitTime);
+        transform.position = newPos;
 
-        //switches the camera
-        cameraToFadeOut.enabled = false;
-        camToSwitchTo.enabled = true;
-    }
-
-    /// <summary>
-    /// Fades in a camera and then updates variables
-    /// </summary>
-    /// <param name="cameraToFadeIn">Either topViewCam or fpsCam</param>
-    /// <param name="otherCamera">The other cam to switch from</param>
-    private IEnumerator FadeIn(Camera cameraToFadeIn, Camera otherCamera)
-    {
-        //waits until camera had switched
-        while (otherCamera.enabled)
+        while (timer < 2f)
         {
-            yield return null;
+            timer += fadeSpeed;
+            blackPlaneFader.material.SetColor("_Color", Color.Lerp(black, transparent, timer  - 1f));
+            yield return new WaitForEndOfFrame();
         }
 
-        //gets the 'screen' in front of the camera to fake the fading
-        Renderer rend = cameraToFadeIn.transform.GetChild(0).GetComponent<Renderer>();
-        Color c = rend.material.color;
-        float alpha = rend.material.color.a;
+        if (movement)
+            movement.EnableMovement();
 
-        //adjusts the alpha to fade
-        for (; alpha > 0f; alpha -= fadeSpeed)
-        {
-            c.a = alpha;
-            rend.material.color = c;
-
-            yield return null;
-        }
-
-        //sets it at 0
-        c.a = 0;
-        rend.material.color = c;
-
-        //finalizes switch
-        isUsingTopViewCam = !isUsingTopViewCam;
-        switchingCam = false;
-        if (!isUsingTopViewCam)
-        {
-            if (movement)
-                movement.EnableMovement();
-        }
+        CmdSetIntruderMessage();
+        yield return null;
     }
     #endregion
 }
