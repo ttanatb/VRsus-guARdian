@@ -39,7 +39,18 @@ public class UnityARCameraManager : SingletonMonoBehaviour<UnityARCameraManager>
 		}
 	}
 
-	void FirstFrameUpdate(UnityARCamera cam)
+    public void StopTracking()
+    {
+        m_session = UnityARSessionNativeInterface.GetARSessionNativeInterface();
+        ARKitWorldTrackingSessionConfiguration config = new ARKitWorldTrackingSessionConfiguration();
+        config.planeDetection = UnityARPlaneDetection.None;
+        config.alignment = startAlignment;
+        config.getPointCloudData = getPointCloud;
+        config.enableLightEstimation = enableLightEstimation;
+        m_session.RunWithConfig(config);
+    }
+
+    void FirstFrameUpdate(UnityARCamera cam)
 	{
 		sessionStarted = true;
 		UnityARSessionNativeInterface.ARFrameUpdatedEvent -= FirstFrameUpdate;
