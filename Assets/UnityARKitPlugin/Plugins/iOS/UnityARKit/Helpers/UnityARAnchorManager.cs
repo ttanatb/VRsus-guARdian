@@ -22,6 +22,11 @@ namespace UnityEngine.XR.iOS
             instance = this;
 		}
 
+        public void TogglePlaneMaterial()
+        {
+
+        }
+
 
 		public void AddAnchor(ARPlaneAnchor arPlaneAnchor)
 		{

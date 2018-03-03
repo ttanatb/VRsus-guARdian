@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.iOS;
 
-public class UnityARCameraManager : MonoBehaviour {
+public class UnityARCameraManager : SingletonMonoBehaviour<UnityARCameraManager> {
 
     public Camera m_camera;
     private UnityARSessionNativeInterface m_session;
