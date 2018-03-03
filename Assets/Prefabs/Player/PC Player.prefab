@@ -1528,6 +1528,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transparentMat: {fileID: 2100000, guid: 5b4366177b2370d4bbab08047c61144d, type: 2}
   fadeSpeed: 0.025
+  trailRenderer: {fileID: 96863837334090694}
 --- !u!114 &114075082641424110
 MonoBehaviour:
   m_ObjectHideFlags: 1

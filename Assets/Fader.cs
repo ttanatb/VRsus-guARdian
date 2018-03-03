@@ -12,14 +12,13 @@ public class Fader : MonoBehaviour
     private Color transparentC;
     private Color solidColor;
     private float timer;
-    private TrailRenderer trailRenderer;
+    public TrailRenderer trailRenderer;
 
     private VRCombat combat;
     // Use this for initialization
     void Start()
     {
         charRenderer = GetComponentInChildren<Renderer>();
-        trailRenderer = GetComponentInChildren<TrailRenderer>();
         defaultMat = charRenderer.material;
         transparentC = new Color(0, 0, 0, 0);
         solidColor = new Color(0, 0, 0, 0.95f);
