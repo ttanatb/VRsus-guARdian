@@ -301,13 +301,13 @@ public class ARSetUp : PlayerComponent
         }
         else
         {
-            if (UnityARAnchorManager.Instance.planeAnchorMap.Count < 0)
+            if (UnityARAnchorManager.Instance.PlaneAnchorMap.Count < 0)
                 return false;
 
-            foreach (string key in UnityARAnchorManager.Instance.planeAnchorMap.Keys)
+            foreach (string key in UnityARAnchorManager.Instance.PlaneAnchorMap.Keys)
             {
-                float planeArea = UnityARAnchorManager.Instance.planeAnchorMap[key].gameObject.transform.GetChild(0).localScale.x *
-                    UnityARAnchorManager.Instance.planeAnchorMap[key].gameObject.transform.GetChild(0).localScale.z;
+                float planeArea = UnityARAnchorManager.Instance.PlaneAnchorMap[key].gameObject.transform.GetChild(0).localScale.x *
+                    UnityARAnchorManager.Instance.PlaneAnchorMap[key].gameObject.transform.GetChild(0).localScale.z;
 
                 area += planeArea;
             }
