@@ -1,0 +1,196 @@
+fileFormatVersion: 2
+guid: 7484100ae83b7494d92243fc9d35f066
+timeCreated: 1519960676
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Character
+    100002: Head
+    100004: Hip
+    100006: Hip_CTRL
+    100008: joint1
+    100010: joint2
+    100012: Left_Ankle
+    100014: Left_Clavicle
+    100016: Left_Ear
+    100018: Left_ear_End
+    100020: Left_Elbow
+    100022: Left_Foot
+    100024: Left_Hand
+    100026: Left_LowerLeg
+    100028: Left_Shoulder
+    100030: Left_Toe
+    100032: Left_UpperLeg
+    100034: Left_Wrist
+    100036: Master_CTRL
+    100038: Neck
+    100040: Right_Ankle
+    100042: Right_Clavicle
+    100044: Right_Ear
+    100046: Right_ear_End
+    100048: Right_Elbow
+    100050: Right_Foot
+    100052: Right_Hand
+    100054: Right_LowerLeg
+    100056: Right_Shoulder
+    100058: Right_Toe
+    100060: Right_UpperLeg
+    100062: Right_Wrist
+    100064: Spine1
+    100066: Spine2
+    100068: Spine3
+    100070: //RootNode
+    100072: Zipper
+    100074: Zipper_Cap
+    400000: Character
+    400002: Head
+    400004: Hip
+    400006: Hip_CTRL
+    400008: joint1
+    400010: joint2
+    400012: Left_Ankle
+    400014: Left_Clavicle
+    400016: Left_Ear
+    400018: Left_ear_End
+    400020: Left_Elbow
+    400022: Left_Foot
+    400024: Left_Hand
+    400026: Left_LowerLeg
+    400028: Left_Shoulder
+    400030: Left_Toe
+    400032: Left_UpperLeg
+    400034: Left_Wrist
+    400036: Master_CTRL
+    400038: Neck
+    400040: Right_Ankle
+    400042: Right_Clavicle
+    400044: Right_Ear
+    400046: Right_ear_End
+    400048: Right_Elbow
+    400050: Right_Foot
+    400052: Right_Hand
+    400054: Right_LowerLeg
+    400056: Right_Shoulder
+    400058: Right_Toe
+    400060: Right_UpperLeg
+    400062: Right_Wrist
+    400064: Spine1
+    400066: Spine2
+    400068: Spine3
+    400070: //RootNode
+    400072: Zipper
+    400074: Zipper_Cap
+    2100000: interloper
+    4300000: Character
+    7400000: ch_interloper_walk
+    9500000: //RootNode
+    13700000: Character
+  externalObjects: {}
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: ch_interloper_walk
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 118
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
