@@ -102,7 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07ef4404dba2ce94bb4b80562a6e7797, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  environmentData: {fileID: 11400000, guid: f897cd199a7dd6e4a8baaa374ffb64a8, type: 2}
+  environmentData: {fileID: 0}
   pSystem: {fileID: 198093669859168206}
 --- !u!114 &114170933178170520
 MonoBehaviour:
