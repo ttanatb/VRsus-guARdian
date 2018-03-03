@@ -286,7 +286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 176692702b5afb741b3b1d5487c11338, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  decorListObj: {fileID: 11400000, guid: f897cd199a7dd6e4a8baaa374ffb64a8, type: 2}
+  decorListObj: {fileID: 11400000, guid: ddc3dd1b07965154597c2a4506de1c4a, type: 2}
   envObjPrefab: {fileID: 1955769541861086, guid: 65ec847e51651244b936d7619bb92e7f,
     type: 2}
 --- !u!4 &1378159650

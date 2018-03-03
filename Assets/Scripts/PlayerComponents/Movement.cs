@@ -26,7 +26,7 @@ public class Movement : PlayerComponent
     private float slowTimer;
     private const float MAX_SLOW_TIME = 2f;
 
-    public bool isOnFloor = false;
+    public bool isOnFloor = true;
 
     private Rigidbody rBody;
     private TrailRenderer trailRenderer;
@@ -35,6 +35,9 @@ public class Movement : PlayerComponent
 
     public GameObject grapplePrefab;
 
+    private Animator networkAnimator;
+
+    public Transform cameraTransform;
 
     public bool IsSlowed
     {
@@ -62,6 +65,9 @@ public class Movement : PlayerComponent
     {
         isPlaying = true;
         InitObj();
+        networkAnimator = GetComponentInChildren<Animator>();
+
+        if (!cameraTransform) cameraTransform = transform;
 
         if ((playerType == PlayerType.PC || playerType == PlayerType.VR) && isLocalPlayer)
         {
@@ -73,6 +79,8 @@ public class Movement : PlayerComponent
             right.player = gameObject;
             left.playerAnchor = leftController.transform;
             right.playerAnchor = rightController.transform;
+            left.animController = networkAnimator;
+            right.animController = networkAnimator;
             left.button = "Fire2";
             right.button = "Fire3";
             left.otherGrappling = right;
@@ -114,8 +122,8 @@ public class Movement : PlayerComponent
 #endif
             rotX = Mathf.Clamp(rotX, -clampAngle, clampAngle);
 
-            Quaternion localRotation = Quaternion.Euler(rotX, rotY, 0.0f);
-            transform.rotation = localRotation;
+            transform.rotation = Quaternion.AngleAxis(rotY, Vector3.up);
+            cameraTransform.rotation = transform.rotation * Quaternion.AngleAxis(rotX, Vector3.right) ; // 0.0f, rotY, 0.0f);
         }
     }
 
@@ -153,16 +161,16 @@ public class Movement : PlayerComponent
             }
             else
             {
-                Vector3 movement = transform.right * Input.GetAxis("Horizontal");
+                Vector3 movement = cameraTransform.right * Input.GetAxis("Horizontal");
 
                 if (playerType == PlayerType.AR)
                 {
                     movement += Input.GetAxis("UpDown") * Vector3.up;
-                    movement = (movement + transform.forward * Input.GetAxis("Vertical")) * movementSpeed;
+                    movement = (movement + cameraTransform.forward * Input.GetAxis("Vertical")) * movementSpeed;
                 }
                 else
                 {
-                    movement = (movement + Vector3.ProjectOnPlane(transform.forward, Vector3.up) * Input.GetAxis("Vertical")) * movementSpeed;
+                    movement = (movement + Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up) * Input.GetAxis("Vertical")) * movementSpeed;
                 }
 
                 //Debug.Log("Timer: " + slowTimer);
@@ -173,6 +181,7 @@ public class Movement : PlayerComponent
 
                 if (playerType == PlayerType.PC)
                 {
+                    networkAnimator.SetBool("isWalking", (Mathf.Abs(movement.x) > 0f || Mathf.Abs(movement.z) > 0f));
                     rBody.AddForce(movement, ForceMode.Acceleration);
                 }
                 else
@@ -200,16 +209,18 @@ public class Movement : PlayerComponent
     {
         if (isOnFloor)
         {
+            //networkAnimator.SetTrigger("Jump");
             rBody.AddForce(Vector3.up * 2f, ForceMode.VelocityChange);
             isOnFloor = false;
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionStay(Collision collision)
     {
         if ((collision.gameObject.tag == "Platform") &&
-            (transform.position.y > collision.transform.position.y + collision.transform.localScale.y / 2.1f))
+            (transform.position.y > collision.transform.position.y + collision.transform.localScale.y / 2f))
         {
+            networkAnimator.SetBool("isOnLand", true);
             isOnFloor = true;
         }
     }
@@ -218,6 +229,7 @@ public class Movement : PlayerComponent
     {
         if (collision.gameObject.tag == "Platform")
         {
+            networkAnimator.SetBool("isOnLand", false);
             isOnFloor = false;
         }
     }

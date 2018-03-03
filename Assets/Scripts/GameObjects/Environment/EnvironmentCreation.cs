@@ -113,7 +113,8 @@ public class EnvironmentCreation : MonoBehaviour
             plains.UploadMeshData(false);
 
             GetComponent<MeshFilter>().sharedMesh = mountains;
-            plainFilter.sharedMesh = plains;
+            if (plainFilter)
+                plainFilter.sharedMesh = plains;
             GetComponent<MeshCollider>().sharedMesh = plains;
 
             Mesh boundaryMesh = new Mesh();

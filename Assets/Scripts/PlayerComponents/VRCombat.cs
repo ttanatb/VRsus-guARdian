@@ -45,12 +45,17 @@ public class VRCombat : PlayerComponent
     private float fadeSpeed = 0.1f;
     private Color transparent = new Color(1, 1, 1, 0);
     private Color solid = new Color(1, 1, 1, 0);
+    private Fader fader;
 
     //relic stuff
     [SyncVar]
     private int relicCount = 0;
 
-    public bool IsInvulnerable { get { return isInvulnerable; } }
+    public bool IsInvulnerable
+    {
+        get { return isInvulnerable; }
+        set { isInvulnerable = value; }
+    }
     #endregion
 
     #region Init & Destruction
@@ -62,6 +67,7 @@ public class VRCombat : PlayerComponent
         playerRenderers = player.renderersToDisbale;
         if (!isLocalPlayer)
         {
+            fader = GetComponentInChildren<Fader>();
             //healthBar = Instantiate(healthBarPrefab).GetComponent<HealthBar>();
             //healthBar.Init(this, playerType, avatar);
         }
@@ -99,18 +105,6 @@ public class VRCombat : PlayerComponent
     }
     #endregion
 
-    private void Update()
-    {
-        if (isServer)
-        {
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                IEnumerator flash = Flash(MAX_INVUL_TIME);
-                StartCoroutine(flash);
-            }
-        }
-    }
-
     [Server]
     public void TakeDamage()
     {
@@ -127,8 +121,9 @@ public class VRCombat : PlayerComponent
         {
             RpcFlashRed();
             isInvulnerable = true;
-            IEnumerator flash = Flash(MAX_INVUL_TIME);
-            StartCoroutine(flash);
+            fader.Fade(MAX_INVUL_TIME);
+
+            CanvasManager.Instance.SetMessage("The intruder was hit! Life total at " + (int)(health / (float)maxHealth * 100f) + "%");
         }
     }
 

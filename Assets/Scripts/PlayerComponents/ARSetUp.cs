@@ -64,6 +64,8 @@ public class ARSetUp : PlayerComponent
 
     private ARCombat combat;
 
+    private PraticeArea practiceArea;
+
     private float scale;
     /// <summary>
     /// Gets the current phase of the game
@@ -86,6 +88,7 @@ public class ARSetUp : PlayerComponent
         {
             InitObj();
             CanvasManager.Instance.SetUpUI(this);
+            practiceArea = FindObjectOfType<PraticeArea>();
         }
     }
 
@@ -381,8 +384,7 @@ public class ARSetUp : PlayerComponent
                 foreach (TrapDefense trap in trapObjList) trap.TransitionToPlayPhase();
 
                 VRTransition vrTransition = FindObjectOfType<VRTransition>();
-                if (vrTransition)
-                    vrTransition.RpcSpawnRandom(entranceObjList[Random.Range(0, entranceObjList.Count)].transform.position);
+                    practiceArea.RpcActivateEntrance(entranceObjList[Random.Range(0, entranceObjList.Count)].transform.position);
                 if (combat != null)
                     combat.IsShootingEnabled = true;
 #if UNITY_IOS
@@ -545,14 +547,14 @@ public class ARSetUp : PlayerComponent
             }
             */
 
-            int structureSpawnCount = (int)(Utility.GetAreaSqr(sortedPlanes[i]) * 2.0f);
-            structureSpawnCount = Mathf.Clamp(structureSpawnCount, 2, 20);
+            int structureSpawnCount = (int)(Utility.GetAreaSqr(sortedPlanes[i]) * 4.0f);
+            structureSpawnCount = Mathf.Clamp(structureSpawnCount, 6, 30);
             for (int j = 0; j < structureSpawnCount; j++)
             {
                 int rndmIndex = Random.Range(0, environmentData.structureDataList.Length);
                 float radius = environmentData.structureDataList[rndmIndex].radius;
 
-                Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, entranceCount, spawnedList, 10);
+                Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, entranceCount, spawnedList, 5);
                 if (spawnPos.x > float.MaxValue / 2f) continue;
                 else
                 {
@@ -565,7 +567,7 @@ public class ARSetUp : PlayerComponent
             }
 
             int decorSpawnCount = (int)(Utility.GetAreaSqr(sortedPlanes[i]) * 1.0f);
-            decorSpawnCount = Mathf.Clamp(decorSpawnCount, 5, 10);
+            decorSpawnCount = Mathf.Clamp(decorSpawnCount, 2, 6);
             for (int j = 0; j < decorSpawnCount; j++)
             {
 

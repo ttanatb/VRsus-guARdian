@@ -152,7 +152,7 @@ public class ARCombat : PlayerComponent
             }
 
             //puts it at the furthest distance
-            else laserPoint = avatar.position + avatar.forward * layerMaxDist;
+            else laserPoint = avatar.position + -avatar.forward * layerMaxDist;
 
             //updates timer
             laserTimer += Time.deltaTime;

@@ -53,12 +53,9 @@ public class VRTransition : PlayerComponent
     /// <summary>
     /// Function to call from the server to force camera transition
     /// </summary>
-    [ClientRpc]
-    public void RpcSpawnRandom(Vector3 position)
+    public void SpawnInPos(Vector3 position)
     {
-        if (!isServer)
-            CanvasManager.Instance.SetMessage("Click one of the white boxes to choose where to spawn from");
-        FadeOutAndIn(position);
+        FadeOutAndIn(position + Vector3.up * 0.1f);
     }
     #endregion
 
