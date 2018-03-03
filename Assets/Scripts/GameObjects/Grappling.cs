@@ -94,7 +94,7 @@ public class Grappling : MonoBehaviour //: Launchable
         {
             if (!Input.GetButton(button))
             {
-                animController.SetTrigger("LetGo");
+                animController.SetBool("isFlying", false);
                 LetGo();
             }
             else
@@ -117,6 +117,7 @@ public class Grappling : MonoBehaviour //: Launchable
             state = 3;
             playerRBody.velocity = Vector3.zero;
             animController.SetBool("isClinging", true);
+            animController.SetBool("isFlying", false);
         }
     }
 
@@ -128,7 +129,6 @@ public class Grappling : MonoBehaviour //: Launchable
             state = 0;
             transform.position = Vector3.one * 1000f;
             lineRenderer.enabled = false;
-            animController.ResetTrigger("LetGo");
         }
     }
 
@@ -183,7 +183,7 @@ public class Grappling : MonoBehaviour //: Launchable
 
     void OnCollisionEnter(Collision collision)
     {
-        if (state != 1 ) return;
+        if (state != 1) return;
 
         if (collisionLayers == (collisionLayers | (1 << collision.collider.gameObject.layer)))
         {
@@ -201,7 +201,7 @@ public class Grappling : MonoBehaviour //: Launchable
 
             playerRBody.useGravity = false;
             timer = 0f;// Time.time;
-            animController.SetTrigger("Fly");
+            animController.SetBool("isFlying", true);
         }
         else
         {

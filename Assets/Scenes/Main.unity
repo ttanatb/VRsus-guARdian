@@ -152,6 +152,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114166146487349670, guid: d9463850551544beabfa1a4dda1a048b,
+        type: 2}
+      propertyPath: clearMat
+      value: 
+      objectReference: {fileID: 2100000, guid: f1d9352050a75486f878ab19fa578f16, type: 2}
+    - target: {fileID: 114166146487349670, guid: d9463850551544beabfa1a4dda1a048b,
+        type: 2}
+      propertyPath: enableLightEstimation
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d9463850551544beabfa1a4dda1a048b, type: 2}
   m_IsPrefabParent: 0
@@ -197,7 +207,7 @@ Prefab:
     - target: {fileID: 114755221778035868, guid: 385e9b11460257a448971729f0afeae0,
         type: 2}
       propertyPath: m_NetworkAddress
-      value: 127.0.0.1
+      value: 129.21.133.24
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 385e9b11460257a448971729f0afeae0, type: 2}

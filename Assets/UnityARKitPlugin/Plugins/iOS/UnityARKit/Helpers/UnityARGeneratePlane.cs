@@ -3,41 +3,31 @@ using System.Collections.Generic;
 
 namespace UnityEngine.XR.iOS
 {
-    public class UnityARGeneratePlane : MonoBehaviour
-    {
-        public GameObject debugPlanePrefab;
-        public GameObject occlusionPlanePrefab;
-
-        private GameObject planePrefab;
+	public class UnityARGeneratePlane : MonoBehaviour
+	{
+		public GameObject planePrefab;
         private UnityARAnchorManager unityARAnchorManager;
 
-#if UNITY_IOS
-        // Use this for initialization
-        void Start()
-        {
-            planePrefab = debugPlanePrefab;
-
+		// Use this for initialization
+		void Start () {
             unityARAnchorManager = new UnityARAnchorManager();
-            UnityARAnchorManager.Instance.SetMaterial(debugPlanePrefab.GetComponentInChildren<Renderer>().sharedMaterial,
-                occlusionPlanePrefab.GetComponentInChildren<Renderer>().sharedMaterial);
-            UnityARUtility.InitializePlanePrefab(planePrefab);
-        }
+			UnityARUtility.InitializePlanePrefab (planePrefab);
+		}
 
         void OnDestroy()
         {
-            unityARAnchorManager.Destroy();
+            unityARAnchorManager.Destroy ();
         }
 
-		int prevCount = 0;
-		void Update() {
-			List<ARPlaneAnchorGameObject> arpags = unityARAnchorManager.GetCurrentPlaneAnchors();
-
-			if (arpags.Count != prevCount) {
-				//Debug.Log ("Added plane");
-			}
-
-			prevCount = arpags.Count;
-		}
-#endif
-    }
+        void OnGUI()
+        {
+            List<ARPlaneAnchorGameObject> arpags = unityARAnchorManager.GetCurrentPlaneAnchors ();
+            if (arpags.Count >= 1) {
+                //ARPlaneAnchor ap = arpags [0].planeAnchor;
+                //GUI.Box (new Rect (100, 100, 800, 60), string.Format ("Center: x:{0}, y:{1}, z:{2}", ap.center.x, ap.center.y, ap.center.z));
+                //GUI.Box(new Rect(100, 200, 800, 60), string.Format ("Extent: x:{0}, y:{1}, z:{2}", ap.extent.x, ap.extent.y, ap.extent.z));
+            }
+        }
+	}
 }
+
