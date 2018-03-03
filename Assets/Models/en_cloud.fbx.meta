@@ -12,6 +12,7 @@ ModelImporter:
     3300000: //RootNode
     4300000: polySurface1
     4300002: en_cloud
+    4300004: en_cloud2
   externalObjects: {}
   materials:
     importMaterials: 0
