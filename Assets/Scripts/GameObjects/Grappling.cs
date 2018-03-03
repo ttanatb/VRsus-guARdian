@@ -129,7 +129,6 @@ public class Grappling : MonoBehaviour //: Launchable
             state = 0;
             transform.position = Vector3.one * 1000f;
             lineRenderer.enabled = false;
-            animController.ResetTrigger("LetGo");
         }
     }
 

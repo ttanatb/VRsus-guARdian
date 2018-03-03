@@ -41,7 +41,7 @@ public class Movement : PlayerComponent
 
     public bool IsSlowed
     {
-        get { return slowTimer > 0f; }
+        get { return slowTimer > MAX_SLOW_TIME / 2f; }
     }
 
     // Use this for initialization
@@ -207,7 +207,7 @@ public class Movement : PlayerComponent
 
     public void Jump()
     {
-        if (isOnFloor)
+        if (isOnFloor && !IsSlowed)
         {
             //networkAnimator.SetTrigger("Jump");
             rBody.AddForce(Vector3.up * 2f, ForceMode.VelocityChange);
