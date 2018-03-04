@@ -207,10 +207,9 @@ public class Movement : PlayerComponent
 
     public void Jump()
     {
-        if (isOnFloor && !IsSlowed)
+        if (isOnFloor)
         {
-            //networkAnimator.SetTrigger("Jump");
-            rBody.AddForce(Vector3.up * 2f, ForceMode.VelocityChange);
+            rBody.AddForce(Vector3.Lerp(Vector3.up * 2f, Vector3.zero, slowTimer / MAX_SLOW_TIME), ForceMode.VelocityChange);
             isOnFloor = false;
         }
     }

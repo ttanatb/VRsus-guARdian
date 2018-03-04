@@ -13,9 +13,24 @@ public class Relic : NetworkBehaviour
     private bool hasBeenStolen = false;
     private List<Entrance> entrances;
 
+    public Light spotLight;
+    public ParticleSystem[] particles;
+
     public override void OnStartServer()
     {
         entrances = new List<Entrance>();
+
+#if UNITY_IOS
+        foreach (ParticleSystem p in particles)
+        {
+            if (p.lights.enabled)
+            {
+                ParticleSystem.LightsModule lights = p.lights;
+                lights.enabled = false;
+            }
+        }
+        spotLight.enabled = false;
+#endif
     }
 
     public void AddEntrance(Entrance entrance)
@@ -32,7 +47,7 @@ public class Relic : NetworkBehaviour
         if (other.gameObject.tag == "Player")
         {
             VRCombat combat = other.GetComponent<VRCombat>();
-            if (!combat) 
+            if (!combat)
                 combat = other.transform.parent.GetComponent<VRCombat>();
             if (!combat.IsInvulnerable)
             {
@@ -58,6 +73,10 @@ public class Relic : NetworkBehaviour
             }
         }
 
+        foreach (ParticleSystem p in particles)
+            p.Stop();
+
+        spotLight.enabled = false;
 
         if (isServer)
             CanvasManager.Instance.SetMessage("A relic was stolen!");
