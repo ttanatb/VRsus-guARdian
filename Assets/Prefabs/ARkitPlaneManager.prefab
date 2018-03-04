@@ -63,7 +63,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31cac8edf84834043ac167deaeba16a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugPlanePrefab: {fileID: 1423934023670396, guid: 57aa159348e5c4d71a7aeb9f5ff90b54,
-    type: 2}
-  occlusionPlanePrefab: {fileID: 1983520619281468, guid: 3540743b8858e214cb16d89f11ffe5a9,
+  planePrefab: {fileID: 1423934023670396, guid: 57aa159348e5c4d71a7aeb9f5ff90b54,
     type: 2}
