@@ -92,7 +92,7 @@ public class Movement : PlayerComponent
             }
             else
             {
-                left.spawnPos  = leftController.transform;
+                left.spawnPos = leftController.transform;
                 right.spawnPos = rightController.transform;
             }
         }
@@ -123,7 +123,7 @@ public class Movement : PlayerComponent
             rotX = Mathf.Clamp(rotX, -clampAngle, clampAngle);
 
             transform.rotation = Quaternion.AngleAxis(rotY, Vector3.up);
-            cameraTransform.rotation = transform.rotation * Quaternion.AngleAxis(rotX, Vector3.right) ; // 0.0f, rotY, 0.0f);
+            cameraTransform.rotation = transform.rotation * Quaternion.AngleAxis(rotX, Vector3.right); // 0.0f, rotY, 0.0f);
         }
     }
 
@@ -157,6 +157,7 @@ public class Movement : PlayerComponent
                     movementY *= Mathf.Lerp(1.0f, slowFactor, slowTimer / MAX_SLOW_TIME);
                 }
 
+                networkAnimator.SetBool("isWalking", (movementX.sqrMagnitude > 0f || movementY.sqrMagnitude > 0f));
                 rBody.MovePosition(movementX + movementY + transform.position);
             }
             else
