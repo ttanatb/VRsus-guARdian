@@ -113,6 +113,52 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &90062208
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4221326151304410, guid: 9c365a32e55a0f74699339e62a41523c, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0.266
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221326151304410, guid: 9c365a32e55a0f74699339e62a41523c, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -0.037
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221326151304410, guid: 9c365a32e55a0f74699339e62a41523c, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221326151304410, guid: 9c365a32e55a0f74699339e62a41523c, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221326151304410, guid: 9c365a32e55a0f74699339e62a41523c, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221326151304410, guid: 9c365a32e55a0f74699339e62a41523c, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221326151304410, guid: 9c365a32e55a0f74699339e62a41523c, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221326151304410, guid: 9c365a32e55a0f74699339e62a41523c, type: 2}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1022647815314212, guid: 9c365a32e55a0f74699339e62a41523c, type: 2}
+      propertyPath: m_Name
+      value: fx_trailing
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 9c365a32e55a0f74699339e62a41523c, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1001 &609099078
 Prefab:
   m_ObjectHideFlags: 0
