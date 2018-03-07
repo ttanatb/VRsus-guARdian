@@ -7,7 +7,7 @@ public class Fader : MonoBehaviour
     public Material transparentMat;
     public float fadeSpeed = 0.1f;
     private Material defaultMat;
-    private Renderer charRenderer;
+    public Renderer charRenderer;
 
     private Color transparentC;
     private Color solidColor;
@@ -18,7 +18,8 @@ public class Fader : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        charRenderer = GetComponentInChildren<Renderer>();
+        if (!charRenderer)
+            charRenderer = GetComponentInChildren<Renderer>();
         defaultMat = charRenderer.material;
         transparentC = new Color(0, 0, 0, 0);
         solidColor = new Color(0, 0, 0, 0.95f);

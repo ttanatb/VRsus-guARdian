@@ -10,12 +10,13 @@ public class ProximitySensor : TrapDefense
 {
     #region Fields
     public float radius = 3;
-    private ParticleSystem alertParticles;
+    public ParticleSystem[] alertParticles;
     public MeshRenderer radiusRenderer;
-    private MeshRenderer meshRenderer;
-    private static Transform[] players;
+    public MeshRenderer trapMeshRenderer;
     private bool isActive = false;
     private SphereCollider radiusCollider;
+
+    private BoxCollider selectionCollider;
     public override string TrapName { get { return "Proximity Sensor"; } }
     #endregion
 
@@ -23,29 +24,21 @@ public class ProximitySensor : TrapDefense
     // Use this for initialization
     void Start()
     {
-        alertParticles = GetComponentInChildren<ParticleSystem>();
-        meshRenderer = GetComponent<MeshRenderer>();
-        if (isServer) meshRenderer.enabled = true;
+        selectionCollider = GetComponent<BoxCollider>();
+        if (!isServer)
+        {
+            selectionCollider.enabled = false;
+            trapMeshRenderer.enabled = false;
+            radiusRenderer.enabled = false;
+        }
     }
 
     public override void OnStartServer()
     {
-        //gets the player to keep track for
-        if (players == null)
-        {
-            PlayerInitializer[] playerScripts = FindObjectsOfType<PlayerInitializer>();
-            players = new Transform[1];
-            for (int i = 0; i < players.Length; i++)
-            {
-                if (playerScripts[i].PlayerType == PlayerType.VR)
-                    players[0] = playerScripts[i].transform;
-            }
-        }
-
         //calc radius sqr
-        transform.GetChild(0).localScale *= radius * 2;// transform.localScale.x;
+        radiusRenderer.transform.localScale *= radius * 2 / 10f;// transform.localScale.x;
         radiusCollider = gameObject.AddComponent<SphereCollider>();
-        radiusCollider.radius = radius;
+        radiusCollider.radius = radius / 10f;
         radiusCollider.isTrigger = true;
         radiusCollider.enabled = false;
     }
@@ -55,7 +48,7 @@ public class ProximitySensor : TrapDefense
     private void OnTriggerEnter(Collider other)
     {
         if (!isServer || isActive) return;
-        if(other.tag == "Player")
+        if (other.tag == "Player")
         {
             isActive = true;
             RpcTriggerAlarm();
@@ -74,17 +67,19 @@ public class ProximitySensor : TrapDefense
     [ClientRpc]
     private void RpcTriggerAlarm()
     {
-        alertParticles.Play();
+        foreach (ParticleSystem p in alertParticles)
+            p.Play();
         if (!isServer)
         {
-            meshRenderer.enabled = true;
+            trapMeshRenderer.enabled = true;
         }
-        meshRenderer.material.color = Color.red;
+        trapMeshRenderer.material.color = Color.red;
     }
 
     public override void TransitionToPlayPhase()
     {
         radiusCollider.enabled = true;
+        selectionCollider.enabled = false;
     }
     #endregion
 }

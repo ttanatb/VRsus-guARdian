@@ -42,12 +42,24 @@ public class VRTransition : PlayerComponent
         if (isLocalPlayer)
         {
             fpsCamera = GetComponent<PlayerInitializer>().cameraToEnable;
+            if (!fpsCamera)
+            {
+                fpsCamera = player.camerasToDisable[0];
+            }
             blackPlaneFader = fpsCamera.transform.GetChild(0).GetComponent<MeshRenderer>();
             movement = GetComponent<Movement>();
 
         }
     }
     #endregion
+
+    void Update()
+    {
+        if(Input.GetKey(KeyCode.O))
+        {
+            FadeOutAndIn(transform.position);
+        }
+    }
 
     #region Networking Function(s)
     /// <summary>

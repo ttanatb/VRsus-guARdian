@@ -17,16 +17,21 @@ public class SlowTrap : TrapDefense
 
     private void Start()
     {
-        swampMeshRenderer = GetComponent<MeshRenderer>();
+        selectorCollider = GetComponent<BoxCollider>();
         transform.GetChild(0).localScale *= radius * 2f / 10f;
+
+        if (!isServer)
+        {
+            selectorCollider.enabled = false;
+            swampMeshRenderer.enabled = false;
+        }
     }
 
     public override void OnStartServer()
     {
         swampMeshRenderer.enabled = true;
-        selectorCollider = GetComponent<BoxCollider>();
         radiusCollider = gameObject.AddComponent<SphereCollider>();
-        radiusCollider.radius = radius;
+        radiusCollider.radius = radius / 10f;
         radiusCollider.isTrigger = true;
         radiusCollider.enabled = false;
     }

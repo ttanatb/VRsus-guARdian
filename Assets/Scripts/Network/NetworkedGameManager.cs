@@ -14,6 +14,8 @@ public class NetworkedGameManager : NetworkManager
     private GameObject practiceAreaObj;
     private PraticeArea practiceArea;
 
+    public bool isVR = false;
+
     private int index = -1;
     // 0 - Default Player
     // 1 - AR Player
@@ -38,7 +40,11 @@ public class NetworkedGameManager : NetworkManager
         //    case 2: Debug.Log("VR Player"); break;
         //    case 3: Debug.Log("PC Player"); break;
         //}
-
+        if (index != 1)
+        {
+            if (isVR) index = 2;
+            else index = 3;
+        }
 
         IntegerMessage msg = new IntegerMessage(index);
         ClientScene.AddPlayer(conn, 0, msg);
@@ -68,7 +74,7 @@ public class NetworkedGameManager : NetworkManager
         {
             position = practiceArea.spawnPos.position;
         }
-        else 
+        else
             NetworkServer.Spawn(practiceAreaObj);
 
         GameObject playerObj = Instantiate(playerPrefabs[playerIndex], position, Quaternion.identity);
@@ -99,7 +105,7 @@ public class NetworkedGameManager : NetworkManager
         //Debug.Log("OnStartClient is Called!");
         if (index == -1)
         {
-            if (UnityEngine.XR.XRSettings.enabled) index = 2;
+            if (isVR) index = 2;
             else index = 3;
         }
         base.OnStartClient(client);
