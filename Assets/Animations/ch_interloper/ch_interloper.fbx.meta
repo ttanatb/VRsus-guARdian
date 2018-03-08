@@ -1,86 +1,91 @@
 fileFormatVersion: 2
-guid: 05f37271ce5b25348961fc128e53b1b0
-timeCreated: 1520544286
+guid: 91d86c132edd611479d75dec90dd71c7
+timeCreated: 1519962283
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: Head
-    100002: Hip
-    100004: Hip_CTRL
-    100006: joint1
-    100008: joint2
-    100010: Left_Ankle
-    100012: Left_Clavicle
-    100014: Left_Ear
-    100016: Left_ear_End
-    100018: Left_Elbow
-    100020: Left_Foot
-    100022: Left_Hand
-    100024: Left_LowerLeg
-    100026: Left_Shoulder
-    100028: Left_Toe
-    100030: Left_UpperLeg
-    100032: Left_Wrist
-    100034: Master_CTRL
-    100036: Neck
-    100038: Right_Ankle
-    100040: Right_Clavicle
-    100042: Right_Ear
-    100044: Right_ear_End
-    100046: Right_Elbow
-    100048: Right_Foot
-    100050: Right_Hand
-    100052: Right_LowerLeg
-    100054: Right_Shoulder
-    100056: Right_Toe
-    100058: Right_UpperLeg
-    100060: Right_Wrist
-    100062: Spine1
-    100064: Spine2
-    100066: Spine3
-    100068: //RootNode
-    100070: Zipper
-    100072: Zipper_Cap
-    400000: Head
-    400002: Hip
-    400004: Hip_CTRL
-    400006: joint1
-    400008: joint2
-    400010: Left_Ankle
-    400012: Left_Clavicle
-    400014: Left_Ear
-    400016: Left_ear_End
-    400018: Left_Elbow
-    400020: Left_Foot
-    400022: Left_Hand
-    400024: Left_LowerLeg
-    400026: Left_Shoulder
-    400028: Left_Toe
-    400030: Left_UpperLeg
-    400032: Left_Wrist
-    400034: Master_CTRL
-    400036: Neck
-    400038: Right_Ankle
-    400040: Right_Clavicle
-    400042: Right_Ear
-    400044: Right_ear_End
-    400046: Right_Elbow
-    400048: Right_Foot
-    400050: Right_Hand
-    400052: Right_LowerLeg
-    400054: Right_Shoulder
-    400056: Right_Toe
-    400058: Right_UpperLeg
-    400060: Right_Wrist
-    400062: Spine1
-    400064: Spine2
-    400066: Spine3
-    400068: //RootNode
-    400070: Zipper
-    400072: Zipper_Cap
-    7400000: ch_interloper_cling
+    100000: Character
+    100002: Head
+    100004: Hip
+    100006: Hip_CTRL
+    100008: //RootNode
+    100010: joint1
+    100012: joint2
+    100014: Left_Ankle
+    100016: Left_Clavicle
+    100018: Left_Ear
+    100020: Left_ear_End
+    100022: Left_Elbow
+    100024: Left_Foot
+    100026: Left_Hand
+    100028: Left_LowerLeg
+    100030: Left_Shoulder
+    100032: Left_Toe
+    100034: Left_UpperLeg
+    100036: Left_Wrist
+    100038: Master_CTRL
+    100040: Neck
+    100042: Right_Ankle
+    100044: Right_Clavicle
+    100046: Right_Ear
+    100048: Right_ear_End
+    100050: Right_Elbow
+    100052: Right_Foot
+    100054: Right_Hand
+    100056: Right_LowerLeg
+    100058: Right_Shoulder
+    100060: Right_Toe
+    100062: Right_UpperLeg
+    100064: Right_Wrist
+    100066: Spine1
+    100068: Spine2
+    100070: Spine3
+    100072: Zipper
+    100074: Zipper_Cap
+    400000: Character
+    400002: Head
+    400004: Hip
+    400006: Hip_CTRL
+    400008: //RootNode
+    400010: joint1
+    400012: joint2
+    400014: Left_Ankle
+    400016: Left_Clavicle
+    400018: Left_Ear
+    400020: Left_ear_End
+    400022: Left_Elbow
+    400024: Left_Foot
+    400026: Left_Hand
+    400028: Left_LowerLeg
+    400030: Left_Shoulder
+    400032: Left_Toe
+    400034: Left_UpperLeg
+    400036: Left_Wrist
+    400038: Master_CTRL
+    400040: Neck
+    400042: Right_Ankle
+    400044: Right_Clavicle
+    400046: Right_Ear
+    400048: Right_ear_End
+    400050: Right_Elbow
+    400052: Right_Foot
+    400054: Right_Hand
+    400056: Right_LowerLeg
+    400058: Right_Shoulder
+    400060: Right_Toe
+    400062: Right_UpperLeg
+    400064: Right_Wrist
+    400066: Spine1
+    400068: Spine2
+    400070: Spine3
+    400072: Zipper
+    400074: Zipper_Cap
+    2100000: interloper
+    4300000: Character
+    7400000: ch_interloper_idle
     9500000: //RootNode
+    13700000: Character
   externalObjects: {}
   materials:
     importMaterials: 0
@@ -109,17 +114,17 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: ch_interloper_cling
+      name: ch_interloper_idle
       takeName: Take 001
-      firstFrame: 1
-      lastFrame: 120
+      firstFrame: 0
+      lastFrame: 240
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -164,7 +169,7 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
-  importAnimation: 1
+  importAnimation: 0
   copyAvatar: 0
   humanDescription:
     serializedVersion: 2

@@ -1,12 +1,12 @@
 fileFormatVersion: 2
 guid: 4910ec5212ef2da49ac1c1c3c9ab5986
-timeCreated: 1519962809
+timeCreated: 1520544865
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: Character
-    100002: //RootNode
+    100000: //RootNode
+    100002: Character
     100004: Head
     100006: Hip
     100008: Hip_CTRL
@@ -43,8 +43,8 @@ ModelImporter:
     100070: Spine3
     100072: Zipper
     100074: Zipper_Cap
-    400000: Character
-    400002: //RootNode
+    400000: //RootNode
+    400002: Character
     400004: Head
     400006: Hip
     400008: Hip_CTRL

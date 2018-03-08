@@ -1,91 +1,86 @@
 fileFormatVersion: 2
-guid: 7484100ae83b7494d92243fc9d35f066
-timeCreated: 1519960676
+guid: 081aa10068ea95a43946c155d1d7187d
+timeCreated: 1520544287
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: Character
-    100002: Head
-    100004: Hip
-    100006: Hip_CTRL
-    100008: joint1
-    100010: joint2
-    100012: Left_Ankle
-    100014: Left_Clavicle
-    100016: Left_Ear
-    100018: Left_ear_End
-    100020: Left_Elbow
-    100022: Left_Foot
-    100024: Left_Hand
-    100026: Left_LowerLeg
-    100028: Left_Shoulder
-    100030: Left_Toe
-    100032: Left_UpperLeg
-    100034: Left_Wrist
-    100036: Master_CTRL
-    100038: Neck
-    100040: Right_Ankle
-    100042: Right_Clavicle
-    100044: Right_Ear
-    100046: Right_ear_End
-    100048: Right_Elbow
-    100050: Right_Foot
-    100052: Right_Hand
-    100054: Right_LowerLeg
-    100056: Right_Shoulder
-    100058: Right_Toe
-    100060: Right_UpperLeg
-    100062: Right_Wrist
-    100064: Spine1
-    100066: Spine2
-    100068: Spine3
-    100070: //RootNode
-    100072: Zipper
-    100074: Zipper_Cap
-    400000: Character
-    400002: Head
-    400004: Hip
-    400006: Hip_CTRL
-    400008: joint1
-    400010: joint2
-    400012: Left_Ankle
-    400014: Left_Clavicle
-    400016: Left_Ear
-    400018: Left_ear_End
-    400020: Left_Elbow
-    400022: Left_Foot
-    400024: Left_Hand
-    400026: Left_LowerLeg
-    400028: Left_Shoulder
-    400030: Left_Toe
-    400032: Left_UpperLeg
-    400034: Left_Wrist
-    400036: Master_CTRL
-    400038: Neck
-    400040: Right_Ankle
-    400042: Right_Clavicle
-    400044: Right_Ear
-    400046: Right_ear_End
-    400048: Right_Elbow
-    400050: Right_Foot
-    400052: Right_Hand
-    400054: Right_LowerLeg
-    400056: Right_Shoulder
-    400058: Right_Toe
-    400060: Right_UpperLeg
-    400062: Right_Wrist
-    400064: Spine1
-    400066: Spine2
-    400068: Spine3
-    400070: //RootNode
-    400072: Zipper
-    400074: Zipper_Cap
-    2100000: interloper
-    4300000: Character
+    100000: Head
+    100002: Hip
+    100004: Hip_CTRL
+    100006: joint1
+    100008: joint2
+    100010: Left_Ankle
+    100012: Left_Clavicle
+    100014: Left_Ear
+    100016: Left_ear_End
+    100018: Left_Elbow
+    100020: Left_Foot
+    100022: Left_Hand
+    100024: Left_LowerLeg
+    100026: Left_Shoulder
+    100028: Left_Toe
+    100030: Left_UpperLeg
+    100032: Left_Wrist
+    100034: Master_CTRL
+    100036: Neck
+    100038: Right_Ankle
+    100040: Right_Clavicle
+    100042: Right_Ear
+    100044: Right_ear_End
+    100046: Right_Elbow
+    100048: Right_Foot
+    100050: Right_Hand
+    100052: Right_LowerLeg
+    100054: Right_Shoulder
+    100056: Right_Toe
+    100058: Right_UpperLeg
+    100060: Right_Wrist
+    100062: Spine1
+    100064: Spine2
+    100066: Spine3
+    100068: //RootNode
+    100070: Zipper
+    100072: Zipper_Cap
+    400000: Head
+    400002: Hip
+    400004: Hip_CTRL
+    400006: joint1
+    400008: joint2
+    400010: Left_Ankle
+    400012: Left_Clavicle
+    400014: Left_Ear
+    400016: Left_ear_End
+    400018: Left_Elbow
+    400020: Left_Foot
+    400022: Left_Hand
+    400024: Left_LowerLeg
+    400026: Left_Shoulder
+    400028: Left_Toe
+    400030: Left_UpperLeg
+    400032: Left_Wrist
+    400034: Master_CTRL
+    400036: Neck
+    400038: Right_Ankle
+    400040: Right_Clavicle
+    400042: Right_Ear
+    400044: Right_ear_End
+    400046: Right_Elbow
+    400048: Right_Foot
+    400050: Right_Hand
+    400052: Right_LowerLeg
+    400054: Right_Shoulder
+    400056: Right_Toe
+    400058: Right_UpperLeg
+    400060: Right_Wrist
+    400062: Spine1
+    400064: Spine2
+    400066: Spine3
+    400068: //RootNode
+    400070: Zipper
+    400072: Zipper_Cap
     7400000: ch_interloper_walk
     9500000: //RootNode
-    13700000: Character
   externalObjects: {}
   materials:
     importMaterials: 0
@@ -117,7 +112,7 @@ ModelImporter:
       name: ch_interloper_walk
       takeName: Take 001
       firstFrame: 1
-      lastFrame: 118
+      lastFrame: 120
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
