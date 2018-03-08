@@ -22,6 +22,8 @@ public class ARCombat : PlayerComponent
     [Tooltip("Cooldown before firing lasers again")]
     public float laserCoolDown = 2f;
 
+    public float windUpDuration = 0.1f;
+
     //networked data
     [SyncVar]
     private Vector3 laserPoint;
@@ -33,11 +35,15 @@ public class ARCombat : PlayerComponent
     private float laserTimer = 0f;
 
     //pointers
-    private LineRenderer laser;
     private LaserParticle laserParticle;
     private Transform avatar;
 
     private bool isShootingEnabled = false;
+
+    public LaserBeamParticle laserBeam;
+    public Light flashLight;
+
+    private float spotLightAngle;
 
     /// <summary>
     /// Changes if the character can shoot
@@ -58,23 +64,22 @@ public class ARCombat : PlayerComponent
     void Start()
     {
         InitObj();
-
-        laser.enabled = true;
         laserParticle = LaserParticle.Instance;
-        avatar = GetComponent<PlayerInitializer>().avatar.transform;
+        laserParticle.SetDuration(laserDuration);
+        laserBeam.SetDuration(laserDuration);
+        avatar = player.avatar.transform;
+        spotLightAngle = flashLight.spotAngle;
+        laserBeam.SetOffset(-Vector3.up * 0.3f);
     }
 
-    protected override void InitObj()
+    public override void OnStartLocalPlayer()
     {
-        if (!laser)
-            laser = GetComponent<LineRenderer>();
+#if UNITY_IOS
+        flashLight.enabled = false;
+#endif
     }
 
-    private void OnDestroy()
-    {
-        if (laser)
-            Destroy(laser);
-    }
+    protected override void InitObj() { }
     #endregion
 
     #region Life Cycle
@@ -82,17 +87,18 @@ public class ARCombat : PlayerComponent
     void Update()
     {
         //locally updates the display of the laser
-        DisplayLaser();
-
-        if (!isLocalPlayer)
-            return;
+        if (isShootingLaser)
+            DisplayLaser();
 
         //updates where the laser should be
         UpdateLaser();
 
+        if (!isLocalPlayer)
+            return;
+
         //checks input and if laser should be shot
         if (isShootingEnabled && canShoot && CheckTap() && !Utility.IsPointerOverUIObject())
-            Fire();
+            RpcFire();
     }
 
     /// <summary>
@@ -101,32 +107,20 @@ public class ARCombat : PlayerComponent
     private void DisplayLaser()
     {
         //if laser should be seen
-        if (isShootingLaser)
-        {
-            //updates where the particles should be
-            laserParticle.transform.position = laserPoint;
-            laserParticle.Play();
+        //updates where the particles should be
+        laserBeam.UpdateRange(laserPoint);
+        laserParticle.transform.position = laserPoint;
 
-            //updates where the other laser should be
-            if (isLocalPlayer)
-            {
-                laser.SetPosition(0, avatar.position - avatar.up * 0.03f);
-                laser.SetPosition(1, laserPoint);
-            }
-            else
-            {
-                laser.SetPosition(0, avatar.position);
-                laser.SetPosition(1, laserPoint);
-            }
-        }
-
-        //there should be no laser displays
-        else
-        {
-            laserParticle.Stop();
-            laser.SetPosition(0, avatar.position);
-            laser.SetPosition(1, avatar.position);
-        }
+        //updates where the other laser should be
+        //if (isLocalPlayer)
+        //{
+        //    //laserBeam.SetPosition(0, avatar.position - avatar.up * 0.03f);
+        //    laserBeam.SetPosition(laserPoint);
+        //}
+        //else
+        //{
+        //    //laserBeam.SetPosition(0, avatar.position);
+        //}
     }
 
     /// <summary>
@@ -137,25 +131,32 @@ public class ARCombat : PlayerComponent
         //if the laser is being shot
         if (isShootingLaser)
         {
-            //raycasts
-            RaycastHit hit;
+            laserTimer += Time.deltaTime;
+            if (laserTimer < windUpDuration)
+                flashLight.spotAngle = Mathf.Lerp(spotLightAngle, 0, laserTimer / windUpDuration);
 
-            //puts the laser where it 'hits'
-            if (Physics.Raycast(avatar.position, -avatar.forward, out hit, layerMaxDist, laserLayerMask))
+            if (!isLocalPlayer) return;
+            if (laserTimer > windUpDuration)
             {
-                laserPoint = hit.point;
-                if (hit.transform.tag == "Player")
+                //raycasts
+                RaycastHit hit;
+
+                //puts the laser where it 'hits'
+                if (Physics.Raycast(avatar.position, -avatar.forward, out hit, layerMaxDist, laserLayerMask))
                 {
-                    VRCombat combat = hit.transform.GetComponent<VRCombat>();
-                    combat.TakeDamage();
+                    laserPoint = hit.point;
+
+                    if (hit.transform.tag == "Player")
+                    {
+                        VRCombat combat = hit.transform.GetComponent<VRCombat>();
+                        combat.TakeDamage();
+                    }
                 }
             }
-
             //puts it at the furthest distance
             else laserPoint = avatar.position + -avatar.forward * layerMaxDist;
 
             //updates timer
-            laserTimer += Time.deltaTime;
             if (laserTimer > laserDuration)
             {
                 laserTimer = 0f;
@@ -166,8 +167,12 @@ public class ARCombat : PlayerComponent
         //manages cool down if laser isn't being shot
         else
         {
-            laserTimer += Time.deltaTime;
-            if (laserTimer > laserCoolDown)
+            if (laserTimer < laserCoolDown)
+            {
+                laserTimer += Time.deltaTime;
+                flashLight.spotAngle = Mathf.Lerp(0, spotLightAngle, laserTimer / laserCoolDown);
+            }
+            else if (isLocalPlayer)
             {
                 canShoot = true;
             }
@@ -202,11 +207,14 @@ public class ARCombat : PlayerComponent
     /// <summary>
     /// 'Fires' out the laser
     /// </summary>
-    private void Fire()
+    [ClientRpc]
+    private void RpcFire()
     {
         isShootingLaser = true;
         canShoot = false;
         laserTimer = 0f;
+        laserBeam.Play();
+        laserParticle.Play();
     }
     #endregion
 }

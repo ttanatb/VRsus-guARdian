@@ -72,6 +72,7 @@ public class Movement : PlayerComponent
         if ((playerType == PlayerType.PC || playerType == PlayerType.VR) && isLocalPlayer)
         {
             Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             Grappling left = Instantiate(grapplePrefab).GetComponent<Grappling>();
             Grappling right = Instantiate(grapplePrefab).GetComponent<Grappling>();
 
@@ -114,8 +115,8 @@ public class Movement : PlayerComponent
             float mouseY = -Input.GetAxis("Mouse Y");
 
 #if !UNITY_EDITOR
-            rotY += mouseX * mouseSensitivity * Time.deltaTime * 10f;
-            rotX += mouseY * mouseSensitivity * Time.deltaTime * 10f;
+            rotY += mouseX * mouseSensitivity * Time.deltaTime * 2f;
+            rotX += mouseY * mouseSensitivity * Time.deltaTime * 2f;
 #else
             rotY += mouseX * mouseSensitivity * Time.deltaTime;
             rotX += mouseY * mouseSensitivity * Time.deltaTime;

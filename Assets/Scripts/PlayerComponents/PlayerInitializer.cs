@@ -15,7 +15,6 @@ public class PlayerInitializer : NetworkBehaviour
     public Renderer[] renderersToDisbale;
     public Renderer[] renderersToEnable;
     public Camera cameraToEnable;
-    public Light flashLight;
     public Camera[] camerasToDisable;
 
     public GameObject avatar;
@@ -64,7 +63,6 @@ public class PlayerInitializer : NetworkBehaviour
 
                 Movement m = GetComponent<Movement>();
                 if (m) Destroy(m);
-                flashLight.enabled = false;
 #else
                 // Turns camera into a fps camera
                 Destroy(cameraToEnable.GetComponent<UnityARCameraNearFar>());
