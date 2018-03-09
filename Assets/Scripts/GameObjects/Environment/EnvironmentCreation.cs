@@ -29,9 +29,17 @@ public class EnvironmentCreation : MonoBehaviour
     private int angles;
     private int tripleAngles;
     private int layers;
+    
+    private MeshCollider invisWalls;
+    private MeshRenderer mountainRenderer;
 
     //private Mesh plains;
     private Vector2[] boundaryFlat;
+
+    private void Start()
+    {
+        mountainRenderer = GetComponent<MeshRenderer>();
+    }
 
     public void CreateTerrain()
     {
@@ -160,10 +168,11 @@ public class EnvironmentCreation : MonoBehaviour
             boundaryMesh.RecalculateTangents();
             boundaryMesh.UploadMeshData(false);
 
-            MeshCollider meshCollider = gameObject.AddComponent<MeshCollider>();
-            meshCollider.sharedMesh = boundaryMesh;
+            invisWalls = gameObject.AddComponent<MeshCollider>();
+            invisWalls.sharedMesh = boundaryMesh;
         }
     }
+
 
     private void Extrude(int extrusions)
     {
@@ -277,6 +286,19 @@ public class EnvironmentCreation : MonoBehaviour
                     mountainVerts[i + 2 + (tripleAngles * k)] = temp;
                 }
             }
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.F))
+        {
+            mountainRenderer.enabled = false;
+        }
+
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.G))
+        {
+            invisWalls.enabled = false;
         }
     }
 }

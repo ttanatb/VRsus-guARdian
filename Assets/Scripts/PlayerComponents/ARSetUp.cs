@@ -529,6 +529,7 @@ public class ARSetUp : PlayerComponent
         for (int i = 0; i < planeCount; i++)
         {
             spawnedList.Clear();
+            float area = Utility.GetAreaSqr(sortedPlanes[i]);
 
             /*
             float threshold = 3f;
@@ -547,14 +548,14 @@ public class ARSetUp : PlayerComponent
             }
             */
 
-            int structureSpawnCount = (int)(Utility.GetAreaSqr(sortedPlanes[i]) * 4.0f);
+            int structureSpawnCount = (int)(area * 16.0f);
             structureSpawnCount = Mathf.Clamp(structureSpawnCount, 6, 30);
             for (int j = 0; j < structureSpawnCount; j++)
             {
                 int rndmIndex = Random.Range(0, environmentData.structureDataList.Length);
                 float radius = environmentData.structureDataList[rndmIndex].radius;
 
-                Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, entranceCount, spawnedList, 5);
+                Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, entranceCount, spawnedList, 7);
                 if (spawnPos.x > float.MaxValue / 2f) continue;
                 else
                 {
@@ -566,8 +567,8 @@ public class ARSetUp : PlayerComponent
                 yield return new WaitForSeconds(0.01f);
             }
 
-            int decorSpawnCount = (int)(Utility.GetAreaSqr(sortedPlanes[i]) * 1.0f);
-            decorSpawnCount = Mathf.Clamp(decorSpawnCount, 2, 6);
+            int decorSpawnCount = (int)(area * 2.0f);
+            decorSpawnCount = Mathf.Clamp(decorSpawnCount, 3, 12);
             for (int j = 0; j < decorSpawnCount; j++)
             {
 

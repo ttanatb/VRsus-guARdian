@@ -24,7 +24,7 @@ public class Movement : PlayerComponent
 
     public float slowFactor = 0.3f;
     private float slowTimer;
-    private const float MAX_SLOW_TIME = 2f;
+    private const float MAX_SLOW_TIME = 1.5f;
 
     public bool isOnFloor = true;
 

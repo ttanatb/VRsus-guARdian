@@ -755,7 +755,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1064722355016630}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.0336, z: 0.0061}
+  m_LocalPosition: {x: 0, y: 0.0336, z: -0.0003}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4113566872201430}
@@ -1155,7 +1155,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1272844262855460}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.693511, y: 994.8997, z: 5.814037}
+  m_LocalPosition: {x: 2.330707, y: 993.244, z: -0.7609353}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 4426164412331622}
@@ -1528,6 +1528,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transparentMat: {fileID: 2100000, guid: 5b4366177b2370d4bbab08047c61144d, type: 2}
   fadeSpeed: 0.025
+  charRenderer: {fileID: 0}
   trailRenderer: {fileID: 96863837334090694}
 --- !u!114 &114075082641424110
 MonoBehaviour:
@@ -1545,7 +1546,7 @@ MonoBehaviour:
   maxSpeed: 999
   mouseSensitivity: 80
   clampAngle: 80
-  slowFactor: 0.25
+  slowFactor: 0.4
   isOnFloor: 0
   leftController: {fileID: 1536142056032384}
   rightController: {fileID: 1064121993672964}

@@ -28,7 +28,7 @@ public class VRCombat : PlayerComponent
     private HealthBarUI healthBarUI;
 
     //invulnerability
-    public const float MAX_INVUL_TIME = 1.5f;
+    public const float MAX_INVUL_TIME = 1.75f;
 
     [SyncVar]
     private bool isInvulnerable = false;
