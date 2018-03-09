@@ -29,7 +29,7 @@ public class EnvironmentCreation : MonoBehaviour
     private int angles;
     private int tripleAngles;
     private int layers;
-    
+
     private MeshCollider invisWalls;
     private MeshRenderer mountainRenderer;
 
@@ -96,7 +96,7 @@ public class EnvironmentCreation : MonoBehaviour
             plains.SetVertices(boundary);
             int[] indices = triangulator.Triangulate();
             plains.SetTriangles(indices, 0);
-            
+
             plains.RecalculateBounds();
             plains.RecalculateNormals();
             plains.RecalculateTangents();
@@ -293,12 +293,14 @@ public class EnvironmentCreation : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.F))
         {
-            mountainRenderer.enabled = false;
+            if (mountainRenderer)
+                mountainRenderer.enabled = false;
         }
 
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.G))
         {
-            invisWalls.enabled = false;
+            if (invisWalls)
+                invisWalls.enabled = false;
         }
     }
 }

@@ -103,10 +103,10 @@ public class Movement : PlayerComponent
     void Update()
     {
         if (!isLocalPlayer) return;
-        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.G))
-        {
-            transform.position = startingPos;
-        }
+        //if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.G))
+        //{
+        //    transform.position = startingPos;
+        //}
 
         slowTimer -= Time.deltaTime;
         if (playerType != PlayerType.VR)

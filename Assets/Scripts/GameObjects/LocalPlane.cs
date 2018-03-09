@@ -24,6 +24,8 @@ public class LocalPlane : MonoBehaviour
 #else
         m = GetComponent<Renderer>().material;
 #endif
+
+        m.SetTextureOffset("_MainTex", new Vector2(Random.value, Random.value));
     }
 
 #if !UNITY_IOS
@@ -35,7 +37,7 @@ public class LocalPlane : MonoBehaviour
 
         if (!m)
             m = GetComponent<Renderer>().material;
-        //m.SetTextureScale("_MainTex", scale / 0.75f);
+        m.SetTextureScale("_MainTex", scale * 0.4f);
         //END TEMP
     }
 #endif

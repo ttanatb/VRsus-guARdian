@@ -71,6 +71,7 @@ public class InvisibleWall : TrapDefense
 
         animator.SetTrigger("Trigger");
         particles.Play();
+        gameObject.layer = 1 << 0;
     }
 
     [Server]
