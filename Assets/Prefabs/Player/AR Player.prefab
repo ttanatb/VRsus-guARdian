@@ -737,12 +737,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6acdb3afd6a584c0980479fc784bee22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomWidthRange: {x: 2.8865247, y: 4.836878}
-  roomLengthRange: {x: 4.524823, y: 6.0780144}
+  roomWidthRange: {x: 2.358567, y: 3.8289573}
+  roomLengthRange: {x: 2.935925, y: 4.4891157}
   planeCount: 5
-  planeElevationRange: {x: 0.16950354, y: 0.387943}
-  planeWidthRange: {x: 0.88758874, y: 2.0617023}
-  planeLengthRange: {x: 1.1960993, y: 2.2879443}
+  planeElevationRange: {x: 0.23102951, y: 0.42259127}
+  planeWidthRange: {x: 0.6845932, y: 0.99573565}
+  planeLengthRange: {x: 0.7820254, y: 1.2475209}
 --- !u!114 &114535040245964092
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -890,6 +890,7 @@ MonoBehaviour:
   layerMaxDist: 4
   laserDuration: 1
   laserCoolDown: 2
+  windUpDuration: 0.1
   laserBeam: {fileID: 114535040245964092}
   flashLight: {fileID: 108302986008289754}
 --- !u!124 &124741244087826266

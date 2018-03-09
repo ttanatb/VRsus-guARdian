@@ -13,6 +13,7 @@ public class Entrance : NetworkBehaviour
     private ARSetUp manager;
     private BoxCollider bCollider;
     private ParticleSystem pSystem;
+    public Light attachedLights;
 
     private void Awake()
     {
@@ -61,11 +62,13 @@ public class Entrance : NetworkBehaviour
     {
         pSystem.Play();
         bCollider.enabled = true;
+        attachedLights.enabled = true;
     }
     public void Deactivate()
     {
         pSystem.Stop();
         bCollider.enabled = false;
+        attachedLights.enabled = false;
     }
 
     /// <summary>

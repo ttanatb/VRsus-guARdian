@@ -13,6 +13,9 @@ public class SlowTrap : TrapDefense
 
     public MeshRenderer swampMeshRenderer;
 
+    public Animator trapEnableAnim;
+    public ParticleSystem pSystem;
+
     public override string TrapName { get { return "Slow Trap"; } }
 
     private void Start()
@@ -24,6 +27,7 @@ public class SlowTrap : TrapDefense
         {
             selectorCollider.enabled = false;
             swampMeshRenderer.enabled = false;
+            areaRenderer.enabled = false;
         }
     }
 
@@ -72,7 +76,9 @@ public class SlowTrap : TrapDefense
     [ClientRpc]
     private void RpcVisualizeTrap()
     {
-        areaRenderer.enabled = true; //replace with playing anim
         swampMeshRenderer.enabled = true;
+        //areaRenderer.enabled = true; //replace with playing anim
+        trapEnableAnim.SetBool("isActivated", true);
+        pSystem.Play();
     }
 }

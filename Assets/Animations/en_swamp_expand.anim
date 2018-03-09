@@ -5,7 +5,7 @@ AnimationClip:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: expand
+  m_Name: en_swamp_expand
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -24,10 +24,10 @@ AnimationClip:
         value: 0.01
         inSlope: 0
         outSlope: 0
-        tangentMode: 5
+        tangentMode: 136
       - serializedVersion: 2
         time: 1
-        value: 0.6
+        value: 0.4
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -35,7 +35,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_OrthographicSize
-    path: 
+    path: en_swampProjection
     classID: 119
     script: {fileID: 0}
   m_PPtrCurves: []
@@ -47,7 +47,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 0
+      path: 1068650530
       attribute: 1607003375
       script: {fileID: 0}
       typeID: 119
@@ -83,10 +83,10 @@ AnimationClip:
         value: 0.01
         inSlope: 0
         outSlope: 0
-        tangentMode: 5
+        tangentMode: 136
       - serializedVersion: 2
         time: 1
-        value: 0.6
+        value: 0.4
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -94,7 +94,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_OrthographicSize
-    path: 
+    path: en_swampProjection
     classID: 119
     script: {fileID: 0}
   m_EulerEditorCurves: []
