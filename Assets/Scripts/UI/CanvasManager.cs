@@ -37,11 +37,21 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     [Tooltip("The GameObject containing the Health UI")]
     public GameObject healthUIObj;
 
+    public GameObject leftHookshot;
+    public GameObject rightHookshot;
+
     private GameObject[] arUIbuttons;   //array of buttons
     private Button doneBtn;
     #endregion
 
     #region Set Up & Life Cycle
+    private void Start()
+    {
+#if !UNITY_IOS
+        planeCountText.enabled = false;
+        planeAreaText.enabled = false;
+#endif
+    }
     /// <summary>
     /// Sets Activates the Jump Energy UI
     /// </summary>
@@ -60,6 +70,18 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     {
         healthUIObj.SetActive(true);
         healthUIObj.GetComponent<HealthBarUI>().Init(combat);
+    }
+
+    public void SetUpLeftHookshot(Grappling grapplingHook)
+    {
+        leftHookshot.SetActive(true);
+        leftHookshot.GetComponent<GrapplingUI>().grappling = grapplingHook;
+    }
+
+    public void SetUpRightHookshot(Grappling grapplingHook)
+    {
+        rightHookshot.SetActive(true);
+        rightHookshot.GetComponent<GrapplingUI>().grappling = grapplingHook;
     }
 
     /// <summary>
@@ -125,8 +147,9 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
                 for (int i = 0; i < manager.trapList.Length; i++)
                 {
                     arUIbuttons[i] = Instantiate(trapButtonPrefab, ARUI.transform);
-                    arUIbuttons[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(-20, -70 - i * (trapButtonPrefab.GetComponent<RectTransform>().sizeDelta.y + 20));
+                    arUIbuttons[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(-20, -100 - i * (trapButtonPrefab.GetComponent<RectTransform>().sizeDelta.y + 40));
                     arUIbuttons[i].name = "TrapBtn";
+                    arUIbuttons[i].GetComponent<Image>().sprite = manager.trapList[i].image;
                 }
 
                 //loop through the buttons and hook up events
@@ -205,7 +228,7 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     public void UpdateTrapCount(ARSetUp manager)
     {
         for (int i = 0; i < arUIbuttons.Length; i++)
-            arUIbuttons[i].GetComponentInChildren<Text>().text = manager.trapList[i].trap.GetComponent<TrapDefense>().TrapName + ": (" + manager.trapList[i].count + ")";
+            arUIbuttons[i].GetComponentInChildren<Text>().text = "(" + manager.trapList[i].count + ")";
     }
 
     /// <summary>

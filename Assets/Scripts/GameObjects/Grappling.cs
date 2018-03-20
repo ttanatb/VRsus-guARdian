@@ -38,6 +38,8 @@ public class Grappling : MonoBehaviour //: Launchable
     public Transform spawnPos;
     public Animator animController;
 
+    public int State { get { return state; } }
+
     void Start()
     {
         timer = 0f;// Time.time;

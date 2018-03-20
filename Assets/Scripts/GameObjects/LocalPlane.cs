@@ -4,7 +4,6 @@
 /// Helper class for updating local plane transforms and updating texture tiling
 /// </summary>
 /// 
-[ExecuteInEditMode]
 public class LocalPlane : MonoBehaviour
 {
     #region Fields
@@ -24,8 +23,8 @@ public class LocalPlane : MonoBehaviour
 #else
         m = GetComponent<Renderer>().material;
 #endif
-
         m.SetTextureOffset("_MainTex", new Vector2(Random.value, Random.value));
+        GetComponent<Renderer>().material = m;
     }
 
 #if !UNITY_IOS
@@ -37,7 +36,7 @@ public class LocalPlane : MonoBehaviour
 
         if (!m)
             m = GetComponent<Renderer>().material;
-        m.SetTextureScale("_MainTex", scale * 0.4f);
+        m.SetTextureScale("_MainTex", scale / 5.5f);
         //END TEMP
     }
 #endif

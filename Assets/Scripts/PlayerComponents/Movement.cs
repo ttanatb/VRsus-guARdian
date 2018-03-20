@@ -86,6 +86,8 @@ public class Movement : PlayerComponent
             right.button = "Fire3";
             left.otherGrappling = right;
             right.otherGrappling = left;
+            CanvasManager.Instance.SetUpLeftHookshot(left);
+            CanvasManager.Instance.SetUpRightHookshot(right);
             if (playerType == PlayerType.PC)
             {
                 left.spawnPos = transform;

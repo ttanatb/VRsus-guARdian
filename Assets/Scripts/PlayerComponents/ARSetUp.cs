@@ -12,6 +12,7 @@ public class TrapCounter
     public GameObject trap;     //the trap itself
     public int count;           //how mnay traps can till be placed
     public int maxCount;        //the maximum amount of traps
+    public Sprite image;
 }
 
 /// <summary>
