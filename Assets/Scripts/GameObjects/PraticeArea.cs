@@ -9,11 +9,13 @@ public class PraticeArea : NetworkBehaviour
     public GameObject[] planes;
     private EnvironmentCreation env;
     private PracticeEntrance entrance;
+    private SampleRelic[] relics;
     // Use this for initialization
 
     void Start()
     {
         entrance = GetComponentInChildren<PracticeEntrance>();
+        relics = GetComponentsInChildren<SampleRelic>();
         if (!isServer)
         {
             List<Vector3> list = Utility.CombinePolygons(Utility.CreateVerticesFromPlane(planes[0]),
@@ -47,5 +49,10 @@ public class PraticeArea : NetworkBehaviour
     {
         if (isServer) return;
         entrance.Deactivate();
+
+        foreach(SampleRelic r in relics)
+        {
+            r.ResetPractice();
+        }
     }
 }

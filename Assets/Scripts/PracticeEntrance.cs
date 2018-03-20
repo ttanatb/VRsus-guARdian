@@ -48,8 +48,12 @@ public class PracticeEntrance : MonoBehaviour
         Debug.Log(other);
         if (other.CompareTag("Player"))
         {
-            other.transform.parent.GetComponent<VRTransition>().SpawnInPos(spawnPos);
-            practiceArea.ResetPracticeArea();
+            VRTransition transition = other.transform.parent.GetComponent<VRTransition>();
+            if (transition)
+            {
+                transition.SpawnInPos(spawnPos);
+                practiceArea.ResetPracticeArea();
+            }
         }
     }
 }

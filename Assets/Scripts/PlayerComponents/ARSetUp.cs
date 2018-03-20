@@ -549,8 +549,8 @@ public class ARSetUp : PlayerComponent
             }
             */
 
-            int structureSpawnCount = (int)(area * 16.0f);
-            structureSpawnCount = Mathf.Clamp(structureSpawnCount, 6, 30);
+            int structureSpawnCount = (int)(area * 19.0f);
+            structureSpawnCount = Mathf.Clamp(structureSpawnCount, 6, 35);
             for (int j = 0; j < structureSpawnCount; j++)
             {
                 int rndmIndex = Random.Range(0, environmentData.structureDataList.Length);
@@ -568,8 +568,8 @@ public class ARSetUp : PlayerComponent
                 yield return new WaitForSeconds(0.01f);
             }
 
-            int decorSpawnCount = (int)(area * 2.0f);
-            decorSpawnCount = Mathf.Clamp(decorSpawnCount, 3, 12);
+            int decorSpawnCount = (int)(area * 2.5f);
+            decorSpawnCount = Mathf.Clamp(decorSpawnCount, 6, 16);
             for (int j = 0; j < decorSpawnCount; j++)
             {
 
