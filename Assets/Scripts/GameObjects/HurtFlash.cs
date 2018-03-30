@@ -12,12 +12,12 @@ public class HurtFlash : MonoBehaviour
 {
     #region Fields
     [Tooltip("The speed in which the red color fades in")]
-    [Range(0f, 1f)]
-    public float flashSpeed;
+    [Range(0.01f, 3f)]
+    public float flashTime = 0.5f;
 
     [Tooltip("The speed in which the red color fades iway")]
-    [Range(0f, 1f)]
-    public float fadeSpeed;
+    [Range(0.01f, 3f)]
+    public float fadeTime = 2f;
 
     [Tooltip("The amount of time to wait until fading away")]
     public float waitTime = 3f;
@@ -25,6 +25,7 @@ public class HurtFlash : MonoBehaviour
     private Image image;
     private float alpha = 0;
     private IEnumerator fadeCouroutine;
+    private float timer;
     #endregion
 
     #region Init Logic
@@ -32,6 +33,7 @@ public class HurtFlash : MonoBehaviour
     void Start()
     {
         image = GetComponent<Image>();
+        timer = 0f;
     }
     #endregion
 
@@ -72,14 +74,23 @@ public class HurtFlash : MonoBehaviour
     IEnumerator Flash(float waitTime)
     {
         //increases alpha
-        for (; alpha < 1f; alpha += flashSpeed)
+        for (; timer < flashTime; timer += Time.deltaTime)
+        {
+            alpha = Mathf.Lerp(0f, 1f, timer / flashTime);
             yield return null;
+        }
 
         //starts the next coroutine
+        alpha = 1f;
+        timer = 0f;
         yield return new WaitForSeconds(waitTime);
 
-        for (; alpha > 0f; alpha -= fadeSpeed)
+        for (; timer < fadeTime; timer += Time.deltaTime)
+        {
+            alpha = Mathf.Lerp(1f, 0f, timer / fadeTime);
             yield return null;
+        }
+        alpha = 0f;
     }
     #endregion
 }
