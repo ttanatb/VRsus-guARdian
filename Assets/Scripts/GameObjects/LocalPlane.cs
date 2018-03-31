@@ -7,7 +7,14 @@
 public class LocalPlane : MonoBehaviour
 {
     #region Fields
-    private const float HEIGHT = 50.15f;          //height of tower
+
+#if UNITY_IOS
+	private const float HEIGHT = 50.01f;          //height of tower
+#else
+	private const float HEIGHT = 50.15f;          //height of tower
+#endif
+
+    
     private Vector2 scale = Vector2.one;        //x,z scale of tower
 
     //TEMP (prototype graphics)
@@ -19,10 +26,11 @@ public class LocalPlane : MonoBehaviour
     {
 #if UNITY_IOS
         //shouldn't be seen on AR
-        GetComponent<Renderer>().enabled = false;  
-#else
-        m = GetComponent<Renderer>().material;
+        //GetComponent<Renderer>().enabled = false;  
+
 #endif
+    	m = GetComponent<Renderer>().material;
+        //GetComponent<Renderer>().enabled = false;
         m.SetTextureOffset("_MainTex", new Vector2(Random.value, Random.value));
         GetComponent<Renderer>().material = m;
     }
@@ -36,7 +44,7 @@ public class LocalPlane : MonoBehaviour
 
         if (!m)
             m = GetComponent<Renderer>().material;
-        m.SetTextureScale("_MainTex", scale / 5.5f);
+        m.SetTextureScale("_MainTex", scale / 0.02f);
         //END TEMP
     }
 #endif

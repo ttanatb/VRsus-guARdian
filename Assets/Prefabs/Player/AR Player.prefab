@@ -112,7 +112,6 @@ GameObject:
   - component: {fileID: 114034712502135718}
   - component: {fileID: 114909993582410828}
   - component: {fileID: 114781550108192186}
-  - component: {fileID: 114722010961099726}
   m_Layer: 16
   m_Name: AR Player
   m_TagString: ARPlayer
@@ -304,7 +303,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1344648828105818}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.4975002, y: -2.7017255, z: -0.6779537}
+  m_LocalPosition: {x: -7.3481793, y: -32.832184, z: 10.875515}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4571292994523802}
@@ -740,12 +739,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6acdb3afd6a584c0980479fc784bee22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomWidthRange: {x: 2.358567, y: 3.8289573}
-  roomLengthRange: {x: 2.935925, y: 4.4891157}
-  planeCount: 5
-  planeElevationRange: {x: 0.23102951, y: 0.42259127}
-  planeWidthRange: {x: 0.6845932, y: 0.99573565}
-  planeLengthRange: {x: 0.7820254, y: 1.2475209}
 --- !u!114 &114535040245964092
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -813,26 +806,6 @@ MonoBehaviour:
     i15: 205
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
---- !u!114 &114722010961099726
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1344648828105818}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 730475ee64f9a894bbac0d9e6f22e813, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mode: 1
-  sensitivityDepth: 3
-  sensitivityNormals: 0.3
-  lumThreshold: 0.2
-  edgeExp: 1
-  sampleDist: 0.5
-  edgesOnly: 0.05
-  edgesOnlyBgColor: {r: 0.625, g: 0.21599263, b: 0.21599263, a: 1}
-  edgeDetectShader: {fileID: 4800000, guid: 0d1644bdf064147baa97f235fc5b4903, type: 3}
 --- !u!114 &114781550108192186
 MonoBehaviour:
   m_ObjectHideFlags: 1

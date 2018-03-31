@@ -1,5 +1,9 @@
-﻿Shader "Custom/MobileOcclusion"
+﻿Shader "Custom/ARPlane"
 {
+	Properties {
+		_MainTex("Texture", 2D) = "white" {}
+		_TintColor("Tint Color", Color) = (0,0,1,0)
+	}
     SubShader {
 	    	Pass {
 	    		// Render the Occlusion shader before all
@@ -7,8 +11,8 @@
 				Tags { "Queue"="Geometry" }
 
 				ZWrite On
-				ZTest Less
-				ColorMask 0
+				ZTest LEqual
+				Blend SrcAlpha OneMinusSrcAlpha
 
 				CGPROGRAM
 				#pragma vertex vert
@@ -19,24 +23,32 @@
 				struct appdata
 				{
 					float4 vertex : POSITION;
+					float2 uv : TEXCOORD0;
 				};
 
 				struct v2f
 				{
 					float4 position : SV_POSITION;
+					float2 uv : TEXCOORD0;
 				};
+
+				sampler2D _MainTex;
+				float4 _MainTex_ST;
+				float4 _TintColor;
 
 				v2f vert (appdata input)
 				{
 					v2f output;
 
 					output.position = UnityObjectToClipPos(input.vertex);
+					output.uv = TRANSFORM_TEX(input.uv, _MainTex);
 					return output;
 				}
 
 				fixed4 frag (v2f input) : SV_Target
 				{
-					return fixed4(0.1, 0.1, 0.1, 0.1);
+					fixed4 col = tex2D(_MainTex, input.uv);// + _TintColor.rgb;
+					return col;
 				}
 				ENDCG
 	    	}
