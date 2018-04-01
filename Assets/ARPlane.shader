@@ -47,7 +47,10 @@
 
 				fixed4 frag (v2f input) : SV_Target
 				{
-					fixed4 col = tex2D(_MainTex, input.uv);// + _TintColor.rgb;
+					fixed4 col = tex2D(_MainTex, input.uv);
+					col.r *= _TintColor.r;
+					col.g *= _TintColor.g;
+					col.b *= _TintColor.b;
 					return col;
 				}
 				ENDCG

@@ -31,7 +31,6 @@ namespace UnityEngine.XR.iOS
 
 		public static GameObject UpdatePlaneWithAnchorTransform(GameObject plane, ARPlaneAnchor arPlaneAnchor)
 		{
-			
 			//do coordinate conversion from ARKit to Unity
 			plane.transform.position = UnityARMatrixOps.GetPosition (arPlaneAnchor.transform);
 			plane.transform.rotation = UnityARMatrixOps.GetRotation (arPlaneAnchor.transform);
