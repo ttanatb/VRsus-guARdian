@@ -20,10 +20,6 @@ public struct EnvironmentObjectData
     public bool isLandMark;
     public float rotY;
 
-    /// <summary>
-    /// Henlo
-    /// </summary>
-    /// <param name="radius"></param>
     public EnvironmentObjectData(float radius = 0)
     {
         meshMatDatas = new MeshMatData[1];
@@ -40,7 +36,7 @@ public struct EnvironmentObjectData
         if (meshMatCount >= meshMatDatas.Length)
         {
             MeshMatData[] newArr = new MeshMatData[meshMatDatas.Length + 1];
-            for(int i = 0; i < meshMatDatas.Length; i++)
+            for (int i = 0; i < meshMatDatas.Length; i++)
             {
                 newArr[i] = meshMatDatas[i];
             }
@@ -56,12 +52,18 @@ public struct EnvironmentObjectData
         }
     }
 
-    public void SetBoxCols(BoxCollider[] collider, float scale, Vector3 offset)
+    public void AddBoxCols(BoxCollider[] collider, float scale, Vector3 offset)
     {
         BoxColliderData[] newBoxColDatas = new BoxColliderData[collider.Length + boxColDatas.Length];
+        meshMatDatas[meshMatDatas.Length - 1].boxData = new int[collider.Length];
+
+        Debug.Log(meshMatDatas[meshMatDatas.Length - 1].boxData = new int[collider.Length]);
+
         for (int i = 0; i < collider.Length; i++)
         {
-            newBoxColDatas[i] = new BoxColliderData(collider[i].center * scale + offset, collider[i].size * scale);
+            newBoxColDatas[i] = new BoxColliderData(collider[i].center, collider[i].size);
+
+            meshMatDatas[meshMatDatas.Length - 1].boxData[i] = boxColDatas.Length + i;
         }
 
         for (int i = collider.Length; i < newBoxColDatas.Length; i++)
@@ -75,12 +77,15 @@ public struct EnvironmentObjectData
     public void AddCapCols(CapsuleCollider[] collider, float scale, Vector3 offset)
     {
         CapsuleColliderData[] newCapColDatas = new CapsuleColliderData[collider.Length + capColDatas.Length];
+        meshMatDatas[meshMatDatas.Length - 1].capsuleData = new int[collider.Length];
+
         for (int i = 0; i < collider.Length; i++)
         {
-            newCapColDatas[i] = new CapsuleColliderData(collider[i].center * scale + offset,
-                collider[i].radius * scale,
-                collider[i].height * scale);
+            newCapColDatas[i] = new CapsuleColliderData(collider[i].center,
+                collider[i].radius,
+                collider[i].height);
 
+            meshMatDatas[meshMatDatas.Length - 1].capsuleData[i] = capColDatas.Length + i;
         }
 
         for (int i = collider.Length; i < newCapColDatas.Length; i++)
@@ -110,6 +115,16 @@ public struct EnvironmentObjectData
         }
 
         radius = Mathf.Max(Mathf.Abs(maxX), Mathf.Abs(minX), Mathf.Abs(minZ), Mathf.Abs(maxZ));
+
+        ReCenter((minX + maxX) / 2.0f, (minZ + maxZ) / 2.0f);
+    }
+
+    public void ReCenter(float centerX, float centerZ)
+    {
+        for (int i = 0; i < meshMatDatas.Length; i++)
+        {
+            meshMatDatas[i].posOffset -= new Vector3(centerX, 0, centerZ);
+        }
     }
 }
 
@@ -122,6 +137,9 @@ public struct MeshMatData
     public Vector3 posOffset;
     public Quaternion rotation;
 
+    public int[] boxData;
+    public int[] capsuleData;
+
     public MeshMatData(Mesh mesh, Material[] mats, float scale, Vector3 pos, Quaternion rotation)
     {
         this.mesh = mesh;
@@ -129,6 +147,9 @@ public struct MeshMatData
         this.scale = scale;
         posOffset = pos;
         this.rotation = rotation;
+
+        boxData = null;
+        capsuleData = null;
     }
 }
 

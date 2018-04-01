@@ -46,14 +46,6 @@ public class EnvironmentDataBuilder : MonoBehaviour
             //Create a new environment object
             EnvironmentObjectData envObj = new EnvironmentObjectData(0);
 
-            //Get and save all capsule colliders
-            CapsuleCollider[] cCol = obj.GetComponents<CapsuleCollider>();
-            envObj.AddCapCols(cCol, obj.transform.localScale.x, Vector3.zero);
-
-            //Get and save all box colliders
-            BoxCollider[] bCol = obj.GetComponents<BoxCollider>();
-            envObj.AddBoxCols(bCol, obj.transform.localScale.x, Vector3.zero);
-
             //Get the information about the children
             Debug.Log(name + " has " + obj.transform.childCount + " children");
 
@@ -103,6 +95,14 @@ public class EnvironmentDataBuilder : MonoBehaviour
                     Vector3.zero,
                     obj.transform.localRotation);
             }
+
+            //Get and save all capsule colliders
+            CapsuleCollider[] cCol = obj.GetComponents<CapsuleCollider>();
+            envObj.AddCapCols(cCol, obj.transform.localScale.x, Vector3.zero);
+
+            //Get and save all box colliders
+            BoxCollider[] bCol = obj.GetComponents<BoxCollider>();
+            envObj.AddBoxCols(bCol, obj.transform.localScale.x, Vector3.zero);
 
             envObj.CalcRadius();
 
