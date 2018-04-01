@@ -368,7 +368,6 @@ GameObject:
   - component: {fileID: 20632748678016748}
   - component: {fileID: 124810528611836220}
   - component: {fileID: 135265537808995056}
-  - component: {fileID: 114915862839111056}
   - component: {fileID: 114823487413749286}
   m_Layer: 11
   m_Name: Camera (eye)
@@ -665,7 +664,6 @@ GameObject:
   - component: {fileID: 114328354283499048}
   - component: {fileID: 114625176719335934}
   - component: {fileID: 114724267640258396}
-  - component: {fileID: 114989448260495484}
   - component: {fileID: 54816240626342760}
   - component: {fileID: 95728361710624352}
   - component: {fileID: 114104897269079796}
@@ -1127,7 +1125,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1743894219128570}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.591521, y: 1002.26794, z: -0.74850774}
+  m_LocalPosition: {x: -2.033444, y: -0.5146594, z: 3.576885}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4073413651229748}
@@ -1983,7 +1981,6 @@ MonoBehaviour:
   - {fileID: 23175236694266836}
   - {fileID: 23227729567787586}
   cameraToEnable: {fileID: 0}
-  flashLight: {fileID: 0}
   camerasToDisable:
   - {fileID: 20632748678016748}
   - {fileID: 20270403770022250}
@@ -2185,26 +2182,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vrcam: {fileID: 0}
---- !u!114 &114915862839111056
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1397643711918806}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 730475ee64f9a894bbac0d9e6f22e813, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mode: 1
-  sensitivityDepth: 3
-  sensitivityNormals: 0.3
-  lumThreshold: 0.2
-  edgeExp: 1
-  sampleDist: 0.5
-  edgesOnly: 0.05
-  edgesOnlyBgColor: {r: 0.625, g: 0.21599263, b: 0.21599263, a: 1}
-  edgeDetectShader: {fileID: 4800000, guid: 0d1644bdf064147baa97f235fc5b4903, type: 3}
 --- !u!114 &114932866589416742
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2231,17 +2208,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   head: {fileID: 4935214049474028}
   anim: {fileID: 95728361710624352}
---- !u!114 &114989448260495484
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1743894219128570}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83dfb2ff702a2014394f88202ab1dc64, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!124 &124810528611836220
 Behaviour:
   m_ObjectHideFlags: 1
