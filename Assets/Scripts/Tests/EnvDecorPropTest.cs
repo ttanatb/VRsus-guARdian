@@ -11,12 +11,15 @@ public class EnvDecorPropTest : MonoBehaviour
 
     void Start()
     {
-        DeleteOldProps();    
+        DeleteOldProps();
     }
 
     public void SpawnRandom()
     {
         DeleteOldProps();
+
+        //Set the environment data to pull from
+        envObjPrefab.GetComponent<EnvironmentObject>().environmentData = decorListObj;
 
         int count = decorListObj.decorDataList.Length;
         float x = -2f;
