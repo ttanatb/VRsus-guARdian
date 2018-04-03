@@ -2099,7 +2099,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144ccfada75bd37409f392fcb9e82622, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 0.001
+  movementSpeed: 0.01
   sprintFactor: 1.8
   maxSpeed: 999
   mouseSensitivity: 80
