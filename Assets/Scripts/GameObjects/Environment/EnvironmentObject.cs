@@ -22,39 +22,13 @@ public class EnvironmentObject : NetworkBehaviour
 
     private void Init()
     {
-        int count = environmentObjectData.capColDatas.Length;
         bool collider = false;
+
+        int count = environmentObjectData.meshMatDatas.Length;
         for (int i = 0; i < count; i++)
         {
-            CapsuleColliderData data = environmentObjectData.capColDatas[i];
-            CapsuleCollider col = gameObject.AddComponent<CapsuleCollider>();
-            col.center = data.center;
-            col.radius = data.radius;
-            col.height = data.height;
-            collider = true;
-        }
+            //Debug.Log(i);
 
-        count = environmentObjectData.boxColDatas.Length;
-        for (int i = 0; i < count; i++)
-        {
-            BoxColliderData data = environmentObjectData.boxColDatas[i];
-            BoxCollider col = gameObject.AddComponent<BoxCollider>();
-            col.center = data.center;
-            col.size = data.size;
-            collider = true;
-        }
-
-        if (collider)
-        {
-            gameObject.AddComponent<Rigidbody>().isKinematic = true;
-            //GetComponent<NetworkTransform>().transformSyncMode = NetworkTransform.TransformSyncMode.SyncRigidbody3D;
-        }
-
-
-
-        count = environmentObjectData.meshMatDatas.Length;
-        for (int i = 0; i < count; i++)
-        {
             MeshMatData data = environmentObjectData.meshMatDatas[i];
             GameObject child = new GameObject("Mesh");
             child.transform.SetParent(transform);
@@ -63,6 +37,32 @@ public class EnvironmentObject : NetworkBehaviour
             child.transform.localRotation = Quaternion.identity;
             child.AddComponent<MeshRenderer>().sharedMaterials = data.mats;
             child.AddComponent<MeshFilter>().mesh = data.mesh;
+
+            for (int b=0; b<data.boxData.Length; b++)
+            {
+                BoxColliderData boxData = environmentObjectData.boxColDatas[data.boxData[b]];
+                BoxCollider col = child.AddComponent<BoxCollider>();
+
+                col.center = boxData.center;
+                col.size = boxData.size;
+                collider = true;
+            }
+
+            for (int c = 0; c < data.capsuleData.Length; c++)
+            {
+                CapsuleColliderData capData = environmentObjectData.capColDatas[data.capsuleData[c]];
+                CapsuleCollider col = child.AddComponent<CapsuleCollider>();
+                col.center = capData.center;
+                col.radius = capData.radius;
+                col.height = capData.height;
+                collider = true;
+            }
+        }
+
+        if (collider)
+        {
+            gameObject.AddComponent<Rigidbody>().isKinematic = true;
+            //GetComponent<NetworkTransform>().transformSyncMode = NetworkTransform.TransformSyncMode.SyncRigidbody3D;
         }
 
         radius = environmentObjectData.radius;
