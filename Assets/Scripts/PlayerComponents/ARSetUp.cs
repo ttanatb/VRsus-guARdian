@@ -26,7 +26,7 @@ public class ARSetUp : PlayerComponent
     #region Fields
     [Tooltip("The prefab of the AR plane generator")]
     public GameObject planeGeneratorPrefab;
-
+    
     [Tooltip("The list of traps to be placed")]
     public TrapCounter[] trapList;
 
@@ -466,7 +466,7 @@ public class ARSetUp : PlayerComponent
 
     private Vector3 GetRandPosNotUnderAnyOtherPlanes(int index, float radius, int maxTries)
     {
-        Vector3 spawnPos = Utility.GetRandPosInPlaneAndFarFromEdge(sortedPlanes[index], radius, maxTries);
+        Vector3 spawnPos = Utility.GetRandPosInPlaneAndFarFromEdge(sortedPlanes[index], radius + 0.15f, maxTries);
         if (spawnPos.x > float.MaxValue / 2f) return spawnPos;
 
         int planeCount = sortedPlanes.Count;
@@ -477,7 +477,7 @@ public class ARSetUp : PlayerComponent
             {
                 if (Utility.CheckIfPointIsInPolygon(spawnPos, sortedPlanes[i]) || Utility.CheckIfTooCloseToEdge(sortedPlanes[i], spawnPos, radius))
                 {
-                    spawnPos = Utility.GetRandPosInPlaneAndFarFromEdge(sortedPlanes[index], radius, maxTries);
+                    spawnPos = Utility.GetRandPosInPlaneAndFarFromEdge(sortedPlanes[index], radius + 0.15f, maxTries);
 
                     tries++;
                     if (tries > maxTries || spawnPos.x > float.MaxValue / 2f) return spawnPos;

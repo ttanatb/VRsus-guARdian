@@ -67,7 +67,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4236699710520006}
   - component: {fileID: 114351442857728432}
-  - component: {fileID: 136769399138310660}
   - component: {fileID: 114971024608704200}
   m_Layer: 11
   m_Name: Interloper
@@ -669,6 +668,7 @@ GameObject:
   - component: {fileID: 114104897269079796}
   - component: {fileID: 114011661000426472}
   - component: {fileID: 114287119621473856}
+  - component: {fileID: 136087149322943904}
   m_Layer: 11
   m_Name: VR Player
   m_TagString: Player
@@ -1125,7 +1125,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1743894219128570}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.033444, y: -0.5146594, z: 3.576885}
+  m_LocalPosition: {x: -3.8451476, y: -39.41084, z: 12.499987}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4073413651229748}
@@ -2099,7 +2099,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144ccfada75bd37409f392fcb9e82622, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 0.001
+  movementSpeed: 0.01
   sprintFactor: 1.8
   maxSpeed: 999
   mouseSensitivity: 80
@@ -2227,19 +2227,19 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.15
   m_Center: {x: 0, y: 0, z: -0.05}
---- !u!136 &136769399138310660
+--- !u!136 &136087149322943904
 CapsuleCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1058524386857934}
+  m_GameObject: {fileID: 1743894219128570}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.012
-  m_Height: 0.05
+  m_Radius: 0.024
+  m_Height: 0.1
   m_Direction: 1
-  m_Center: {x: 0, y: 0.025, z: 0}
+  m_Center: {x: 0, y: -0.040008545, z: 0}
 --- !u!137 &137904927595072352
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
