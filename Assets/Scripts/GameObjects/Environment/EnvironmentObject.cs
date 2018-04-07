@@ -27,7 +27,7 @@ public class EnvironmentObject : NetworkBehaviour
         int count = environmentObjectData.meshMatDatas.Length;
         for (int i = 0; i < count; i++)
         {
-            Debug.Log(i);
+            //Debug.Log(i);
 
             MeshMatData data = environmentObjectData.meshMatDatas[i];
             GameObject child = new GameObject("Mesh");
