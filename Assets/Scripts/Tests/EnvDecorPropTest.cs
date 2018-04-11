@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 public class EnvDecorPropTest : MonoBehaviour
@@ -80,6 +82,7 @@ public class EnvDecorPropTest : MonoBehaviour
                 //Set the objects to be active
                 obj.SetActive(true);
 
+#if UNITY_EDITOR
                 //Test the running state of the application
                 if (EditorApplication.isPlaying)
                 {
@@ -91,7 +94,8 @@ public class EnvDecorPropTest : MonoBehaviour
                     //Destroy objects in edit mode
                     DestroyImmediate(obj);
                 }
-            } 
+            }
+#endif
         }
     }
 }
