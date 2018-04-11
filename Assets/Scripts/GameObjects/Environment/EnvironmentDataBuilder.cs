@@ -38,7 +38,7 @@ public class EnvironmentDataBuilder : MonoBehaviour
         {
             //Skip objects that aren't props and aren't the parent object
             if (obj.transform.parent != null) { continue; }
-            if (!obj.name.StartsWith("en_")) { continue; }
+            if (!obj.name.StartsWith("en_") && !obj.name.StartsWith("lm_")) { continue; }
 
             string name = obj.name.Split('_')[1];
             Debug.Log("Working on: " + name);
@@ -107,11 +107,11 @@ public class EnvironmentDataBuilder : MonoBehaviour
             envObj.CalcRadius();
 
             //Set the type of prop the object is
-            if (envObj.boxColDatas.Length == 0 && envObj.capColDatas.Length == 0)
+            if (!obj.name.StartsWith("lm_") && envObj.boxColDatas.Length == 0 && envObj.capColDatas.Length == 0)
             {
                 decors.Add(envObj);
             }
-            else if (!envObj.isLandMark)
+            else if (!obj.name.StartsWith("lm_") && !envObj.isLandMark)
             {
                 structures.Add(envObj);
             }

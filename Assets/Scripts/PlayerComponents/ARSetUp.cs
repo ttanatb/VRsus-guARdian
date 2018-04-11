@@ -424,6 +424,7 @@ public class ARSetUp : PlayerComponent
     {
         GameObject obj = Instantiate(envObjPrefab, position, Quaternion.Euler(0f, rotY, 0f));
         NetworkServer.Spawn(obj);
+        obj.GetComponent<EnvironmentObject>().environmentData = environmentData;
         obj.GetComponent<EnvironmentObject>().RpcInit(0, index);// environmentData.decorDataList[index]);
         if (isServer)
         {
@@ -436,6 +437,7 @@ public class ARSetUp : PlayerComponent
     {
         GameObject obj = Instantiate(envObjPrefab, position, Quaternion.Euler(0f, rotY, 0f));
         NetworkServer.Spawn(obj);
+        obj.GetComponent<EnvironmentObject>().environmentData = environmentData;
         obj.GetComponent<EnvironmentObject>().RpcInit(1, index);// environmentData.structureDataList[index]);
         envObjList.Add(obj);
     }
@@ -445,6 +447,7 @@ public class ARSetUp : PlayerComponent
     {
         GameObject obj = Instantiate(envObjPrefab, position, Quaternion.Euler(0f, rotY, 0f));
         NetworkServer.Spawn(obj);
+        obj.GetComponent<EnvironmentObject>().environmentData = environmentData;
         obj.GetComponent<EnvironmentObject>().RpcInit(2, index);// environmentData.landMarkDataList[index]);
         if (isServer)
             envObjList.Add(obj);
@@ -532,37 +535,43 @@ public class ARSetUp : PlayerComponent
             spawnedList.Clear();
             float area = Utility.GetAreaSqr(sortedPlanes[i]);
 
-            /*
             float threshold = 3f;
             if (Utility.GetAreaSqr(sortedPlanes[i]) > threshold)
             {
-                int rndmIndex = Random.Range(0, environmentData.landMarkDataList.Length);
-                float radius = environmentData.landMarkDataList[rndmIndex].radius;
+                if (environmentData.landMarkDataList.Length > 0)
+                {
+                    int rndmIndex = Random.Range(0, environmentData.landMarkDataList.Length);
+                    float radius = environmentData.landMarkDataList[rndmIndex].radius;
 
-                Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, spawnedList);
+                    Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, entranceCount, spawnedList, 7);
 
-                CmdSpawnEnvLandMark(spawnPos + Vector3.up * scale, rndmIndex, Random.Range(0f, 360f));
-                spawnPos.y = radius;
-                spawnedList.Add(spawnPos);
+                    Debug.Log(rndmIndex);
+
+                    CmdSpawnEnvLandMark(spawnPos + Vector3.up * scale, rndmIndex, Random.Range(0f, 360f));
+                    spawnPos.y = radius;
+                    spawnedList.Add(spawnPos);
+                }
 
                 yield return new WaitForSeconds(0.001f);
             }
-            */
 
             int structureSpawnCount = (int)(area * 19.0f);
             structureSpawnCount = Mathf.Clamp(structureSpawnCount, 6, 35);
             for (int j = 0; j < structureSpawnCount; j++)
             {
-                int rndmIndex = Random.Range(0, environmentData.structureDataList.Length);
-                float radius = environmentData.structureDataList[rndmIndex].radius;
-
-                Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, entranceCount, spawnedList, 7);
-                if (spawnPos.x > float.MaxValue / 2f) continue;
-                else
+                if (environmentData.structureDataList.Length > 0)
                 {
-                    CmdSpawnEnvStructure(spawnPos, rndmIndex, Random.Range(0f, 360f));
-                    spawnPos.y = radius;
-                    spawnedList.Add(spawnPos);
+                    int rndmIndex = Random.Range(0, environmentData.structureDataList.Length);
+                    float radius = environmentData.structureDataList[rndmIndex].radius;
+
+                    Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, entranceCount, spawnedList, 7);
+                    if (spawnPos.x > float.MaxValue / 2f) continue;
+                    else
+                    {
+                        CmdSpawnEnvStructure(spawnPos, rndmIndex, Random.Range(0f, 360f));
+                        spawnPos.y = radius;
+                        spawnedList.Add(spawnPos);
+                    }
                 }
 
                 yield return new WaitForSeconds(0.01f);
@@ -572,17 +581,19 @@ public class ARSetUp : PlayerComponent
             decorSpawnCount = Mathf.Clamp(decorSpawnCount, 6, 16);
             for (int j = 0; j < decorSpawnCount; j++)
             {
-
-                int rndmIndex = Random.Range(0, environmentData.decorDataList.Length);
-                float radius = environmentData.decorDataList[rndmIndex].radius;
-
-                Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, entranceCount, spawnedList, 5);
-                if (spawnPos.x > float.MaxValue / 2f) continue;
-                else
+                if (environmentData.structureDataList.Length > 0)
                 {
-                    CmdSpawnEnvDecor(spawnPos, rndmIndex, Random.Range(0f, 360f));
-                    spawnPos.y = radius;
-                    spawnedList.Add(spawnPos);
+                    int rndmIndex = Random.Range(0, environmentData.decorDataList.Length);
+                    float radius = environmentData.decorDataList[rndmIndex].radius;
+
+                    Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, entranceCount, spawnedList, 5);
+                    if (spawnPos.x > float.MaxValue / 2f) continue;
+                    else
+                    {
+                        CmdSpawnEnvDecor(spawnPos, rndmIndex, Random.Range(0f, 360f));
+                        spawnPos.y = radius;
+                        spawnedList.Add(spawnPos);
+                    }
                 }
 
                 yield return new WaitForSeconds(0.01f);
