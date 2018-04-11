@@ -35,7 +35,7 @@ public class EnvDecorPropTest : MonoBehaviour
                 Quaternion.identity).GetComponent<EnvironmentObject>();
             x += data.radius;
 
-            obj.Init(0,i);
+            obj.Init(0, i);
         }
 
 
@@ -94,8 +94,8 @@ public class EnvDecorPropTest : MonoBehaviour
                     //Destroy objects in edit mode
                     DestroyImmediate(obj);
                 }
-            }
 #endif
+            }
         }
     }
 }
