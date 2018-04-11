@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 public class EnvironmentDataBuilder : MonoBehaviour
 {
     public EnvironmentData decorList = null;
@@ -134,9 +136,11 @@ public class EnvironmentDataBuilder : MonoBehaviour
 
             Debug.Log("Created new Env Asset named: " + name);
 
+#if UNITY_EDITOR
             //Create and save the asset
             AssetDatabase.CreateAsset(decorList, "Assets/EnvironmentAssetData/" + name + ".asset");
             AssetDatabase.SaveAssets();
+#endif
         }
 
         Debug.Log("Done building!");
