@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
 /// <summary>
 /// A sample of the relic that is placed in the training area
@@ -35,7 +36,9 @@ public class SampleRelic : MonoBehaviour
                 p.Stop();
 
             stolen = true;
-            CanvasManager.Instance.SetMessage("You stole a practice relic!");
+
+            if (!transform.parent.GetComponent<NetworkIdentity>().isServer)
+                CanvasManager.Instance.SetMessage("You stole a practice relic!");
         }
     }
 

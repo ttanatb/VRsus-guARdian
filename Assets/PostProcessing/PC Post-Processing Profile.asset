@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a3bdb2cd68f901469e7cc149151eb49, type: 3}
-  m_Name: VR Post-Processing Profile
+  m_Name: PC Post-Processing Profile
   m_EditorClassIdentifier: 
   debugViews:
     m_Enabled: 1
@@ -25,7 +25,7 @@ MonoBehaviour:
         motionVectorsResolution: 24
         motionVectorsAmplitude: 64
   fog:
-    m_Enabled: 1
+    m_Enabled: 0
     m_Settings:
       excludeSkybox: 1
   antialiasing:
@@ -71,15 +71,15 @@ MonoBehaviour:
   depthOfField:
     m_Enabled: 1
     m_Settings:
-      focusDistance: 0.225
+      focusDistance: 0.22
       aperture: 2
-      focalLength: 9.73
+      focalLength: 8
       useCameraFov: 0
       kernelSize: 1
   motionBlur:
-    m_Enabled: 0
+    m_Enabled: 1
     m_Settings:
-      shutterAngle: 270
+      shutterAngle: 275
       sampleCount: 10
       frameBlending: 0
   eyeAdaptation:
@@ -100,9 +100,9 @@ MonoBehaviour:
     m_Enabled: 1
     m_Settings:
       bloom:
-        intensity: 0.36
-        threshold: 1.67
-        softKnee: 0.21
+        intensity: 1
+        threshold: 1.5
+        softKnee: 0.5
         radius: 4
         antiFlicker: 1
       lensDirt:

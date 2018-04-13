@@ -51,6 +51,10 @@ namespace UnityEngine.PostProcessing
 
         void OnEnable()
         {
+#if UNITY_IOS
+            Destroy(this);
+#endif
+
             m_CommandBuffers = new Dictionary<Type, KeyValuePair<CameraEvent, CommandBuffer>>();
             m_MaterialFactory = new MaterialFactory();
             m_RenderTextureFactory = new RenderTextureFactory();

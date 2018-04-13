@@ -74,9 +74,7 @@ public class ARCombat : PlayerComponent
 
     public override void OnStartLocalPlayer()
     {
-#if UNITY_IOS
         flashLight.enabled = false;
-#endif
     }
 
     protected override void InitObj() { }
