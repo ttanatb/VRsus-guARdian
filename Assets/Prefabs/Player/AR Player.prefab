@@ -112,6 +112,7 @@ GameObject:
   - component: {fileID: 114034712502135718}
   - component: {fileID: 114909993582410828}
   - component: {fileID: 114781550108192186}
+  - component: {fileID: 114736864152388484}
   m_Layer: 16
   m_Name: AR Player
   m_TagString: ARPlayer
@@ -739,6 +740,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6acdb3afd6a584c0980479fc784bee22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  roomWidthRange: {x: 2, y: 5}
+  roomLengthRange: {x: 3, y: 7}
+  planeCount: 4
+  planeElevationRange: {x: 0.25, y: 0.5}
+  planeWidthRange: {x: 0.25, y: 2}
+  planeLengthRange: {x: 0.25, y: 2}
 --- !u!114 &114535040245964092
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -806,6 +813,18 @@ MonoBehaviour:
     i15: 205
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
+--- !u!114 &114736864152388484
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1344648828105818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: 57ed7e37eb1066143aee176898303998, type: 2}
 --- !u!114 &114781550108192186
 MonoBehaviour:
   m_ObjectHideFlags: 1
