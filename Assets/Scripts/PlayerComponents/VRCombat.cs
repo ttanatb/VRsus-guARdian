@@ -105,7 +105,7 @@ public class VRCombat : PlayerComponent
     }
     #endregion
 
-    [Server]
+    //[Server]
     public void TakeDamage()
     {
         if (!isServer || isInvulnerable)

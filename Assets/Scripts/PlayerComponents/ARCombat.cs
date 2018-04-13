@@ -136,6 +136,14 @@ public class ARCombat : PlayerComponent
                 flashLight.spotAngle = Mathf.Lerp(spotLightAngle, 0, laserTimer / windUpDuration);
 
             if (!isLocalPlayer) return;
+
+            //updates timer
+            if (laserTimer > laserDuration)
+            {
+                laserTimer = 0f;
+                isShootingLaser = false;
+            }
+
             if (laserTimer > windUpDuration)
             {
                 //raycasts
@@ -155,13 +163,6 @@ public class ARCombat : PlayerComponent
             }
             //puts it at the furthest distance
             else laserPoint = avatar.position + -avatar.forward * layerMaxDist;
-
-            //updates timer
-            if (laserTimer > laserDuration)
-            {
-                laserTimer = 0f;
-                isShootingLaser = false;
-            }
         }
 
         //manages cool down if laser isn't being shot
