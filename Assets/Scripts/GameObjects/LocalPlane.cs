@@ -7,22 +7,50 @@
 public class LocalPlane : MonoBehaviour
 {
     #region Fields
-    private const float HEIGHT = 50.15f;          //height of tower
+
+    private const float HEIGHT = 2.0f;          //height of tower
+
     private Vector2 scale = Vector2.one;        //x,z scale of tower
 
     //TEMP (prototype graphics)
     private Material m;                         //(for updating tiling)
-    //END TEMP
+                                                //END TEMP
+
+
+    private MeshCollider meshCollider;
+    private BoxCollider boxCollider;
+
+    [SerializeField]
+    private float topPlaneLayerSize = 0.01f;
+
     #endregion
+
+    private void Awake()
+    {
+        meshCollider = GetComponent<MeshCollider>();
+        boxCollider = GetComponent<BoxCollider>();
+    }
 
     public void Start()
     {
 #if UNITY_IOS
-        //shouldn't be seen on AR
-        GetComponent<Renderer>().enabled = false;  
+        GetComponent<Renderer>().enabled = false;
 #else
-        m = GetComponent<Renderer>().material;
+        meshCollider.enabled = true;
+
+        Vector3 newCenter = boxCollider.center;
+        newCenter.y = -topPlaneLayerSize / 2;
+
+        Vector3 newSize = boxCollider.size;
+        newSize.y = topPlaneLayerSize;
+
+        boxCollider.size = newSize;
+        boxCollider.center = newCenter;
+
+        boxCollider.enabled = false;
 #endif
+
+        m = GetComponent<Renderer>().material;
         m.SetTextureOffset("_MainTex", new Vector2(Random.value, Random.value));
         GetComponent<Renderer>().material = m;
     }
@@ -36,7 +64,7 @@ public class LocalPlane : MonoBehaviour
 
         if (!m)
             m = GetComponent<Renderer>().material;
-        m.SetTextureScale("_MainTex", scale / 5.5f);
+        m.SetTextureScale("_MainTex", scale / 2.5f);
         //END TEMP
     }
 #endif
@@ -53,11 +81,11 @@ public class LocalPlane : MonoBehaviour
         transform.position = position;
 
         //update scale (to height)
-        scale.y = HEIGHT;
+        //scale.y = HEIGHT;
         transform.localScale = scale;
 
         //moves tower down (pivot is in the center)
-        transform.Translate(HEIGHT / 2 * Vector3.down);
+        //transform.Translate(HEIGHT / 2 * Vector3.down);
 
         //update rotation
         Vector3 euler = transform.rotation.eulerAngles;

@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 23310291459709284}
   - component: {fileID: 114564130125812978}
   - component: {fileID: 54699296585999992}
+  - component: {fileID: 64692044314822268}
   m_Layer: 8
   m_Name: Tower
   m_TagString: Platform
@@ -38,7 +39,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1799214505512546}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -3.3786106, y: 998.84393, z: 7.2415767}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -58,7 +59,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c65da7ed9bd04934c9c03c973e766679, type: 2}
+  - {fileID: 2100000, guid: bf0694f199c3a4c06942fc1a9c004d33, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -84,7 +85,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1799214505512546}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300000, guid: 8e0ec05a14302c84fb45a7896f70402e, type: 3}
 --- !u!54 &54699296585999992
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -100,6 +101,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!64 &64692044314822268
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1799214505512546}
+  m_Material: {fileID: 13400000, guid: bb655c85211fbf1498e5fa18b5e2ac9a, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300000, guid: 8e0ec05a14302c84fb45a7896f70402e, type: 3}
 --- !u!65 &65879119369944700
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -111,7 +126,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: -0.5, z: 0}
 --- !u!114 &114564130125812978
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -123,3 +138,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30f0d2df3450544d4bea2069482ca9e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  topPlaneLayerSize: 0.01

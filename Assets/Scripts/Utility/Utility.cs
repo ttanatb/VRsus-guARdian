@@ -34,10 +34,10 @@ public class Utility
         List<Vector3> vertices = new List<Vector3>
         {
             //add the corners of the plane;
-            new Vector3(-planeScale.x, planeScale.y, planeScale.z),
-            new Vector3(planeScale.x, planeScale.y, planeScale.z),
-            new Vector3(planeScale.x, planeScale.y, -planeScale.z),
-            new Vector3(-planeScale.x, planeScale.y, -planeScale.z)
+            new Vector3(-planeScale.x, 0f,  planeScale.z),
+            new Vector3( planeScale.x, 0f,  planeScale.z),
+            new Vector3( planeScale.x, 0f, -planeScale.z),
+            new Vector3(-planeScale.x, 0f, -planeScale.z)
         };
 
         //loop through to rotate and translate accordingly
@@ -72,6 +72,41 @@ public class Utility
 
         return vertices;
     }
+
+
+    public static List<Vector3> CreateVerticesFromPlane(Transform transform)
+    {
+        float rotY = transform.rotation.eulerAngles.y;
+        Vector3 translation = transform.position;
+
+        Vector3 planeScale = Vector3.one; // transform.localScale / 2f;
+
+        Transform curr = transform;
+        while (curr != null)
+        {
+            planeScale.x = transform.localScale.x;
+            planeScale.z = transform.localScale.z;
+
+            curr = curr.parent; // transform = transform.parent;
+        }
+
+        List<Vector3> vertices = new List<Vector3>
+        {
+            //add the corners of the plane;
+            new Vector3(-planeScale.x, 0, planeScale.z),
+            new Vector3(planeScale.x,  0, planeScale.z),
+            new Vector3(planeScale.x,  0, -planeScale.z),
+            new Vector3(-planeScale.x, 0, -planeScale.z)
+        };
+
+        //loop through to rotate and translate accordingly
+        Quaternion rot = Quaternion.AngleAxis(rotY, Vector3.up);
+        for (int i = 0; i < vertices.Count; i++)
+            vertices[i] = (rot * vertices[i]) + translation;
+
+        return vertices;
+    }
+
 
     /// <summary>
     /// Gets a random point on a plane (it uses square root so it might be a bit slow)
@@ -458,6 +493,51 @@ public class Utility
                 return Vector3.one * float.MaxValue;
         }
 
+    }
+
+    public static bool CheckIntersection(List<Vector3> bottom, List<Vector3> top)
+    {
+        bool contains = CheckIfContains(bottom, top);
+        if (contains) return true;
+
+        for (int i = 0; i < top.Count; i++)
+        {
+            int nextIndex = i + 1;
+            if (nextIndex >= top.Count)
+                nextIndex = 0;
+
+            Vector3 s1v1 = top[i];
+            Vector3 s1v2 = top[nextIndex];
+            for (int j = 0; j < bottom.Count; j++)
+            {
+                nextIndex = j + 1;
+                if (nextIndex >= bottom.Count)
+                    nextIndex = 0;
+
+                Vector3 s2v1 = top[j];
+                Vector3 s2v2 = top[nextIndex];
+
+                Vector3 outVec;
+                if (CheckIntersectionBetweenSegments(s1v1, s1v2, s2v1, s2v2, out outVec))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    public static bool CheckIfContains(List<Vector3> bottom, List<Vector3> top)
+    {
+        for (int i = 0; i < top.Count; i++)
+        {
+            if (!CheckIfPointIsInPolygon(top[i], bottom))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 

@@ -7,7 +7,7 @@
 				Tags { "Queue"="Geometry" }
 
 				ZWrite On
-				ZTest LEqual
+				ZTest Less
 				ColorMask 0
 
 				CGPROGRAM
@@ -36,7 +36,7 @@
 
 				fixed4 frag (v2f input) : SV_Target
 				{
-					return fixed4(0.5, 0.3, 0.0, 1.0);
+					return fixed4(0.1, 0.1, 0.1, 0.1);
 				}
 				ENDCG
 	    	}
