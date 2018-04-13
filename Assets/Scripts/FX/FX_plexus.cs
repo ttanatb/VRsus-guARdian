@@ -24,8 +24,10 @@ public class FX_plexus : MonoBehaviour {
         particleSystem = GetComponent<ParticleSystem>();
         particleSystemMainModule = particleSystem.main;
 
-
-	}
+#if UNITY_IOS
+        Destroy(gameObject);
+#endif
+    }
 	
 	// Update is called once per frame
 	void LateUpdate () {

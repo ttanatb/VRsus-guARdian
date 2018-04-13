@@ -367,7 +367,8 @@ GameObject:
   - component: {fileID: 20632748678016748}
   - component: {fileID: 124810528611836220}
   - component: {fileID: 135265537808995056}
-  - component: {fileID: 114823487413749286}
+  - component: {fileID: 114258239774327274}
+  - component: {fileID: 114726845814313030}
   m_Layer: 11
   m_Name: Camera (eye)
   m_TagString: MainCamera
@@ -1125,7 +1126,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1743894219128570}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.8451476, y: -39.41084, z: 12.499987}
+  m_LocalPosition: {x: 2.5925841, y: -9.710167, z: 7.016367}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4073413651229748}
@@ -1941,6 +1942,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraEye: {fileID: 4935214049474028}
+--- !u!114 &114258239774327274
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1397643711918806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: 57ed7e37eb1066143aee176898303998, type: 2}
 --- !u!114 &114287119621473856
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2111,6 +2124,20 @@ MonoBehaviour:
   grapplePrefab: {fileID: 1617336623288622, guid: ac272ad3e742d1e4099a0d1a5b10fbaa,
     type: 2}
   cameraTransform: {fileID: 0}
+--- !u!114 &114726845814313030
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1397643711918806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bca9ccf900ccc84c887d783321d27e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _head: {fileID: 4115892228185042}
+  _ears: {fileID: 4565173039399450}
+  wireframe: 0
 --- !u!114 &114760763416134762
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2156,20 +2183,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: -1
   origin: {fileID: 0}
---- !u!114 &114823487413749286
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1397643711918806}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bca9ccf900ccc84c887d783321d27e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _head: {fileID: 4115892228185042}
-  _ears: {fileID: 4565173039399450}
-  wireframe: 0
 --- !u!114 &114906968254101648
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -39,7 +39,7 @@ public class Entrance : NetworkBehaviour
         if (other.CompareTag("Player"))
         {
             VRCombat combat = other.GetComponent<VRCombat>();
-            if(!combat) 
+            if (!combat)
                 combat = other.transform.parent.GetComponent<VRCombat>();
 
             if (!combat.IsInvulnerable && combat.GetRelicCount() == 2 && manager.CurrGamePhase != GamePhase.Over)
@@ -62,13 +62,17 @@ public class Entrance : NetworkBehaviour
     {
         pSystem.Play();
         bCollider.enabled = true;
-        attachedLights.enabled = true;
+
+        if (attachedLights)
+            attachedLights.enabled = true;
     }
     public void Deactivate()
     {
         pSystem.Stop();
         bCollider.enabled = false;
-        attachedLights.enabled = false;
+
+        if (attachedLights)
+            attachedLights.enabled = false;
     }
 
     /// <summary>
