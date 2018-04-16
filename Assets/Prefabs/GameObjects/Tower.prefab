@@ -139,3 +139,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topPlaneLayerSize: 0.01
+  updateRate: 0.1
+  textureScale: 4
