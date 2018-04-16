@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// Helper class for updating local plane transforms and updating texture tiling
@@ -15,13 +17,26 @@ public class LocalPlane : MonoBehaviour
     //TEMP (prototype graphics)
     private Material m;                         //(for updating tiling)
                                                 //END TEMP
-
-
     private MeshCollider meshCollider;
     private BoxCollider boxCollider;
 
     [SerializeField]
     private float topPlaneLayerSize = 0.01f;
+
+    [SerializeField]
+    private float updateRate = 0.1f;
+
+    [SerializeField]
+    private float textureScale = 0.25f;
+
+    private Vector3 totalScale = Vector3.one;        //x,z scale of tower
+    private Material matTop;
+    private Material matX;
+    private Material matY;
+
+    private Vector2 topScale = Vector2.one;        //x,z scale of tower
+    private Vector2 xScale = Vector2.one;        //x,z scale of tower
+    private Vector2 yScale = Vector2.one;        //x,z scale of tower
 
     #endregion
 
@@ -50,21 +65,24 @@ public class LocalPlane : MonoBehaviour
         boxCollider.enabled = false;
 #endif
 
-        m = GetComponent<Renderer>().material;
-        m.SetTextureOffset("_MainTex", new Vector2(Random.value, Random.value));
-        GetComponent<Renderer>().material = m;
+
+
+        Material[] mats = GetComponent<MeshRenderer>().materials;
+        //Vector2 offset = new Vector2(Random.value, Random.value);
+        //foreach (Material m in mats)
+        //    m.SetTextureOffset("_MainTex", offset);
+
+        matTop = mats[0];
+        //matX = mats[1];
+        //matY = mats[2];
+
+        IEnumerator updateCoroutine = TextureUpdateCoroutine(updateRate);
+        StartCoroutine(updateCoroutine);
     }
 
 #if !UNITY_IOS
     private void Update()
     {
-        //TEMP (prototype graphics)
-        scale.x = transform.localScale.x;
-        scale.y = transform.localScale.z;
-
-        if (!m)
-            m = GetComponent<Renderer>().material;
-        m.SetTextureScale("_MainTex", scale / 2.5f);
         //END TEMP
     }
 #endif
@@ -91,5 +109,32 @@ public class LocalPlane : MonoBehaviour
         Vector3 euler = transform.rotation.eulerAngles;
         euler.y = rotation;
         transform.rotation = Quaternion.Euler(euler);
+    }
+
+    IEnumerator TextureUpdateCoroutine(float waitTime)
+    {
+        while (true)
+        {
+            totalScale.x = transform.localScale.x / textureScale;
+            totalScale.y = transform.localScale.y / textureScale;
+            totalScale.z = transform.localScale.z / textureScale;
+
+            topScale.x = totalScale.x;
+            topScale.y = totalScale.z;
+            matTop.SetTextureScale("_MainTex", topScale);
+            matTop.SetTextureOffset("_MainTex", topScale);
+
+            //xScale.y = totalScale.z;
+            //xScale.x = totalScale.y;
+            //matX.SetTextureScale("_MainTex", xScale);
+            //matX.SetTextureOffset("_MainTex", xScale);
+            //
+            //yScale.y = totalScale.x;
+            //yScale.x = totalScale.y;
+            //matY.SetTextureScale("_MainTex", yScale);
+            //matY.SetTextureOffset("_MainTex", yScale);
+
+            yield return new WaitForSeconds(waitTime);
+        }
     }
 }

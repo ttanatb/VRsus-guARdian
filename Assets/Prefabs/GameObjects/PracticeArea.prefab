@@ -4078,6 +4078,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topPlaneLayerSize: 0.01
+  updateRate: 0.1
+  textureScale: 4
 --- !u!114 &114371593380609658
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4102,6 +4104,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topPlaneLayerSize: 0.01
+  updateRate: 0.1
+  textureScale: 4
 --- !u!114 &114671050037847456
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4151,6 +4155,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topPlaneLayerSize: 0.01
+  updateRate: 0.1
+  textureScale: 4
 --- !u!114 &114877876061502356
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4213,6 +4219,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topPlaneLayerSize: 0.01
+  updateRate: 0.1
+  textureScale: 4
 --- !u!136 &136546508674780408
 CapsuleCollider:
   m_ObjectHideFlags: 1
