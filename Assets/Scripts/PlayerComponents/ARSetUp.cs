@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine.XR.iOS;
+using System.Linq;
 
 /// <summary>
 /// This for the AR player to use to keep track of the traps
@@ -26,7 +27,7 @@ public class ARSetUp : PlayerComponent
     #region Fields
     [Tooltip("The prefab of the AR plane generator")]
     public GameObject planeGeneratorPrefab;
-    
+
     [Tooltip("The list of traps to be placed")]
     public TrapCounter[] trapList;
 
@@ -385,7 +386,7 @@ public class ARSetUp : PlayerComponent
                 foreach (TrapDefense trap in trapObjList) trap.TransitionToPlayPhase();
 
                 VRTransition vrTransition = FindObjectOfType<VRTransition>();
-                    practiceArea.RpcActivateEntrance(entranceObjList[Random.Range(0, entranceObjList.Count)].transform.position);
+                practiceArea.RpcActivateEntrance(entranceObjList[Random.Range(0, entranceObjList.Count)].transform.position);
                 if (combat != null)
                     combat.IsShootingEnabled = true;
 #if UNITY_IOS
@@ -442,16 +443,18 @@ public class ARSetUp : PlayerComponent
         envObjList.Add(obj);
     }
 
+    /*
     [Command]
-    private void CmdSpawnEnvLandMark(Vector3 position, int index, float rotY)
+    private void CmdSpawnEnvLandMark(EnvironmentObjectData envObj, Vector3 position, int index, float rotY)
     {
         GameObject obj = Instantiate(envObjPrefab, position, Quaternion.Euler(0f, rotY, 0f));
         NetworkServer.Spawn(obj);
         obj.GetComponent<EnvironmentObject>().environmentData = environmentData;
-        obj.GetComponent<EnvironmentObject>().RpcInit(2, index);// environmentData.landMarkDataList[index]);
+        obj.GetComponent<EnvironmentObject>().RpcInit(1, index);// environmentData.landMarkDataList[index]);
         if (isServer)
             envObjList.Add(obj);
     }
+    */
 
     [Command]
     private void CmdSpawnEntrance(Vector3 position)
@@ -530,26 +533,58 @@ public class ARSetUp : PlayerComponent
         int relicCount = relicObjList.Count;
         int entranceCount = entranceObjList.Count;
         List<Vector3> spawnedList = new List<Vector3>();
-        for (int i = 0; i < planeCount; i++)
+        for (int i = 0; i < sortedPlanes.Count; i++)
         {
             spawnedList.Clear();
             float area = Utility.GetAreaSqr(sortedPlanes[i]);
 
-            float threshold = 3f;
-            if (Utility.GetAreaSqr(sortedPlanes[i]) > threshold)
+            if (environmentData.landMarkDataList.Length > 0)
             {
-                if (environmentData.landMarkDataList.Length > 0)
+                int rndmIndex = Random.Range(0, environmentData.landMarkDataList.Length);
+                EnviromentLandmarkData envObj = environmentData.landMarkDataList[rndmIndex];
+
+                Vector3 spawnPos = Utility.GetCenterPointInPlane(sortedPlanes[i]);
+
+                float rotation = Random.Range(0f, 360f);
+
+                for (int e = 0; e < envObj.decors.Length; e++)
                 {
-                    int rndmIndex = Random.Range(0, environmentData.landMarkDataList.Length);
-                    float radius = environmentData.landMarkDataList[rndmIndex].radius;
+                    int id = envObj.decors[e];
+                    EnvironmentObjectData obj = environmentData.decorDataList[id];
+                    Vector3 pos = spawnPos + obj.meshMatDatas[0].posOffset;
+                    bool underPlane = false;
 
-                    Vector3 spawnPos = GetEnvObjSpawnPos(radius, i, relicCount, entranceCount, spawnedList, 7);
+                    for (int p = 0; p < sortedPlanes.Count; p++)
+                    {
+                        if (i == p) { continue; }
+                        underPlane = Utility.CheckIfPointIsInPolygon(pos, sortedPlanes[p]);
+                        if (underPlane) { break; }
+                    }
 
-                    Debug.Log(rndmIndex);
+                    if (!underPlane && Utility.CheckIfPointIsInPolygon(pos + Vector3.down * 2, sortedPlanes[i]))
+                    {
+                        CmdSpawnEnvDecor(pos, id, rotation);
+                    }
+                }
 
-                    CmdSpawnEnvLandMark(spawnPos + Vector3.up * scale, rndmIndex, Random.Range(0f, 360f));
-                    spawnPos.y = radius;
-                    spawnedList.Add(spawnPos);
+                for (int e = 0; e < envObj.structures.Length; e++)
+                {
+                    int id = envObj.structures[e];
+                    EnvironmentObjectData obj = environmentData.structureDataList[id];
+                    Vector3 pos = spawnPos + obj.meshMatDatas[0].posOffset;
+                    bool underPlane = false;
+
+                    for (int p = 0; p < sortedPlanes.Count; p++)
+                    {
+                        if (i == p) { continue; }
+                        underPlane = Utility.CheckIfPointIsInPolygon(pos, sortedPlanes[p]);
+                        if (underPlane) { break; }
+                    }
+
+                    if (!underPlane && Utility.CheckIfPointIsInPolygon(pos + Vector3.down * 2, sortedPlanes[i]))
+                    {
+                        CmdSpawnEnvStructure(pos, id, rotation);
+                    }
                 }
 
                 yield return new WaitForSeconds(0.001f);

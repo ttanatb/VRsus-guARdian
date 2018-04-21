@@ -54,13 +54,11 @@ public class EnvDecorPropTest : MonoBehaviour
         count = decorListObj.landMarkDataList.Length;
         for (int i = 0; i < count; i++)
         {
-            EnvironmentObjectData data = decorListObj.landMarkDataList[i];
+            EnviromentLandmarkData data = decorListObj.landMarkDataList[i];
 
-            x += data.radius;
             EnvironmentObject obj = Instantiate(envObjPrefab,
                 new Vector3(x, 0f, 0f),
                 Quaternion.identity).GetComponent<EnvironmentObject>();
-            x += data.radius;
 
             obj.Init(2, i);
         }

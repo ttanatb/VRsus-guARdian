@@ -713,7 +713,7 @@ MonoBehaviour:
   entrancePrefab: {fileID: 1638740177162806, guid: 6244c8c1573a0354fb969f4a2049dbba,
     type: 2}
   wallPrefab: {fileID: 0}
-  environmentData: {fileID: 11400000, guid: ddc3dd1b07965154597c2a4506de1c4a, type: 2}
+  environmentData: {fileID: 11400000, guid: 284845beca2ef674a904fa970d6cfc2e, type: 2}
   envObjPrefab: {fileID: 1955769541861086, guid: 65ec847e51651244b936d7619bb92e7f,
     type: 2}
   minPlayArea: 0
@@ -739,6 +739,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6acdb3afd6a584c0980479fc784bee22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  roomWidthRange: {x: 2, y: 5}
+  roomLengthRange: {x: 3, y: 7}
+  planeCount: 4
+  planeElevationRange: {x: 0.25, y: 0.5}
+  planeWidthRange: {x: 0.25, y: 2}
+  planeLengthRange: {x: 0.25, y: 2}
 --- !u!114 &114535040245964092
 MonoBehaviour:
   m_ObjectHideFlags: 1

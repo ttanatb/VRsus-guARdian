@@ -140,6 +140,16 @@ public class Utility
             (r1 * r2 * triangleVertices[2]);
     }
 
+    static public Vector3 GetCenterPointInPlane(List<Vector3> vertices)
+    {
+        Vector3 totalPos = Vector3.zero;
+
+        foreach (Vector3 pos in vertices)
+            totalPos += pos;
+
+        return totalPos / vertices.Count;
+    }
+
     /// <summary>
     /// Gets a random point on a plane (doesn't use square root, so it's weighted)
     /// </summary>
