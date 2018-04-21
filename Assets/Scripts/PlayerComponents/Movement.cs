@@ -237,7 +237,7 @@ public class Movement : PlayerComponent
     private void OnCollisionStay(Collision collision)
     {
         if ((collision.gameObject.tag == "Platform") &&
-            (transform.position.y > collision.transform.position.y + collision.transform.localScale.y / 2f))
+            (transform.position.y > collision.transform.position.y))
         {
             networkAnimator.SetBool("isOnLand", true);
             isOnFloor = true;

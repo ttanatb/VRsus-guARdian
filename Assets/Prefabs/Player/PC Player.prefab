@@ -69,7 +69,7 @@ GameObject:
   - component: {fileID: 20680594579613456}
   - component: {fileID: 124410602532411594}
   - component: {fileID: 81175471303152914}
-  - component: {fileID: 114363633067114914}
+  - component: {fileID: 114900391010933626}
   m_Layer: 11
   m_Name: PC Camera
   m_TagString: Player
@@ -1155,7 +1155,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1272844262855460}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.330707, y: 993.244, z: -0.7609353}
+  m_LocalPosition: {x: 1.7960367, y: -9.256388, z: 9.002582}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 4426164412331622}
@@ -1587,26 +1587,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fadeSpeed: 0.05
   waitTime: 1.2
---- !u!114 &114363633067114914
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1064722355016630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 730475ee64f9a894bbac0d9e6f22e813, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mode: 1
-  sensitivityDepth: 3
-  sensitivityNormals: 0.3
-  lumThreshold: 0.2
-  edgeExp: 1
-  sampleDist: 0.5
-  edgesOnly: 0.05
-  edgesOnlyBgColor: {r: 0.625, g: 0.21599263, b: 0.21599263, a: 1}
-  edgeDetectShader: {fileID: 4800000, guid: 0d1644bdf064147baa97f235fc5b4903, type: 3}
 --- !u!114 &114491057832289410
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1659,6 +1639,18 @@ MonoBehaviour:
   cameraToEnable: {fileID: 20680594579613456}
   camerasToDisable: []
   avatar: {fileID: 1891817359413210}
+--- !u!114 &114900391010933626
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1064722355016630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: 49cd6d224f69d8a42a2b746144b668a4, type: 2}
 --- !u!114 &114912979153586058
 MonoBehaviour:
   m_ObjectHideFlags: 1
