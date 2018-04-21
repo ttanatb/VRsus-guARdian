@@ -14,6 +14,12 @@ public class EnvDecorPropTestEditor : Editor {
         {
             myScript.SpawnRandom();
         }
+
+        myScript = (EnvDecorPropTest)target;
+        if (GUILayout.Button("Delete Prop Objs"))
+        {
+            myScript.DeleteOldProps();
+        }
     }
 }
 #endif

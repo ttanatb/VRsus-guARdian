@@ -19,9 +19,14 @@ public class DebugPlaneTiler : MonoBehaviour
     private float updateRate = 0.1f;
 
     [SerializeField]
+    private float renderUpdateRate = 0.1f;
+
+    [SerializeField]
     static List<DebugPlaneTiler> planeList;
 
     private List<Vector3> vertices;
+
+    //private static bool isFirst = true;
 
     private void Awake()
     {
@@ -29,6 +34,14 @@ public class DebugPlaneTiler : MonoBehaviour
         {
             planeList = new List<DebugPlaneTiler>();
         }
+
+        //if (isFirst)
+        //{
+        //    isFirst = false;
+        //
+        //    IEnumerator renderOrderCoroutine = RenderOrderCoroutine(renderUpdateRate);
+        //    StartCoroutine(renderOrderCoroutine);
+        //}
     }
 
     // Use this for initialization
@@ -83,6 +96,16 @@ public class DebugPlaneTiler : MonoBehaviour
         }
     }
 
+    //IEnumerator RenderOrderCoroutine(float waitTime)
+    //{
+    //    while(true)
+    //    {
+    //
+    //        yield return new WaitForSeconds(waitTime);
+    //    }
+    //}
+
+
     public void AddToList()
     {
         if (planeList.Contains(this))
@@ -103,18 +126,16 @@ public class DebugPlaneTiler : MonoBehaviour
     {
         planeList = planeList.OrderBy(o => o.transform.position.y).ToList();
 
-        for (int i = 0; i < planeList.Count; i++)
-        {
-            planeList[i].name = "Plane " + i;
-        }
+        //for (int i = 0; i < planeList.Count; i++)
+        //    planeList[i].name = "Plane " + i;
 
         vertices = Utility.CreateVerticesFromPlane(transform);
 
-        Debug.Log(gameObject.name + " vertices");
-        foreach(Vector3 v in vertices)
-        {
-            Debug.Log(v);
-        }
+        //Debug.Log(gameObject.name + " vertices");
+        //foreach(Vector3 v in vertices)
+        //{
+        //    Debug.Log(v);
+        //}
 
         float yPosBelow = planeList[0].transform.position.y ;
         for (int i = 0; i < planeList.Count; i++)
@@ -127,7 +148,7 @@ public class DebugPlaneTiler : MonoBehaviour
             else if (Utility.CheckIfContains(planeList[i].vertices, vertices))
             {
                 yPosBelow = planeList[i].transform.position.y;
-                Debug.Log("New yPosBelow: " + yPosBelow);
+                //Debug.Log("New yPosBelow: " + yPosBelow);
             }
         }
 

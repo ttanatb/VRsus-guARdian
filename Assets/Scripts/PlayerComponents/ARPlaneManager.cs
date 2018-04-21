@@ -113,7 +113,7 @@ public class ARPlaneManager : PlayerComponent
         float length = Random.Range(roomLengthRange.x, roomLengthRange.y);
         float rotY = Random.Range(0f, 360f);
 
-        ServerAddPlane("floor", Vector3.zero, rotY, new Vector3(width, 1f, length));
+        ServerAddPlane("floor", Vector3.zero, rotY, new Vector3(width, .1f, length));
         List<Vector3> floorGeometry = Utility.CreateVerticesFromPlane(Vector3.zero, (new Vector2(width, length)) / 2f, rotY);
 
         List<List<Vector3>> prevPlanes = new List<List<Vector3>>();// { floorGeometry };
@@ -131,7 +131,7 @@ public class ARPlaneManager : PlayerComponent
 
             planePos += Vector3.up * (((planeElevationRange.y - planeElevationRange.x) * (i + 1) / 0.75f)  + Random.Range(planeElevationRange.x, planeElevationRange.y)); // (Random.Range(0.2f, planeElevationRange.y - planeElevationRange.x) * i / planeCount) + planeElevationRange.x);
             float planeRotY = Random.Range(0f, 360f);
-            Vector3 planeScale = new Vector3(Random.Range(planeWidthRange.x, planeWidthRange.y), 1f, Random.Range(planeLengthRange.x, planeLengthRange.y));
+            Vector3 planeScale = new Vector3(Random.Range(planeWidthRange.x, planeWidthRange.y), planePos.y, Random.Range(planeLengthRange.x, planeLengthRange.y));
 
             List<Vector3> planeGeometry = Utility.CreateVerticesFromPlane(planePos, (new Vector2(planeScale.x, planeScale.z)) / 2f, rotY);
             prevPlanes.Add(planeGeometry);
