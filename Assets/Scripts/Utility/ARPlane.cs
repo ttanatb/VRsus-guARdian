@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 /// 
 /// Author: Tanat Boozayaangool
 /// </summary>
+[System.Serializable]
 public struct ARPlane
 {
     //Fields

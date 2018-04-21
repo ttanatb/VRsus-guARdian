@@ -25,6 +25,8 @@ GameObject:
   - component: {fileID: 114564130125812978}
   - component: {fileID: 54699296585999992}
   - component: {fileID: 64692044314822268}
+  - component: {fileID: 114870706317345708}
+  - component: {fileID: 114938031927361702}
   m_Layer: 8
   m_Name: Tower
   m_TagString: Platform
@@ -141,3 +143,56 @@ MonoBehaviour:
   topPlaneLayerSize: 0.01
   updateRate: 0.1
   textureScale: 4
+--- !u!114 &114870706317345708
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1799214505512546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 195
+    i1: 188
+    i2: 200
+    i3: 247
+    i4: 233
+    i5: 0
+    i6: 52
+    i7: 33
+    i8: 234
+    i9: 132
+    i10: 43
+    i11: 123
+    i12: 111
+    i13: 138
+    i14: 72
+    i15: 16
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
+--- !u!114 &114938031927361702
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1799214505512546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 3
+  m_SendInterval: 1
+  m_SyncRotationAxis: 2
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1

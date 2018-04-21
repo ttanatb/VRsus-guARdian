@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -6,9 +7,11 @@ using System.Collections.Generic;
 /// Helper class for updating local plane transforms and updating texture tiling
 /// </summary>
 /// 
-public class LocalPlane : MonoBehaviour
+public class LocalPlane : NetworkBehaviour
 {
     #region Fields
+    [SyncVar]
+    private Vector3 syncedScale;
 
     private const float HEIGHT = 2.0f;          //height of tower
 
@@ -38,16 +41,39 @@ public class LocalPlane : MonoBehaviour
     private Vector2 xScale = Vector2.one;        //x,z scale of tower
     private Vector2 yScale = Vector2.one;        //x,z scale of tower
 
+    private static List<LocalPlane> allPlanes;
+
+    public static List<LocalPlane> AllPlanes
+    {
+        get { return allPlanes; }
+    }
     #endregion
 
     private void Awake()
     {
         meshCollider = GetComponent<MeshCollider>();
         boxCollider = GetComponent<BoxCollider>();
+
+        if (allPlanes == null)
+            allPlanes = new List<LocalPlane>();
     }
 
     public void Start()
     {
+        //makes sure you only add 'real' planes and not practice ones
+        if (transform.position.y < 900f)
+        {
+            int insertionIndex = 0;
+            float yPos = transform.position.y;
+            for (; insertionIndex < allPlanes.Count; insertionIndex++)
+            {
+                float thisYPos = allPlanes[insertionIndex].transform.position.y; //.transform.position.y;
+                if (yPos < thisYPos)
+                    break;
+            }
+            allPlanes.Insert(insertionIndex, this);
+        }
+
 #if UNITY_IOS
         GetComponent<Renderer>().enabled = false;
 #else
@@ -78,6 +104,8 @@ public class LocalPlane : MonoBehaviour
 
         IEnumerator updateCoroutine = TextureUpdateCoroutine(updateRate);
         StartCoroutine(updateCoroutine);
+
+        transform.localScale = syncedScale;
     }
 
 #if !UNITY_IOS
@@ -101,7 +129,7 @@ public class LocalPlane : MonoBehaviour
         //update scale (to height)
         //scale.y = HEIGHT;
         transform.localScale = scale;
-
+        syncedScale = scale;
         //moves tower down (pivot is in the center)
         //transform.Translate(HEIGHT / 2 * Vector3.down);
 
@@ -109,6 +137,7 @@ public class LocalPlane : MonoBehaviour
         Vector3 euler = transform.rotation.eulerAngles;
         euler.y = rotation;
         transform.rotation = Quaternion.Euler(euler);
+
     }
 
     IEnumerator TextureUpdateCoroutine(float waitTime)

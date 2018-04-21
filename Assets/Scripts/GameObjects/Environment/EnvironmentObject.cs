@@ -14,6 +14,14 @@ public class EnvironmentObject : NetworkBehaviour
     public ParticleSystem pSystem;
     private Animator anim;
 
+    [SyncVar]
+    private short indexType = -1;
+
+    [SyncVar]
+    private short index = -1;
+
+
+    private bool initialized = false;
     public float Radius
     {
         get { return radius; }
@@ -22,13 +30,14 @@ public class EnvironmentObject : NetworkBehaviour
 
     private void Init()
     {
+        if (initialized) return;
+
+        initialized = true;
         bool collider = false;
 
         int count = environmentObjectData.meshMatDatas.Length;
         for (int i = 0; i < count; i++)
         {
-            //Debug.Log(i);
-
             MeshMatData data = environmentObjectData.meshMatDatas[i];
             GameObject child = new GameObject("Mesh");
             child.transform.SetParent(transform);
@@ -88,6 +97,9 @@ public class EnvironmentObject : NetworkBehaviour
                 break;
         }
 
+        indexType = (short)type;
+        this.index = (short)index;
+
         Invoke("Init", 5f);
     }
 
@@ -107,6 +119,14 @@ public class EnvironmentObject : NetworkBehaviour
         }
 
         Init();
+    }
+
+    private void Start()
+    {
+        if (index != -1 && indexType != -1)
+        {
+            Init(indexType, index);
+        }
     }
 
     private void OnDrawGizmos()

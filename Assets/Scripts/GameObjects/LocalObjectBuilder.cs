@@ -59,7 +59,6 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
         this.planeManager = planeManager;
         Clear();
         Init();
-        StartCoroutine("UpdateLocalPlanes");
     }
 
     // Important for singleton logic
@@ -74,7 +73,6 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
     /// </summary>
     public void Clear()
     {
-        //Debug.Log("Clearing");
         StopAllCoroutines();
         for (int i = 0; i < localPlanes.Count; i++)
             Destroy(localPlanes[i]);
@@ -158,22 +156,7 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
     }
 
     //for testing
-    private void Update()
-    {
-        //List<Vector3> worldGeometry = GetWorldGeometry();
-        //for (int i = 0; i < worldGeometry.Count; i++)
-        //{
-        //    Vector3 point1 = worldGeometry[i];
-        //    Vector3 point2 = Vector3.zero;
-        //    if (i == worldGeometry.Count - 1) point2 = worldGeometry[0];
-        //    else point2 = worldGeometry[i + 1];
-        //    Debug.DrawLine(point1, point2);
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.D))
-        //    StopAllCoroutines();
-    }
-
+    /*
     /// <summary>
     /// Reads the list from the plane manager and builds it
     /// </summary>
@@ -218,5 +201,6 @@ public class LocalObjectBuilder : SingletonMonoBehaviour<LocalObjectBuilder>
             yield return new WaitForSeconds(.1f);
         }
     }
+    */
     #endregion
 }

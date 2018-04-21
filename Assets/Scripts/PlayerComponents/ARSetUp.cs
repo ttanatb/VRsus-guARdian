@@ -67,7 +67,6 @@ public class ARSetUp : PlayerComponent
 
     private PraticeArea practiceArea;
 
-    private float scale;
     /// <summary>
     /// Gets the current phase of the game
     /// </summary>
@@ -106,6 +105,11 @@ public class ARSetUp : PlayerComponent
             t.maxCount = t.count;
 
         combat = GetComponent<ARCombat>();
+
+        if (CurrGamePhase == GamePhase.Placing)
+        {
+            BuildTerrain();
+        }
     }
 
     protected override void InitObj()
@@ -288,7 +292,7 @@ public class ARSetUp : PlayerComponent
     /// To-do: This function should be done elsewhere
     /// </summary>
     /// <returns></returns>
-    public bool CheckAggregrateArea()
+    public bool CheckAggregrateArea()   
     {
         return true;
         float area = 0;
@@ -371,15 +375,14 @@ public class ARSetUp : PlayerComponent
 #if UNITY_IOS
 			UnityARCameraManager.Instance.StopTracking ();
 #endif
-                sortedPlanes = LocalObjectBuilder.Instance.GetSortedPlanes();
-                scale = FindObjectOfType<LocalPlane>().transform.localScale.y / 2;
+                sortedPlanes = GetComponent<ARPlaneManager>().StopScanAndInstantiate();
                 SpawnRelics();
                 SpawnEntrances();
                 StartCoroutine("SpawnEnvObjs");
-                RpcBuildTerrain();
                 break;
 
             case GamePhase.Playing:
+                RpcBuildTerrain();
                 currentlySelectedTrap = null;
                 TogglePreviouslySelectedTrap();
                 foreach (TrapDefense trap in trapObjList) trap.TransitionToPlayPhase();
@@ -670,25 +673,12 @@ public class ARSetUp : PlayerComponent
     private void RpcBuildTerrain()
     {
         if (isServer) return;
-        sortedPlanes = LocalObjectBuilder.Instance.GetSortedPlanes();
-        float floor = LocalObjectBuilder.Instance.FloorPos;// + FindObjectOfType<LocalPlane>().transform.localScale.y / 2f;
+        BuildTerrain();
+    }
 
-        List<Vector3> vertices = new List<Vector3>();
-        vertices = Utility.CombinePolygons(sortedPlanes[0], sortedPlanes[1], 0.2f);
-        for (int i = 2; i < sortedPlanes.Count; i++)
-        {
-            vertices = Utility.CombinePolygons(vertices, sortedPlanes[i], 0.2f);
-        }
-
-        for (int i = 0; i < vertices.Count; i++)
-        {
-            Vector3 vert = vertices[i];
-            vert.y = floor;
-            vertices[i] = vert;
-        }
-
+    private void BuildTerrain()
+    {
         EnvironmentCreation terrainBuilder = LocalObjectBuilder.Instance.GetComponent<EnvironmentCreation>();
-        terrainBuilder.boundary = vertices;
-        terrainBuilder.CreateTerrain();
+        terrainBuilder.GatherAndCreateTerrain();
     }
 }

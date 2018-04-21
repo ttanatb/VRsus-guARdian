@@ -174,6 +174,39 @@ public class EnvironmentCreation : MonoBehaviour
     }
 
 
+    public void GatherAndCreateTerrain()
+    {
+        //get a sorted list of the planes
+        List<LocalPlane> allPlanes = LocalPlane.AllPlanes;
+        float floorY = LocalObjectBuilder.Instance.FloorPos;// + FindObjectOfType<LocalPlane>().transform.localScale.y / 2f;
+
+        //list of vertices making the entire boundary
+        List<Vector3> vertices = new List<Vector3>();
+
+        //combine the first two planes
+        vertices = Utility.CombinePolygons(Utility.CreateVerticesFromPlane(allPlanes[0].gameObject),
+            Utility.CreateVerticesFromPlane(allPlanes[1].gameObject), 
+            0.2f);
+
+        //combine everything else
+        for (int i = 2; i < allPlanes.Count; i++)
+            vertices = Utility.CombinePolygons(vertices,
+                Utility.CreateVerticesFromPlane(allPlanes[i].gameObject),
+                0.2f);
+
+        //sets the y to the floor location
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            Vector3 vert = vertices[i];
+            vert.y = floorY;
+            vertices[i] = vert;
+        }
+
+        //create that terrain
+        boundary = vertices;
+        CreateTerrain();
+    }
+
     private void Extrude(int extrusions)
     {
         if (extrusions == 0)

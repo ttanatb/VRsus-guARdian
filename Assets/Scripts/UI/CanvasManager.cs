@@ -94,8 +94,12 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
         {
             //Adds a button to complete scanning phase
             case GamePhase.Scanning:
+                
+                //enables the text for how many planes we have
                 planeAreaText.gameObject.SetActive(true);
                 planeCountText.gameObject.SetActive(true);
+
+                //enables the UI for AR player
                 ARUI.SetActive(true);
 
                 if (!doneBtn)

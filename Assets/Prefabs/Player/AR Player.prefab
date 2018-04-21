@@ -732,6 +732,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6acdb3afd6a584c0980479fc784bee22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ARPlane: []
+  planePrefab: {fileID: 1799214505512546, guid: c3bcc8f7e9003421ea842b7b6f8a4810,
+    type: 2}
   roomWidthRange: {x: 2, y: 5}
   roomLengthRange: {x: 3, y: 7}
   planeCount: 4

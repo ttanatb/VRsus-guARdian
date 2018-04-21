@@ -12,7 +12,13 @@ using UnityEngine.Networking;
 public class ARPlaneManager : PlayerComponent
 {
     //The list of planes (as a list of synced structs)
-    public ARPlaneSync m_ARPlane = new ARPlaneSync();
+    //public ARPlaneSync m_ARPlane = new ARPlaneSync();
+    [SerializeField]
+    public List<ARPlane> m_ARPlane = new List<ARPlane>();
+
+    public GameObject planePrefab;
+
+    private List<List<Vector3>> sortedPlanes;
 
 #if !UNITY_IOS
     [MinMaxSlider(2f, 7f)]
@@ -31,13 +37,16 @@ public class ARPlaneManager : PlayerComponent
     public Vector2 planeLengthRange = new Vector2(.25f, 2f);
 #endif
 
+    private IEnumerator scanCoroutine;
+
     protected override void InitObj() { }
 
     public override void OnStartLocalPlayer()
     {
         if (isServer)
         {
-            StartCoroutine(UpdateARPlanes());
+            scanCoroutine = UpdateARPlanes();
+            StartCoroutine(scanCoroutine);
         }
     }
 
@@ -51,6 +60,46 @@ public class ARPlaneManager : PlayerComponent
     {
         if (LocalObjectBuilder.Instance && LocalObjectBuilder.Instance.Manager == this)
             LocalObjectBuilder.Instance.Clear();
+    }
+
+    [Server]
+    public List<List<Vector3>> StopScanAndInstantiate()
+    {
+        //stop that scan yo
+        StopCoroutine(scanCoroutine);
+        sortedPlanes = new List<List<Vector3>>();
+        for (int i = 0; i < m_ARPlane.Count; i++)
+        {
+            //instantiate Game Object
+            GameObject gameObj = Instantiate(planePrefab);
+
+            //update the local Plane data to fit what AR had scanned
+            LocalPlane localPlane = gameObj.GetComponent<LocalPlane>();
+            localPlane.UpdatePos(m_ARPlane[i].position,
+                m_ARPlane[i].rotation,
+                m_ARPlane[i].scale);
+
+            //index to insert it
+            int insertionIndex = 0;
+
+            //turn it into a list of vertices
+            List<Vector3> thisPlane = Utility.CreateVerticesFromPlane(gameObj);
+
+            //loop through to sort the planes
+            float yPos = thisPlane[0].y;
+            for (; insertionIndex < sortedPlanes.Count; insertionIndex++)
+            {
+                //find that insertion index yo
+                float thisYPos = sortedPlanes[insertionIndex][0].y;
+                if (yPos < thisYPos)
+                    break;
+            }
+
+            sortedPlanes.Insert(insertionIndex, thisPlane); //actually insert
+            NetworkServer.Spawn(gameObj);                   //spawn on the server
+        }
+
+        return sortedPlanes;
     }
 
     #region Server Functions
@@ -129,7 +178,7 @@ public class ARPlaneManager : PlayerComponent
                 }
             }
 
-            planePos += Vector3.up * (((planeElevationRange.y - planeElevationRange.x) * (i + 1) / 0.75f)  + Random.Range(planeElevationRange.x, planeElevationRange.y)); // (Random.Range(0.2f, planeElevationRange.y - planeElevationRange.x) * i / planeCount) + planeElevationRange.x);
+            planePos += Vector3.up * (((planeElevationRange.y - planeElevationRange.x) * (i + 1) / 0.75f) + Random.Range(planeElevationRange.x, planeElevationRange.y)); // (Random.Range(0.2f, planeElevationRange.y - planeElevationRange.x) * i / planeCount) + planeElevationRange.x);
             float planeRotY = Random.Range(0f, 360f);
             Vector3 planeScale = new Vector3(Random.Range(planeWidthRange.x, planeWidthRange.y), planePos.y, Random.Range(planeLengthRange.x, planeLengthRange.y));
 
@@ -170,7 +219,6 @@ public class ARPlaneManager : PlayerComponent
         {
             //must create a new SyncStruct to make sure it updates on client
             m_ARPlane[index] = new ARPlane(m_ARPlane[index].identifier, pos, rot, scale);
-            m_ARPlane.Dirty(index);
         }
     }
 
@@ -184,7 +232,6 @@ public class ARPlaneManager : PlayerComponent
         m_ARPlane.RemoveAt(index);
         CanvasManager.Instance.UpdatePlaneCount(m_ARPlane.Count);
     }
-
     #endregion
 
     #region Helper Functions
@@ -219,5 +266,6 @@ public class ARPlaneManager : PlayerComponent
 
         return -1;
     }
+
     #endregion
 }
