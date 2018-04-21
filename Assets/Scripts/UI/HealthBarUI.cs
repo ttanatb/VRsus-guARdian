@@ -11,6 +11,9 @@ public class HealthBarUI : MonoBehaviour
     private Transform healthBarPivot;
     private VRCombat player;
     private int maxHealth;
+
+	[SerializeField]
+	private GameObject[] lives;
     #endregion
 
     #region Init Logic
@@ -26,6 +29,9 @@ public class HealthBarUI : MonoBehaviour
     /// <param name="combat">The player with the health</param>
     public void Init(VRCombat combat)
     {
+		for (int i = 0; i < 3; i++) {
+			lives [i].SetActive (true);
+		}
         player = combat;
         maxHealth = player.health;
     }
@@ -36,16 +42,29 @@ public class HealthBarUI : MonoBehaviour
     void Update()
     {
         //calculates percentage
-        float healthPercentage = player.health / (float)maxHealth;
-        if (healthPercentage < 0f)
-            healthPercentage = 0f;
-        else if (healthPercentage > 1f)
-            healthPercentage = 1f;
+        //float healthPercentage = player.health / (float)maxHealth;
+        //if (healthPercentage < 0f)
+        //    healthPercentage = 0f;
+        //else if (healthPercentage > 1f)
+        //    healthPercentage = 1f;
+
 
         //sets scale
-        Vector3 scale = healthBarPivot.localScale;
-        scale.x = Mathf.Lerp(scale.x, healthPercentage, Time.deltaTime * 20f);
-        healthBarPivot.localScale = scale;
+        //Vector3 scale = healthBarPivot.localScale;
+        //scale.x = Mathf.Lerp(scale.x, healthPercentage, Time.deltaTime * 20f);
+        //healthBarPivot.localScale = scale;
+		switch (player.health) {
+		case 2:
+			lives [2].SetActive (false);
+			break;
+		case 1:
+			lives [1].SetActive (false);
+			break;
+		case 0:
+			lives [0].SetActive (false);
+			break;
+		}
+
     }
     #endregion
 }
