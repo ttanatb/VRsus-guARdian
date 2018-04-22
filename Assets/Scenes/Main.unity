@@ -220,6 +220,11 @@ Prefab:
       propertyPath: showGUI
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114455738654136604, guid: 385e9b11460257a448971729f0afeae0,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 385e9b11460257a448971729f0afeae0, type: 2}
   m_IsPrefabParent: 0
@@ -509,6 +514,11 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114744832098068600, guid: 94a26e1fef5ba424ab64c97755d1e7a6,
+        type: 2}
+      propertyPath: networkManager
+      value: 
+      objectReference: {fileID: 1716667671}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 94a26e1fef5ba424ab64c97755d1e7a6, type: 2}
   m_IsPrefabParent: 0
@@ -857,3 +867,9 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f7eed23a61410be4b9222c2a49edc799, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &1716667671 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114755221778035868, guid: 385e9b11460257a448971729f0afeae0,
+    type: 2}
+  m_PrefabInternal: {fileID: 482561059}
+  m_Script: {fileID: 11500000, guid: d3192edf5a253e241a429be89cf7b92a, type: 3}
