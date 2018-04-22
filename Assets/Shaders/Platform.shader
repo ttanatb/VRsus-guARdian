@@ -7,9 +7,9 @@
 		_Normal("Normal/Noise", 2D) = "bump" {}
 		_Scale("Top Scale", Range(0,2)) = 1
 		_SideScale("Side Scale", Range(0,2)) = 1
-		_NoiseScale("Noise Scale", Range(0,4)) = 1
-		_TopSpread("TopSpread", Range(0,0.5)) = 0.1
-		_EdgeWidth("EdgeWidth", Range(0,0.5)) = 0.5
+		_NoiseScale("Noise Scale", Range(0,4)) = 2
+		_TopSpread("TopSpread", Range(0,0.5)) = 0
+		_EdgeWidth("EdgeWidth", Range(0,0.5)) = 0.05
 	}
 		SubShader
 		{
@@ -67,7 +67,7 @@
 				float3 sideTextureResult = step(worldNormalDotNoise, _TopSpread) * sideTexture;
 
 				float3 topTextureEdgeResult = step(_TopSpread, worldNormalDotNoise) *
-					step(worldNormalDotNoise, _TopSpread + _EdgeWidth) * -0.15f;
+					step(worldNormalDotNoise, _TopSpread + _EdgeWidth) * 0.1f;
 
 				o.Albedo = (topTextureResult + sideTextureResult + topTextureEdgeResult);// *_Color;
 			}
