@@ -1,18 +1,86 @@
 fileFormatVersion: 2
-guid: b06d4b00e3a46ec41bed1baaa6b9cc9f
-timeCreated: 1522538214
-licenseType: Free
+guid: aadfe331edf14ce479d56065ab394204
+timeCreated: 1524424549
+licenseType: Pro
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
-    400000: //RootNode
+    100002: en_weenieGate_01
+    100004: group1
+    100006: group1 1
+    100008: group11
+    100010: group12
+    100012: group2
+    100014: group3
+    100016: polySurface10
+    100018: polySurface10 1
+    100020: polySurface11
+    100022: polySurface12
+    100024: polySurface12 1
+    100026: polySurface13
+    100028: polySurface14
+    100030: polySurface14 1
+    100032: polySurface15
+    100034: polySurface15 1
+    100036: polySurface17
+    100038: polySurface17 1
+    100040: polySurface6
+    100042: polySurface9
+    100044: transform1
+    100046: transform41
+    100048: transform42
+    100050: transform43
+    100052: transform44
+    100054: transform45
+    100056: transform46
+    100058: transform47
+    100060: transform48
+    100062: transform49
+    100064: transform50
+    100066: transform51
+    100068: transform52
+    100070: transform53
+    400000: en_weenieGate_01
+    400002: //RootNode
+    400004: group1
+    400006: group1 1
+    400008: group11
+    400010: group12
+    400012: group2
+    400014: group3
+    400016: polySurface10
+    400018: polySurface10 1
+    400020: polySurface11
+    400022: polySurface12
+    400024: polySurface12 1
+    400026: polySurface13
+    400028: polySurface14
+    400030: polySurface14 1
+    400032: polySurface15
+    400034: polySurface15 1
+    400036: polySurface17
+    400038: polySurface17 1
+    400040: polySurface6
+    400042: polySurface9
+    400044: transform1
+    400046: transform41
+    400048: transform42
+    400050: transform43
+    400052: transform44
+    400054: transform45
+    400056: transform46
+    400058: transform47
+    400060: transform48
+    400062: transform49
+    400064: transform50
+    400066: transform51
+    400068: transform52
+    400070: transform53
     2100000: lambert1
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: pPlane
-    4300002: arPlane
-    4300004: planeBlock
+    2300000: en_weenieGate_01
+    3300000: en_weenieGate_01
+    4300000: en_weenieGate_01
   externalObjects: {}
   materials:
     importMaterials: 0
@@ -43,7 +111,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.1
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     importVisibility: 1
