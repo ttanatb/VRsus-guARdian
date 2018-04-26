@@ -207,7 +207,7 @@ Prefab:
     - target: {fileID: 114755221778035868, guid: 385e9b11460257a448971729f0afeae0,
         type: 2}
       propertyPath: m_NetworkAddress
-      value: 129.21.133.1
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 114755221778035868, guid: 385e9b11460257a448971729f0afeae0,
         type: 2}
@@ -519,6 +519,16 @@ Prefab:
       propertyPath: networkManager
       value: 
       objectReference: {fileID: 1716667671}
+    - target: {fileID: 114200672952239730, guid: 94a26e1fef5ba424ab64c97755d1e7a6,
+        type: 2}
+      propertyPath: m_Text
+      value: Type the iPad's IP Address
+      objectReference: {fileID: 0}
+    - target: {fileID: 224291246187179736, guid: 94a26e1fef5ba424ab64c97755d1e7a6,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 203.07
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 94a26e1fef5ba424ab64c97755d1e7a6, type: 2}
   m_IsPrefabParent: 0

@@ -50,7 +50,7 @@ public class PracticeEntrance : MonoBehaviour
         {
             if (other.transform.parent)
             {
-                VRTransition transition = other.transform.parent.GetComponent<VRTransition>();
+                VRTransition transition = other.transform.root.GetComponent<VRTransition>();
                 if (transition)
                 {
                     transition.SpawnInPos(spawnPos);

@@ -155,6 +155,9 @@ public class ARCombat : PlayerComponent
                     if (hit.transform.tag == "Player")
                     {
                         VRCombat combat = hit.transform.GetComponent<VRCombat>();
+                        if (!combat)
+                            combat = hit.transform.root.GetComponent<VRCombat>();
+
                         combat.TakeDamage();
                     }
                 }

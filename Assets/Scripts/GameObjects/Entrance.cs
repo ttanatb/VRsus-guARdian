@@ -40,7 +40,7 @@ public class Entrance : NetworkBehaviour
         {
             VRCombat combat = other.GetComponent<VRCombat>();
             if (!combat)
-                combat = other.transform.parent.GetComponent<VRCombat>();
+                combat = other.transform.root.GetComponent<VRCombat>();
 
             if (!combat.IsInvulnerable && combat.GetRelicCount() == 2 && manager.CurrGamePhase != GamePhase.Over)
                 Win(combat);

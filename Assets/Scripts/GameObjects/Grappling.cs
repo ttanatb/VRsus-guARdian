@@ -29,8 +29,8 @@ public class Grappling : MonoBehaviour //: Launchable
     // 3 - attached
     // 4 - retracting
 
-    private float radii = 0;
-    private float radiiSqr;
+    //private float radii = 0;
+    //private float radiiSqr;
     private Vector3 force;
     private bool vr;
 
@@ -56,20 +56,31 @@ public class Grappling : MonoBehaviour //: Launchable
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.enabled = false;
 
-        SphereCollider playerCol = player.GetComponentInChildren<SphereCollider>();
-        radii = playerCol.radius;
-        Transform playerColObj = playerCol.transform;
-        do
-        {
-            radii *= playerColObj.localScale.x;
-            playerColObj = playerColObj.parent;
-        }
-        while (playerColObj != null);
-
-        radii += GetComponent<SphereCollider>().radius + transform.localScale.x;
-        radiiSqr = radii * radii;
-    }
-
+        //SphereCollider playerCol = player.GetComponentInChildren<SphereCollider>();
+        //Transform playerColObj = null;
+        //if (playerCol)
+        //{
+        //    radii = playerCol.radius;
+        //    playerColObj = playerCol.transform;
+        //}
+        //else
+        //{
+        //    CapsuleCollider capCol = player.GetComponentInChildren<CapsuleCollider>();
+        //    radii = capCol.radius;
+        //    playerColObj = capCol.transform;
+        //}
+        //
+        //do
+        //{
+        //    radii *= playerColObj.localScale.x;
+        //    playerColObj = playerColObj.parent;
+        //}
+        //while (playerColObj != null);
+        //
+        //radii += GetComponent<SphereCollider>().radius + transform.localScale.x;
+        //radiiSqr = radii * radii;
+    }   
+        
     // Update is called once per frame
     private void Update()
     {
@@ -181,8 +192,8 @@ public class Grappling : MonoBehaviour //: Launchable
             else if (otherGrappling.state == 2) otherGrappling.LetGo();
 
             transform.position = playerAnchor.position;
-            transform.forward =  cameraAnchor.forward;
-            
+            transform.forward = cameraAnchor.forward;
+
             rBody.velocity = transform.forward * speed;
             rBody.isKinematic = false;
             state = 1;
