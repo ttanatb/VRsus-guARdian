@@ -67,7 +67,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4236699710520006}
   - component: {fileID: 114351442857728432}
-  - component: {fileID: 136769399138310660}
   - component: {fileID: 114971024608704200}
   m_Layer: 11
   m_Name: Interloper
@@ -368,8 +367,8 @@ GameObject:
   - component: {fileID: 20632748678016748}
   - component: {fileID: 124810528611836220}
   - component: {fileID: 135265537808995056}
-  - component: {fileID: 114915862839111056}
-  - component: {fileID: 114823487413749286}
+  - component: {fileID: 114258239774327274}
+  - component: {fileID: 114726845814313030}
   m_Layer: 11
   m_Name: Camera (eye)
   m_TagString: MainCamera
@@ -665,12 +664,12 @@ GameObject:
   - component: {fileID: 114328354283499048}
   - component: {fileID: 114625176719335934}
   - component: {fileID: 114724267640258396}
-  - component: {fileID: 114989448260495484}
   - component: {fileID: 54816240626342760}
   - component: {fileID: 95728361710624352}
   - component: {fileID: 114104897269079796}
   - component: {fileID: 114011661000426472}
   - component: {fileID: 114287119621473856}
+  - component: {fileID: 136087149322943904}
   m_Layer: 11
   m_Name: VR Player
   m_TagString: Player
@@ -1127,7 +1126,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1743894219128570}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.591521, y: 1002.26794, z: -0.74850774}
+  m_LocalPosition: {x: 2.5925841, y: -9.710167, z: 7.016367}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4073413651229748}
@@ -1943,6 +1942,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraEye: {fileID: 4935214049474028}
+--- !u!114 &114258239774327274
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1397643711918806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: 57ed7e37eb1066143aee176898303998, type: 2}
 --- !u!114 &114287119621473856
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1983,7 +1994,6 @@ MonoBehaviour:
   - {fileID: 23175236694266836}
   - {fileID: 23227729567787586}
   cameraToEnable: {fileID: 0}
-  flashLight: {fileID: 0}
   camerasToDisable:
   - {fileID: 20632748678016748}
   - {fileID: 20270403770022250}
@@ -2102,7 +2112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144ccfada75bd37409f392fcb9e82622, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 0.001
+  movementSpeed: 0.01
   sprintFactor: 1.8
   maxSpeed: 999
   mouseSensitivity: 80
@@ -2114,6 +2124,20 @@ MonoBehaviour:
   grapplePrefab: {fileID: 1617336623288622, guid: ac272ad3e742d1e4099a0d1a5b10fbaa,
     type: 2}
   cameraTransform: {fileID: 0}
+--- !u!114 &114726845814313030
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1397643711918806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bca9ccf900ccc84c887d783321d27e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _head: {fileID: 4115892228185042}
+  _ears: {fileID: 4565173039399450}
+  wireframe: 0
 --- !u!114 &114760763416134762
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2159,20 +2183,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: -1
   origin: {fileID: 0}
---- !u!114 &114823487413749286
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1397643711918806}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bca9ccf900ccc84c887d783321d27e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _head: {fileID: 4115892228185042}
-  _ears: {fileID: 4565173039399450}
-  wireframe: 0
 --- !u!114 &114906968254101648
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2185,26 +2195,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vrcam: {fileID: 0}
---- !u!114 &114915862839111056
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1397643711918806}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 730475ee64f9a894bbac0d9e6f22e813, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mode: 1
-  sensitivityDepth: 3
-  sensitivityNormals: 0.3
-  lumThreshold: 0.2
-  edgeExp: 1
-  sampleDist: 0.5
-  edgesOnly: 0.05
-  edgesOnlyBgColor: {r: 0.625, g: 0.21599263, b: 0.21599263, a: 1}
-  edgeDetectShader: {fileID: 4800000, guid: 0d1644bdf064147baa97f235fc5b4903, type: 3}
 --- !u!114 &114932866589416742
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2231,17 +2221,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   head: {fileID: 4935214049474028}
   anim: {fileID: 95728361710624352}
---- !u!114 &114989448260495484
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1743894219128570}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83dfb2ff702a2014394f88202ab1dc64, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!124 &124810528611836220
 Behaviour:
   m_ObjectHideFlags: 1
@@ -2261,19 +2240,19 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.15
   m_Center: {x: 0, y: 0, z: -0.05}
---- !u!136 &136769399138310660
+--- !u!136 &136087149322943904
 CapsuleCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1058524386857934}
+  m_GameObject: {fileID: 1743894219128570}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.012
-  m_Height: 0.05
+  m_Radius: 0.024
+  m_Height: 0.1
   m_Direction: 1
-  m_Center: {x: 0, y: 0.025, z: 0}
+  m_Center: {x: 0, y: -0.040008545, z: 0}
 --- !u!137 &137904927595072352
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

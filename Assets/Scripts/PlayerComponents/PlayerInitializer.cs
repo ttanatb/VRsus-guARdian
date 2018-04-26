@@ -73,6 +73,8 @@ public class PlayerInitializer : NetworkBehaviour
                 cameraToEnable.allowHDR = true;
                 cameraToEnable.depth = 0;
 #endif
+
+                cameraToEnable.opaqueSortMode = UnityEngine.Rendering.OpaqueSortMode.FrontToBack;
                 break;
             case PlayerType.VR:
                 break;

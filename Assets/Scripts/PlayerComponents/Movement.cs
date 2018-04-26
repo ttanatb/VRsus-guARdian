@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.VR;
+using UnityEngine.XR;
 
 //FPS camera movement adapted from: http://wiki.unity3d.com/index.php/SmoothMouseLook
 public class Movement : PlayerComponent
@@ -82,21 +82,37 @@ public class Movement : PlayerComponent
             right.playerAnchor = rightController.transform;
             left.animController = networkAnimator;
             right.animController = networkAnimator;
-            left.button = "Fire2";
-            right.button = "Fire3";
+            left.button = "FireL";
+            right.button = "FireR";
             left.otherGrappling = right;
             right.otherGrappling = left;
+
             CanvasManager.Instance.SetUpLeftHookshot(left);
             CanvasManager.Instance.SetUpRightHookshot(right);
+
             if (playerType == PlayerType.PC)
             {
-                left.spawnPos = transform;
-                right.spawnPos = transform;
+                //CanvasManager.Instance.SetUpLeftHookshot(left);
+                //CanvasManager.Instance.SetUpRightHookshot(right);
+                left.cameraAnchor = player.cameraToEnable.transform;
+                right.cameraAnchor = player.cameraToEnable.transform;
             }
             else
             {
-                left.spawnPos = leftController.transform;
-                right.spawnPos = rightController.transform;
+
+                //left.spawnPos = leftController.transform;
+                //right.spawnPos = rightController.transform;
+                left.cameraAnchor = player.camerasToDisable[0].transform;
+                right.cameraAnchor = player.camerasToDisable[0].transform;
+
+                left.VR = true;
+                right.VR = true;
+                string device = XRDevice.model;
+                if (device.Contains("Oculus"))
+                {
+                    left.button = "FireL1";
+                    right.button = "FireR1";
+                }
             }
         }
     }
@@ -221,7 +237,7 @@ public class Movement : PlayerComponent
     private void OnCollisionStay(Collision collision)
     {
         if ((collision.gameObject.tag == "Platform") &&
-            (transform.position.y > collision.transform.position.y + collision.transform.localScale.y / 2f))
+            (transform.position.y > collision.transform.position.y))
         {
             networkAnimator.SetBool("isOnLand", true);
             isOnFloor = true;

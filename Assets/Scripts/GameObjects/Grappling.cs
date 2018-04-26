@@ -32,13 +32,20 @@ public class Grappling : MonoBehaviour //: Launchable
     private float radii = 0;
     private float radiiSqr;
     private Vector3 force;
+    private bool vr;
 
     private LineRenderer lineRenderer;
     public Transform playerAnchor;
-    public Transform spawnPos;
+    public Transform cameraAnchor;
     public Animator animController;
+    private int controllerIndex = -1;
 
     public int State { get { return state; } }
+
+    public bool VR
+    {
+        set { vr = value; }
+    }
 
     void Start()
     {
@@ -77,14 +84,14 @@ public class Grappling : MonoBehaviour //: Launchable
 
             if (state == 1)    //updates lifetime if its shooting out
             {
-                if (timer > lifetime || !Input.GetButton(button))
+                if (timer > lifetime || ReleaseButton())
                     StartRetraction();
 
                 timer += Time.deltaTime;
             }
             else if (state == 3)
             {
-                if (!Input.GetButton(button))
+                if (ReleaseButton())
                     Detach();
             }
         }
@@ -94,7 +101,7 @@ public class Grappling : MonoBehaviour //: Launchable
     {
         if (state == 2)     //player is traveling, move player accordingly
         {
-            if (!Input.GetButton(button))
+            if (ReleaseButton())
             {
                 animController.SetBool("isFlying", false);
                 LetGo();
@@ -141,6 +148,7 @@ public class Grappling : MonoBehaviour //: Launchable
         rBody.velocity = -rBody.velocity;
         timer = 0f;// Time.time;
         state = 4;
+        totalAngularRot = Vector3.zero;
     }
 
 
@@ -166,15 +174,15 @@ public class Grappling : MonoBehaviour //: Launchable
 
     private void CheckShoot()
     {
-        if (Input.GetButtonDown(button) && !playerMovement.IsSlowed)
+        if (OnButtonInput() && !playerMovement.IsSlowed)
         {
             //Debug.Log("Player shot the grappling hook");
             if (otherGrappling.state == 1) otherGrappling.StartRetraction();
             else if (otherGrappling.state == 2) otherGrappling.LetGo();
 
             transform.position = playerAnchor.position;
-            transform.forward = playerAnchor.forward;
-
+            transform.forward =  cameraAnchor.forward;
+            
             rBody.velocity = transform.forward * speed;
             rBody.isKinematic = false;
             state = 1;
@@ -210,4 +218,49 @@ public class Grappling : MonoBehaviour //: Launchable
             StartRetraction();
         }
     }
+
+    private bool ReleaseButton()
+    {
+        return (!vr && !Input.GetButton(button)) || (vr && Input.GetAxis(button) < 1f);
+    }
+
+    private bool OnButtonInput()
+    {
+        if (!vr) return Input.GetButtonDown(button);
+        else
+        {
+            if (Input.GetAxis(button) > 0.9f)
+            {
+                if (controllerIndex == -1)
+                {
+                    controllerIndex = (int)playerAnchor.GetComponent<SteamVR_TrackedObject>().index;
+                }
+
+                SteamVR_Controller.Device device = SteamVR_Controller.Input(controllerIndex);
+                if (device == null)
+                {
+                    controllerIndex = -1;
+                    return false;
+                }
+
+                totalAngularRot += device.angularVelocity;
+                //Debug.Log(button + ": " + totalAngularRot);
+                if (Mathf.Abs(totalAngularRot.y) > 30f)
+                {
+
+                    //Debug.Log(button + ": " + device.velocity + ", " + device.angularVelocity);
+                    //Debug.Log(button + ": " + device.velocity.sqrMagnitude + ", " + device.angularVelocity.sqrMagnitude);
+                    return true;
+                }
+                else return false;
+            }
+            else
+            {
+                totalAngularRot = Vector3.zero;
+                return false;
+            }
+        }
+    }
+
+    private Vector3 totalAngularRot = Vector3.zero;
 }
