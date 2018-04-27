@@ -105,6 +105,9 @@ public class Movement : PlayerComponent
                 left.cameraAnchor = player.camerasToDisable[0].transform;
                 right.cameraAnchor = player.camerasToDisable[0].transform;
 
+                left.collisionLayers |= (1 << 12);
+                right.collisionLayers |= (1 << 12);
+
                 left.VR = true;
                 right.VR = true;
                 string device = XRDevice.model;

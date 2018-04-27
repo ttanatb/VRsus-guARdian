@@ -134,7 +134,7 @@ public class Grappling : MonoBehaviour //: Launchable
 
     private void MovePlayer()   //moves player
     {
-        force = (transform.position - player.transform.position).normalized * playerTravelSpeed;
+        force = (transform.position - Vector3.up * 0.05f - player.transform.position).normalized * playerTravelSpeed;
         playerRBody.AddForce(force);
         if ((transform.position - player.transform.position).sqrMagnitude < 0.01f)
         {
