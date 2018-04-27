@@ -20,9 +20,13 @@ public class Grappling : MonoBehaviour //: Launchable
 
     private Movement playerMovement;
     private Rigidbody playerRBody;
+    private Vector3 totalAngularRot = Vector3.zero;
 
     [SerializeField]
     private int state = 0;
+
+    [SerializeField]
+    private float minFlickAngle = 30f;
     // 0 - inactive
     // 1 - shooting out
     // 2 - plyrTraveling
@@ -156,7 +160,7 @@ public class Grappling : MonoBehaviour //: Launchable
     {
         //Debug.Log("Grappling Hook is retracting");
         playerMovement.EnableMovement();
-        rBody.velocity = -rBody.velocity;
+        rBody.velocity = Vector3.zero;
         timer = 0f;// Time.time;
         state = 4;
         totalAngularRot = Vector3.zero;
@@ -178,7 +182,7 @@ public class Grappling : MonoBehaviour //: Launchable
         animController.SetBool("isClinging", false);
         if (Input.GetButton("Jump"))
         {
-            playerRBody.AddForce(Vector3.up * 5f, ForceMode.VelocityChange);
+            playerRBody.AddForce(Vector3.up * 3f, ForceMode.VelocityChange);
         }
         StartRetraction();
     }
@@ -199,6 +203,7 @@ public class Grappling : MonoBehaviour //: Launchable
             state = 1;
 
             lineRenderer.enabled = true;
+            totalAngularRot = Vector3.zero;
         }
     }
 
@@ -255,12 +260,8 @@ public class Grappling : MonoBehaviour //: Launchable
                 }
 
                 totalAngularRot += device.angularVelocity;
-                //Debug.Log(button + ": " + totalAngularRot);
-                if (Mathf.Abs(totalAngularRot.y) > 30f)
+                if (Mathf.Abs(totalAngularRot.y) > minFlickAngle)
                 {
-
-                    //Debug.Log(button + ": " + device.velocity + ", " + device.angularVelocity);
-                    //Debug.Log(button + ": " + device.velocity.sqrMagnitude + ", " + device.angularVelocity.sqrMagnitude);
                     return true;
                 }
                 else return false;
@@ -273,5 +274,4 @@ public class Grappling : MonoBehaviour //: Launchable
         }
     }
 
-    private Vector3 totalAngularRot = Vector3.zero;
 }
