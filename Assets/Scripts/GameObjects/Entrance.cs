@@ -55,6 +55,7 @@ public class Entrance : NetworkBehaviour
     {
         manager.SetPhaseTo(GamePhase.Over);
         RpcAlertVRWin(combat.GetRelicCount());
+        combat.GetComponent<VRTransition>().RpcSpawnWin();
     }
 
     [ClientRpc]
@@ -83,5 +84,7 @@ public class Entrance : NetworkBehaviour
     void RpcAlertVRWin(int relicCount)
     {
         CanvasManager.Instance.SetPermanentMessage("VR player escaped with " + relicCount + " relic(s)");
+        //if (transition && !isServer)
+        //    transition.SpawnWin();
     }
 }
