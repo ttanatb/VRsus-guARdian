@@ -55,10 +55,10 @@ public class VRTransition : PlayerComponent
 
     void Update()
     {
-        if(Input.GetKey(KeyCode.O))
-        {
-            FadeOutAndIn(transform.position);
-        }
+        //if(Input.GetKey(KeyCode.O))
+        //{
+        //    FadeOutAndIn(transform.position);
+        //}
     }
 
     #region Networking Function(s)
@@ -67,7 +67,24 @@ public class VRTransition : PlayerComponent
     /// </summary>
     public void SpawnInPos(Vector3 position)
     {
-        FadeOutAndIn(position + Vector3.up * 0.1f);
+        FadeOutAndIn(position + Vector3.up * 0.1f, true);
+    }
+
+    [ClientRpc]
+    public void RpcSpawnWin()
+    {
+        FadeOutAndIn(Vector3.up * 501f, false);
+    }
+
+    [ClientRpc]
+    public void RpcSpawnLost()
+    {
+        FadeOutAndIn(Vector3.up * 751f, false);
+    }
+
+    public void Respawn()
+    {
+        FadeOutAndIn(Vector3.up * 1001f, false);
     }
     #endregion
 
@@ -85,7 +102,7 @@ public class VRTransition : PlayerComponent
     /// <summary>
     /// Function to switch into placing mode
     /// </summary>
-    private void FadeOutAndIn(Vector3 newPos)
+    private void FadeOutAndIn(Vector3 newPos, bool startGame)
     {
         if (!isLocalPlayer) return;
 
@@ -94,7 +111,7 @@ public class VRTransition : PlayerComponent
         if (movement)
             movement.DisableMovement();
 
-        IEnumerator fadeOut = Fade(newPos); 
+        IEnumerator fadeOut = Fade(newPos, startGame);
         timer = 0;
         StartCoroutine(fadeOut);
     }
@@ -107,7 +124,7 @@ public class VRTransition : PlayerComponent
     /// <param name="camToSwitchTo">To other cam to switch to</param>
     /// <param name="adjustTopViewCam">Whether or not the topViewCamera should adjust its position</param>
     /// <returns></returns>
-    private IEnumerator Fade(Vector3 newPos)
+    private IEnumerator Fade(Vector3 newPos, bool startGame)
     {
         while (timer < 1f)
         {
@@ -123,14 +140,15 @@ public class VRTransition : PlayerComponent
         while (timer < 2f)
         {
             timer += fadeSpeed;
-            blackPlaneFader.material.SetColor("_Color", Color.Lerp(black, transparent, timer  - 1f));
+            blackPlaneFader.material.SetColor("_Color", Color.Lerp(black, transparent, timer - 1f));
             yield return new WaitForEndOfFrame();
         }
 
         if (movement)
             movement.EnableMovement();
 
-        CmdSetIntruderMessage();
+        if (startGame)
+            CmdSetIntruderMessage();
         yield return null;
     }
     #endregion

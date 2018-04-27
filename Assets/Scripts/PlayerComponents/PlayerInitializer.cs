@@ -15,6 +15,7 @@ public class PlayerInitializer : NetworkBehaviour
     public Renderer[] renderersToDisbale;
     public Renderer[] renderersToEnable;
     public Camera cameraToEnable;
+    public AudioListener vrAudioListener;
     public Camera[] camerasToDisable;
 
     public GameObject avatar;
@@ -47,6 +48,10 @@ public class PlayerInitializer : NetworkBehaviour
             cameraToEnable.gameObject.tag = "MainCamera";
         }
 
+        if (vrAudioListener)
+        {
+            vrAudioListener.enabled = true;
+        }
 
 
         if (playerType != PlayerType.VR)

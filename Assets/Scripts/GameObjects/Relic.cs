@@ -48,12 +48,12 @@ public class Relic : NetworkBehaviour
         {
             VRCombat combat = other.GetComponent<VRCombat>();
             if (!combat)
-                combat = other.transform.parent.GetComponent<VRCombat>();
+                combat = other.transform.root.GetComponent<VRCombat>();
             //if (!combat.IsInvulnerable)
             //{
-                hasBeenStolen = true;
-                combat.GainRelic();
-                RpcStealRelic();
+            hasBeenStolen = true;
+            combat.GainRelic();
+            RpcStealRelic();
             //}
         }
     }

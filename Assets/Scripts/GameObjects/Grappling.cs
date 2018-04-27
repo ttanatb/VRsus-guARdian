@@ -20,17 +20,21 @@ public class Grappling : MonoBehaviour //: Launchable
 
     private Movement playerMovement;
     private Rigidbody playerRBody;
+    private Vector3 totalAngularRot = Vector3.zero;
 
     [SerializeField]
     private int state = 0;
+
+    [SerializeField]
+    private float minFlickAngle = 30f;
     // 0 - inactive
     // 1 - shooting out
     // 2 - plyrTraveling
     // 3 - attached
     // 4 - retracting
 
-    private float radii = 0;
-    private float radiiSqr;
+    //private float radii = 0;
+    //private float radiiSqr;
     private Vector3 force;
     private bool vr;
 
@@ -56,20 +60,31 @@ public class Grappling : MonoBehaviour //: Launchable
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.enabled = false;
 
-        SphereCollider playerCol = player.GetComponentInChildren<SphereCollider>();
-        radii = playerCol.radius;
-        Transform playerColObj = playerCol.transform;
-        do
-        {
-            radii *= playerColObj.localScale.x;
-            playerColObj = playerColObj.parent;
-        }
-        while (playerColObj != null);
-
-        radii += GetComponent<SphereCollider>().radius + transform.localScale.x;
-        radiiSqr = radii * radii;
-    }
-
+        //SphereCollider playerCol = player.GetComponentInChildren<SphereCollider>();
+        //Transform playerColObj = null;
+        //if (playerCol)
+        //{
+        //    radii = playerCol.radius;
+        //    playerColObj = playerCol.transform;
+        //}
+        //else
+        //{
+        //    CapsuleCollider capCol = player.GetComponentInChildren<CapsuleCollider>();
+        //    radii = capCol.radius;
+        //    playerColObj = capCol.transform;
+        //}
+        //
+        //do
+        //{
+        //    radii *= playerColObj.localScale.x;
+        //    playerColObj = playerColObj.parent;
+        //}
+        //while (playerColObj != null);
+        //
+        //radii += GetComponent<SphereCollider>().radius + transform.localScale.x;
+        //radiiSqr = radii * radii;
+    }   
+        
     // Update is called once per frame
     private void Update()
     {
@@ -119,7 +134,7 @@ public class Grappling : MonoBehaviour //: Launchable
 
     private void MovePlayer()   //moves player
     {
-        force = (transform.position - player.transform.position).normalized * playerTravelSpeed;
+        force = (transform.position - Vector3.up * 0.05f - player.transform.position).normalized * playerTravelSpeed;
         playerRBody.AddForce(force);
         if ((transform.position - player.transform.position).sqrMagnitude < 0.01f)
         {
@@ -145,7 +160,7 @@ public class Grappling : MonoBehaviour //: Launchable
     {
         //Debug.Log("Grappling Hook is retracting");
         playerMovement.EnableMovement();
-        rBody.velocity = -rBody.velocity;
+        rBody.velocity = Vector3.zero;
         timer = 0f;// Time.time;
         state = 4;
         totalAngularRot = Vector3.zero;
@@ -167,7 +182,7 @@ public class Grappling : MonoBehaviour //: Launchable
         animController.SetBool("isClinging", false);
         if (Input.GetButton("Jump"))
         {
-            playerRBody.AddForce(Vector3.up * 5f, ForceMode.VelocityChange);
+            playerRBody.AddForce(Vector3.up * 3f, ForceMode.VelocityChange);
         }
         StartRetraction();
     }
@@ -181,13 +196,14 @@ public class Grappling : MonoBehaviour //: Launchable
             else if (otherGrappling.state == 2) otherGrappling.LetGo();
 
             transform.position = playerAnchor.position;
-            transform.forward =  cameraAnchor.forward;
-            
+            transform.forward = cameraAnchor.forward;
+
             rBody.velocity = transform.forward * speed;
             rBody.isKinematic = false;
             state = 1;
 
             lineRenderer.enabled = true;
+            totalAngularRot = Vector3.zero;
         }
     }
 
@@ -244,12 +260,8 @@ public class Grappling : MonoBehaviour //: Launchable
                 }
 
                 totalAngularRot += device.angularVelocity;
-                //Debug.Log(button + ": " + totalAngularRot);
-                if (Mathf.Abs(totalAngularRot.y) > 30f)
+                if (Mathf.Abs(totalAngularRot.y) > minFlickAngle)
                 {
-
-                    //Debug.Log(button + ": " + device.velocity + ", " + device.angularVelocity);
-                    //Debug.Log(button + ": " + device.velocity.sqrMagnitude + ", " + device.angularVelocity.sqrMagnitude);
                     return true;
                 }
                 else return false;
@@ -262,5 +274,4 @@ public class Grappling : MonoBehaviour //: Launchable
         }
     }
 
-    private Vector3 totalAngularRot = Vector3.zero;
 }

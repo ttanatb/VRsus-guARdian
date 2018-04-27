@@ -146,12 +146,14 @@ public class VRCombat : PlayerComponent
 
         arSetUp.SetPhaseTo(GamePhase.Over);
         CanvasManager.Instance.SetPermanentMessage("AR player wins!");
+        if (isServer)
+            GetComponent<VRTransition>().RpcSpawnLost();
     }
 
     [ClientRpc]
     public void RpcRespawn()
     {
-        transform.position = new Vector3(0.759f, 1005f, -0.659f);
+        GetComponent<VRTransition>().Respawn();
         CanvasManager.Instance.ClearMsg();
         relicCount = 0;
         health = 3;
