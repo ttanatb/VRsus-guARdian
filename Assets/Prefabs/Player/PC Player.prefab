@@ -247,6 +247,7 @@ GameObject:
   - component: {fileID: 135681290816371648}
   - component: {fileID: 95891474611954526}
   - component: {fileID: 114978329237637056}
+  - component: {fileID: 136153950951581654}
   m_Layer: 11
   m_Name: PC Player
   m_TagString: Player
@@ -1155,7 +1156,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1272844262855460}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.7960367, y: -9.256388, z: 9.002582}
+  m_LocalPosition: {x: 136.79335, y: 179.29662, z: 817.8648}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 4426164412331622}
@@ -1718,6 +1719,19 @@ CapsuleCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.012
+  m_Height: 0.05
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.025, z: 0}
+--- !u!136 &136153950951581654
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1272844262855460}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.01
   m_Height: 0.05
   m_Direction: 1
   m_Center: {x: 0, y: 0.025, z: 0}

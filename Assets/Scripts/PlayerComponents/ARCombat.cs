@@ -45,6 +45,16 @@ public class ARCombat : PlayerComponent
 
     private float spotLightAngle;
 
+    public float LaserTimer
+    {
+        get
+        {
+            if (!isShootingEnabled) return 0f;
+            if (isShootingLaser) return 0f;
+            return laserTimer / laserCoolDown;
+        }
+    }
+
     /// <summary>
     /// Changes if the character can shoot
     /// </summary>
@@ -54,6 +64,7 @@ public class ARCombat : PlayerComponent
         {
             laserTimer = 0f;
             CanvasManager.Instance.SetCrossHairUI(value);
+            CanvasManager.Instance.SetUpLaserUI(this);
             isShootingEnabled = value;
         }
     }

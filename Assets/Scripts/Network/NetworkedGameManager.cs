@@ -32,7 +32,7 @@ public class NetworkedGameManager : NetworkManager
 
         if (XRSettings.enabled)
         {
-            Debug.Log("XR setings enabled");
+            //Debug.Log("XR setings enabled");
             isVR = true;
         }
     }
@@ -60,7 +60,7 @@ public class NetworkedGameManager : NetworkManager
 
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId, NetworkReader extraMessageReader)
     {
-        Debug.Log("OnServerAddPlayer is called -- now adding...");
+        //Debug.Log("OnServerAddPlayer is called -- now adding...");
 
         int playerIndex = 0;
         if (extraMessageReader.Length > 0)
@@ -100,7 +100,7 @@ public class NetworkedGameManager : NetworkManager
 
     public override void OnStartServer()
     {
-        Debug.Log("On start server");
+        //Debug.Log("On start server");
         base.OnStartServer();
         practiceAreaObj = Instantiate(practiceAreaPrefab);
         practiceArea = practiceAreaObj.GetComponent<PraticeArea>();

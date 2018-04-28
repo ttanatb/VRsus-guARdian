@@ -15,7 +15,7 @@ public class Relic : NetworkBehaviour
 
     public Light spotLight;
     public ParticleSystem[] particles;
-
+    
     public override void OnStartServer()
     {
         entrances = new List<Entrance>();
@@ -53,17 +53,18 @@ public class Relic : NetworkBehaviour
             //{
             hasBeenStolen = true;
             combat.GainRelic();
-            RpcStealRelic();
+            RpcStealRelic(combat.GetRelicCount());
             //}
         }
     }
 
     [ClientRpc]
-    private void RpcStealRelic()
+    private void RpcStealRelic(int relicCount)
     {
         if (relicRenderer)
             relicRenderer.enabled = false;
 
+        CanvasManager.Instance.UpdateRelicCounter(relicCount, ! isServer);
 
         if (entrances != null)
         {

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
@@ -40,8 +41,13 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     public GameObject leftHookshot;
     public GameObject rightHookshot;
 
+    public GameObject hookShotReticle;
+
     private GameObject[] arUIbuttons;   //array of buttons
     private Button doneBtn;
+
+    public LaserUI laserUI;
+    public RelicCounterUI relicUI;
     #endregion
 
     #region Set Up & Life Cycle
@@ -66,10 +72,17 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     /// Sets Activates the Health UI
     /// </summary>
     /// <param name="combat">Movement script to tie it to</param>
-    public void InitHealthEnergyBar(VRCombat combat)
+    public HealthBarUI InitHealthEnergyBar(VRCombat combat)
     {
         healthUIObj.SetActive(true);
         healthUIObj.GetComponent<HealthBarUI>().Init(combat);
+        return healthUIObj.GetComponent<HealthBarUI>();
+    }
+
+    public void SetUpLaserUI(ARCombat arCombat)
+    {
+        laserUI.gameObject.SetActive(true);
+        laserUI.Init(arCombat);
     }
 
     public void SetUpLeftHookshot(Grappling grapplingHook)
@@ -82,6 +95,19 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     {
         rightHookshot.SetActive(true);
         rightHookshot.GetComponent<GrapplingUI>().grappling = grapplingHook;
+    }
+
+    public void SetActiveRelicCounter(bool shouldBeActive, bool isLocal)
+    {
+        relicUI.gameObject.SetActive(shouldBeActive);
+        UpdateRelicCounter(2, !isLocal);
+    }
+
+    public void UpdateRelicCounter(int relicCount, bool isLocalPlayer)
+    {
+        int count = relicCount;
+        if (!isLocalPlayer) count = 2 - count;
+        relicUI.SetCount(count);
     }
 
     /// <summary>
@@ -254,6 +280,12 @@ public class CanvasManager : SingletonMonoBehaviour<CanvasManager>
     public void SetCrossHairUI(bool value)
     {
         crossHairUI.SetActive(value);
+    }
+
+    public void SetHookShotUI(Transform player, int mask, float dist)
+    {
+        hookShotReticle.SetActive(true);
+        hookShotReticle.GetComponent<HookshotUI>().Init(player, mask, dist);
     }
 
     /// <summary>

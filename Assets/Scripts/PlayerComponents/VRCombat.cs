@@ -76,7 +76,7 @@ public class VRCombat : PlayerComponent
             hurtFlashes = new HurtFlash[hurtFlashCount];
             for (int i = 0; i < hurtFlashCount; i++)
                 hurtFlashes[i] = Instantiate(HurtScreenPrefab, canvas).GetComponent<HurtFlash>();
-            CanvasManager.Instance.InitHealthEnergyBar(this);
+            healthBarUI = CanvasManager.Instance.InitHealthEnergyBar(this);
         }
     }
 
@@ -132,6 +132,9 @@ public class VRCombat : PlayerComponent
     {
         if (!isLocalPlayer) return;
 
+        if (healthBarUI)
+            healthBarUI.DecrementHealth();
+
         hurtFlashes[hurtFlashIndex].FlashRed();
         hurtFlashIndex++;
         if (hurtFlashIndex > hurtFlashCount - 1)
@@ -144,6 +147,8 @@ public class VRCombat : PlayerComponent
         if (!arSetUp)
             arSetUp = FindObjectOfType<ARSetUp>();
 
+        if (healthBarUI)
+            healthBarUI.DecrementHealth();
         arSetUp.SetPhaseTo(GamePhase.Over);
         CanvasManager.Instance.SetPermanentMessage("AR player wins!");
         if (isServer)
@@ -157,6 +162,9 @@ public class VRCombat : PlayerComponent
         CanvasManager.Instance.ClearMsg();
         relicCount = 0;
         health = 3;
+
+        if (healthBarUI)
+            healthBarUI.ResetHealth();
     }
 
     IEnumerator Flash(float waitTime)

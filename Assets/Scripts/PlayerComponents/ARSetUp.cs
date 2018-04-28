@@ -391,6 +391,7 @@ public class ARSetUp : PlayerComponent
 #if UNITY_IOS
                 UnityARAnchorManager.Instance.TogglePlaneMaterial();
 #endif
+                RpcToggleRelicCount(true);
                 break;
             case GamePhase.Over:
                 if (!isServer) break;
@@ -398,11 +399,18 @@ public class ARSetUp : PlayerComponent
                 if (combatt != null)
                     combatt.IsShootingEnabled = false;
                 CanvasManager.Instance.ShowGameOverBtn(this);
+                RpcToggleRelicCount(false);
                 break;
         }
 
         currGamePhase = (int)newPhase;
         CanvasManager.Instance.SetUpUI(this);
+    }
+
+    [ClientRpc]
+    private void RpcToggleRelicCount(bool shouldBeActive)
+    {
+        CanvasManager.Instance.SetActiveRelicCounter(shouldBeActive, !isLocalPlayer);
     }
 
     public void SetCurrTrapSelection(int toSelect)

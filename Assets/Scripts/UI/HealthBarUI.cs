@@ -20,7 +20,7 @@ public class HealthBarUI : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        healthBarPivot = transform.GetChild(0).GetChild(0);
+        //healthBarPivot = transform.GetChild(0).GetChild(0);
     }
 
     /// <summary>
@@ -41,30 +41,23 @@ public class HealthBarUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //calculates percentage
-        //float healthPercentage = player.health / (float)maxHealth;
-        //if (healthPercentage < 0f)
-        //    healthPercentage = 0f;
-        //else if (healthPercentage > 1f)
-        //    healthPercentage = 1f;
-
-
-        //sets scale
-        //Vector3 scale = healthBarPivot.localScale;
-        //scale.x = Mathf.Lerp(scale.x, healthPercentage, Time.deltaTime * 20f);
-        //healthBarPivot.localScale = scale;
-		switch (player.health) {
-		case 2:
-			lives [2].SetActive (false);
-			break;
-		case 1:
-			lives [1].SetActive (false);
-			break;
-		case 0:
-			lives [0].SetActive (false);
-			break;
-		}
 
     }
+
+    public void ResetHealth()
+    {
+        foreach(GameObject obj in lives)
+        {
+            obj.SetActive(true);
+        }
+    }
+
+    public void DecrementHealth()
+    {
+        int index = player.health - 1;
+        if (index < 0) return;
+        lives[index].SetActive(false);
+    }
+
     #endregion
 }

@@ -304,7 +304,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1344648828105818}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -17.708632, y: 47.85369, z: -30.018408}
+  m_LocalPosition: {x: -4.862542, y: 986.7976, z: -4.377709}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4571292994523802}
@@ -656,8 +656,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 0
-  m_Color: {r: 0.52205884, g: 0.17607243, b: 0.08061204, a: 1}
-  m_Intensity: 5
+  m_Color: {r: 0.52205884, g: 0.1943392, b: 0.08061204, a: 1}
+  m_Intensity: 8
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -771,6 +771,7 @@ MonoBehaviour:
   - {fileID: 137702098708757872}
   renderersToEnable: []
   cameraToEnable: {fileID: 20586400908853146}
+  vrAudioListener: {fileID: 0}
   camerasToDisable: []
   avatar: {fileID: 1540765997631438}
 --- !u!114 &114655120174981896
@@ -1090,7 +1091,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 0
-  randomSeed: 1920643002
+  randomSeed: -226108461
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -4496,7 +4497,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 0
-  randomSeed: 377933996
+  randomSeed: -87838281
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -7947,7 +7948,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 0
-  randomSeed: 692768192
+  randomSeed: -1070987249
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -11353,7 +11354,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1929653577
+  randomSeed: -1681181920
   InitialModule:
     serializedVersion: 3
     enabled: 1

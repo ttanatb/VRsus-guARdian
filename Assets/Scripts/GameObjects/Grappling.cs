@@ -15,6 +15,7 @@ public class Grappling : MonoBehaviour //: Launchable
 
     [SerializeField]
     private float timer;
+    private float initalShootTime = 0.03f;
 
     private Rigidbody rBody;
 
@@ -207,12 +208,15 @@ public class Grappling : MonoBehaviour //: Launchable
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnCollisionStay(Collision collision)
     {
         if (state != 1) return;
 
         if (collisionLayers == (collisionLayers | (1 << collision.collider.gameObject.layer)))
         {
+            if (timer < initalShootTime && (Vector3.Dot(cameraAnchor.forward,  transform.position - player.transform.position) > 0f))
+                return;
+            
             //Debug.Log("Grappling hook attached itself to the wall");
             if (otherGrappling.state == 3)
             {

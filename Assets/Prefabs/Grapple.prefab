@@ -141,19 +141,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98ff825158a34134c9016ff70705d6bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
+  speed: 3.5
   collisionLayers:
     serializedVersion: 2
     m_Bits: 256
   playerTravelSpeed: 10
-  lifetime: 2
+  lifetime: 1
   otherGrappling: {fileID: 0}
   player: {fileID: 0}
   button: 
   timer: 0
   state: 0
+  minFlickAngle: 30
   playerAnchor: {fileID: 0}
-  spawnPos: {fileID: 0}
+  cameraAnchor: {fileID: 0}
   animController: {fileID: 0}
 --- !u!120 &120351145011220940
 LineRenderer:

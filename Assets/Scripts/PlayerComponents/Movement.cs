@@ -105,6 +105,9 @@ public class Movement : PlayerComponent
                 left.cameraAnchor = player.camerasToDisable[0].transform;
                 right.cameraAnchor = player.camerasToDisable[0].transform;
 
+                left.speed *= 1.5f;
+                right.speed *= 1.5f;
+
                 left.collisionLayers |= (1 << 12);
                 right.collisionLayers |= (1 << 12);
 
@@ -117,6 +120,8 @@ public class Movement : PlayerComponent
                     right.button = "FireR1";
                 }
             }
+
+            CanvasManager.Instance.SetHookShotUI(left.cameraAnchor, left.collisionLayers, left.speed * left.lifetime);
         }
     }
 
@@ -232,7 +237,7 @@ public class Movement : PlayerComponent
     {
         if (isOnFloor)
         {
-            rBody.AddForce(Vector3.Lerp(Vector3.up * 2f, Vector3.zero, slowTimer / MAX_SLOW_TIME), ForceMode.VelocityChange);
+            rBody.AddForce(Vector3.Lerp(Vector3.up * 1.5f, Vector3.zero, slowTimer / MAX_SLOW_TIME), ForceMode.VelocityChange);
             isOnFloor = false;
         }
     }

@@ -13,18 +13,21 @@
 
 			CGPROGRAM
 			//PreCompiling functions
-			#pragma surface surf CelShading
+			#pragma surface surf Lambert
 			#pragma target 3.0 //Supporting DX9
 
 			fixed4 _SpecCol;
 
+			/*
 			half4 LightingCelShading(SurfaceOutput s, half3 lightDir, half atten)
 			{
 				half newDot = dot(s.Normal, lightDir);
 				
 				//Determine if there's a shadow or not (Polarize)
-				if (newDot <= 0.3) newDot = 0;
-				else newDot = 1;
+				bool mask = newDot > 0.3;
+				newDot = mask;
+				//if (newDot <= 0.3) newDot = 0;
+				//else newDot = 1;
 
 				//Setup the new color
 				half4 color;
@@ -32,6 +35,7 @@
 				color.a = s.Alpha * _SpecColor.a;
 				return color;
 			}
+			*/
 
 			sampler2D _MainTex;
 			fixed4 _Color;

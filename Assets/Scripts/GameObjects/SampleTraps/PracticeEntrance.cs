@@ -45,7 +45,7 @@ public class PracticeEntrance : MonoBehaviour
     {
         if (!activated) return;
 
-        Debug.Log(other);
+        //Debug.Log(other);
         if (other.CompareTag("Player"))
         {
             if (other.transform.parent)

@@ -28,6 +28,9 @@ public class VRTransition : PlayerComponent
 
     private Color transparent = new Color(0, 0, 0, 0);
     private Color black = new Color(0, 0, 0, 1);
+
+    private Vector3 startPos;
+    float prevYPos;
     #endregion
 
     #region Init & Destruction
@@ -48,13 +51,17 @@ public class VRTransition : PlayerComponent
             }
             blackPlaneFader = fpsCamera.transform.GetChild(0).GetComponent<MeshRenderer>();
             movement = GetComponent<Movement>();
-
+            prevYPos = transform.position.y;
         }
     }
     #endregion
 
     void Update()
     {
+        if (prevYPos > -5f && transform.position.y < -5f)
+            FadeOutAndIn(startPos, false);
+
+        prevYPos = transform.position.y;
         //if(Input.GetKey(KeyCode.O))
         //{
         //    FadeOutAndIn(transform.position);
@@ -67,7 +74,8 @@ public class VRTransition : PlayerComponent
     /// </summary>
     public void SpawnInPos(Vector3 position)
     {
-        FadeOutAndIn(position + Vector3.up * 0.1f, true);
+        startPos = position + Vector3.up * 0.1f;
+        FadeOutAndIn(startPos, true);
     }
 
     [ClientRpc]
