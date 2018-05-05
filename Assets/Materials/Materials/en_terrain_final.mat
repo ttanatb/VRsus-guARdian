@@ -31,11 +31,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _EdgeWidth: 0.05
-    - _NoiseScale: 2
+    - _EdgeWidth: 0.1
+    - _NoiseScale: 3
     - _Scale: 1
     - _SideScale: 1
-    - _TopSpread: 0
+    - _TopSpread: 0.3
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _SpecCol: {r: 1, g: 1, b: 1, a: 1}

@@ -214,8 +214,8 @@ public class Grappling : MonoBehaviour //: Launchable
 
         if (collisionLayers == (collisionLayers | (1 << collision.collider.gameObject.layer)))
         {
-            if (timer < initalShootTime && (Vector3.Dot(cameraAnchor.forward,  transform.position - player.transform.position) > 0f))
-                return;
+            //if (timer < initalShootTime && (Vector3.Dot(cameraAnchor.forward,  transform.position - player.transform.position) > 0f))
+            //    return;
             
             //Debug.Log("Grappling hook attached itself to the wall");
             if (otherGrappling.state == 3)
@@ -247,6 +247,10 @@ public class Grappling : MonoBehaviour //: Launchable
     private bool OnButtonInput()
     {
         if (!vr) return Input.GetButtonDown(button);
+        else return (Input.GetAxis(button) > 0.9f);
+
+        /*
+        if (!vr) return Input.GetButtonDown(button);
         else
         {
             if (Input.GetAxis(button) > 0.9f)
@@ -276,6 +280,8 @@ public class Grappling : MonoBehaviour //: Launchable
                 return false;
             }
         }
+
+        */
     }
 
 }
