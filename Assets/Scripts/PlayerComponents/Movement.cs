@@ -100,8 +100,8 @@ public class Movement : PlayerComponent
             else
             {
 
-                //left.spawnPos = leftController.transform;
-                //right.spawnPos = rightController.transform;
+                left.playerAnchor = leftController.transform;
+                right.playerAnchor = rightController.transform;
                 left.cameraAnchor = player.camerasToDisable[0].transform;
                 right.cameraAnchor = player.camerasToDisable[0].transform;
 
@@ -162,9 +162,31 @@ public class Movement : PlayerComponent
         {
             if (playerType == PlayerType.VR)
             {
+                float leftH = Input.GetAxis("VRLeftHorizontal");
+                float leftV = Input.GetAxis("VRLeftVertical");
+                float rightH = Input.GetAxis("VRRightHorizontal");
+                float rightV = Input.GetAxis("VRRightVertical");
+
+                Vector3 movement = Vector3.zero;
+
+                if ((leftH != 0 || leftV != 0) && (rightH != 0 || rightV != 0)) return;
+
+
+                if (!(leftH != 0 && rightH != 0)) // no input horizontally on both controllers
+                {
+                    movement += cameraTransform.right * (leftH + rightH);
+                }
+
+                if (!(leftV != 0 && rightV != 0)) // no input horizontally on both controllers
+                {
+                    movement = (movement + Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up) * (leftV + rightV));
+                }
+
+
+                /*
+                 * 
                 Vector3 movementX = Vector3.zero;
                 Vector3 movementY = Vector3.zero;
-
                 if (Input.GetAxis("VRLeftHorizontal") != 0 || Input.GetAxis("VRLeftVertical") != 0)
                 {
                     movementX = leftController.transform.right * Input.GetAxis("VRLeftHorizontal") * movementSpeed;
@@ -178,14 +200,19 @@ public class Movement : PlayerComponent
                     movementY = (rightController.transform.forward * Input.GetAxis("VRRightVertical")) * movementSpeed;
                 }
 
-                if (slowTimer > 0f)
-                {
-                    movementX *= Mathf.Lerp(1.0f, slowFactor, slowTimer / MAX_SLOW_TIME);
-                    movementY *= Mathf.Lerp(1.0f, slowFactor, slowTimer / MAX_SLOW_TIME);
-                }
+                //if (slowTimer > 0f)
+                //{
+                //    movementX *= Mathf.Lerp(1.0f, slowFactor, slowTimer / MAX_SLOW_TIME);
+                //    movementY *= Mathf.Lerp(1.0f, slowFactor, slowTimer / MAX_SLOW_TIME);
+                //}
 
                 networkAnimator.SetBool("isWalking", (movementX.sqrMagnitude > 0f || movementY.sqrMagnitude > 0f));
                 rBody.MovePosition(movementX + movementY + transform.position);
+                */
+
+                networkAnimator.SetBool("isWalking", (movement.sqrMagnitude > 0.001f)); // || movementY.sqrMagnitude > 0f));
+                rBody.MovePosition(movement * movementSpeed + transform.position);
+
             }
             else
             {

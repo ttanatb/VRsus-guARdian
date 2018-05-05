@@ -45,6 +45,9 @@ public class Grappling : MonoBehaviour //: Launchable
     public Animator animController;
     private int controllerIndex = -1;
 
+    private float prevTriggerValue = 0.0f;
+    private Vector3 hookshotPos = Vector3.zero;
+
     public int State { get { return state; } }
 
     public bool VR
@@ -84,8 +87,8 @@ public class Grappling : MonoBehaviour //: Launchable
         //
         //radii += GetComponent<SphereCollider>().radius + transform.localScale.x;
         //radiiSqr = radii * radii;
-    }   
-        
+    }
+
     // Update is called once per frame
     private void Update()
     {
@@ -111,6 +114,9 @@ public class Grappling : MonoBehaviour //: Launchable
                     Detach();
             }
         }
+
+        if (vr)
+            prevTriggerValue = Input.GetAxis(button);
     }
 
     private void FixedUpdate()
@@ -135,9 +141,12 @@ public class Grappling : MonoBehaviour //: Launchable
 
     private void MovePlayer()   //moves player
     {
-        force = (transform.position - Vector3.up * 0.05f - player.transform.position).normalized * playerTravelSpeed;
-        playerRBody.AddForce(force);
-        if ((transform.position - player.transform.position).sqrMagnitude < 0.01f)
+        //calculates force
+        force = (hookshotPos - player.transform.position).normalized * playerTravelSpeed;
+        playerRBody.AddForce(force);    //applies force
+
+        //checks if player is close enough
+        if ((hookshotPos - player.transform.position).sqrMagnitude < 0.01f)
         {
             state = 3;
             playerRBody.velocity = Vector3.zero;
@@ -152,6 +161,7 @@ public class Grappling : MonoBehaviour //: Launchable
         if ((playerAnchor.position - transform.position).sqrMagnitude < 0.02f || timer > lifetime)
         {
             state = 0;
+            if (Input.GetAxis(otherGrappling.button) < 1f) prevTriggerValue = 0f;
             transform.position = Vector3.one * 1000f;
             lineRenderer.enabled = false;
         }
@@ -181,10 +191,10 @@ public class Grappling : MonoBehaviour //: Launchable
         //Debug.Log("Player detaching himself from the wall");
         playerRBody.useGravity = true;
         animController.SetBool("isClinging", false);
-        if (Input.GetButton("Jump"))
-        {
-            playerRBody.AddForce(Vector3.up * 3f, ForceMode.VelocityChange);
-        }
+        //if (Input.GetButton("Jump"))
+        //{
+        //playerRBody.AddForce(Vector3.up * 1f, ForceMode.VelocityChange);
+        //}
         StartRetraction();
     }
 
@@ -216,7 +226,7 @@ public class Grappling : MonoBehaviour //: Launchable
         {
             //if (timer < initalShootTime && (Vector3.Dot(cameraAnchor.forward,  transform.position - player.transform.position) > 0f))
             //    return;
-            
+
             //Debug.Log("Grappling hook attached itself to the wall");
             if (otherGrappling.state == 3)
             {
@@ -225,6 +235,10 @@ public class Grappling : MonoBehaviour //: Launchable
             }
 
             state = 2;
+
+            if (transform.position.y < player.transform.position.y)
+                hookshotPos = transform.position;
+            else hookshotPos = transform.position + Vector3.up * 0.01f;
             playerMovement.isOnFloor = false;
             playerMovement.DisableMovement();
             rBody.isKinematic = true;
@@ -241,14 +255,16 @@ public class Grappling : MonoBehaviour //: Launchable
 
     private bool ReleaseButton()
     {
-        return (!vr && !Input.GetButton(button)) || (vr && Input.GetAxis(button) < 1f);
+        return (!vr && !Input.GetButton(button)) || (vr && Input.GetAxis(button) < 1.0f);
     }
 
     private bool OnButtonInput()
     {
         if (!vr) return Input.GetButtonDown(button);
-        else return (Input.GetAxis(button) > 0.9f);
-
+        else
+        {
+            return Input.GetAxis(button) > 0.9f && prevTriggerValue < 0.9f;
+        }
         /*
         if (!vr) return Input.GetButtonDown(button);
         else

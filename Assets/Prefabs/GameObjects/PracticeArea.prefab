@@ -1188,8 +1188,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1505605847767268}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.3, z: 0}
-  m_LocalScale: {x: 1.480645, y: 0.2991092, z: 1.4806451}
+  m_LocalPosition: {x: 0, y: -0.48, z: 0}
+  m_LocalScale: {x: 2.4801202, y: 0.50101596, z: 2.4801204}
   m_Children: []
   m_Father: {fileID: 4033681479780876}
   m_RootOrder: 0
@@ -3514,7 +3514,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300000, guid: 8e0ec05a14302c84fb45a7896f70402e, type: 3}
+  m_Mesh: {fileID: 4300002, guid: 8e0ec05a14302c84fb45a7896f70402e, type: 3}
 --- !u!64 &64550906779381538
 MeshCollider:
   m_ObjectHideFlags: 1
@@ -3528,7 +3528,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300000, guid: 8e0ec05a14302c84fb45a7896f70402e, type: 3}
+  m_Mesh: {fileID: 4300002, guid: 8e0ec05a14302c84fb45a7896f70402e, type: 3}
 --- !u!64 &64774604574315426
 MeshCollider:
   m_ObjectHideFlags: 1
@@ -3542,7 +3542,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300000, guid: 8e0ec05a14302c84fb45a7896f70402e, type: 3}
+  m_Mesh: {fileID: 4300002, guid: 8e0ec05a14302c84fb45a7896f70402e, type: 3}
 --- !u!64 &64843545832053980
 MeshCollider:
   m_ObjectHideFlags: 1
@@ -3570,7 +3570,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300000, guid: 8e0ec05a14302c84fb45a7896f70402e, type: 3}
+  m_Mesh: {fileID: 4300002, guid: 8e0ec05a14302c84fb45a7896f70402e, type: 3}
 --- !u!65 &65018876990020492
 BoxCollider:
   m_ObjectHideFlags: 1
