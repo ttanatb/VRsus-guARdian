@@ -1,11 +1,14 @@
 # VRsus guARdian
-VRsus guARdian is a networked, stealth-based game between AR and PC. The game utilizes ARKit to scan the room around the player and builds a shared world where both players can interact with one another. The game sets a 'VR Player' who's trying to steal a relic against an 'AR Player' who uses an iPad to set up traps and search for this thief.
+VRsus guARdian is a cat-and-mouse chase where one player plays using an AR-enabled device and another player utilizes a VR system. The goal of the AR Player is to track down the other player and shoot them down, while the goal of the VR Player is to snatch relics placed around the world and escape before getting defeated.
+
+Check our website out here: [vrsus-guardian.site](http://www.vrsus-guardian.site/)
 
 ## Screenshots
-![Picture of Screenshots](https://i.imgur.com/51sv3oX.jpg)
+![Picture of Screenshots](https://i.imgur.com/KNTNwtG.jpg)
+
 
 ## Demo Video
-[![AR_Hack](https://i.imgur.com/JEC7qyz.png)](https://youtu.be/-Z7KCzS648w "AR_Hack")
+[![AR_Hack](https://i.imgur.com/JkNHF2w.jpg)](https://www.youtube.com/watch?v=cu3ih-etwGA&feature=youtu.be "AR_Hack")
 
 ## Development Blog
 Check out a more personal narrative about the project on my [blog](https://tanatbdev.wordpress.com/)!
