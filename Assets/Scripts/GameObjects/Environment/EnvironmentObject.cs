@@ -33,12 +33,12 @@ public class EnvironmentObject : NetworkBehaviour
             GameObject child = new GameObject("Mesh");
             child.transform.SetParent(transform);
             child.transform.localScale *= data.scale;
-            child.transform.localPosition = data.posOffset;
+            child.transform.localPosition = Vector3.zero;
             child.transform.localRotation = Quaternion.identity;
             child.AddComponent<MeshRenderer>().sharedMaterials = data.mats;
             child.AddComponent<MeshFilter>().mesh = data.mesh;
 
-            for (int b=0; b<data.boxData.Length; b++)
+            for (int b = 0; b < data.boxData.Length; b++)
             {
                 BoxColliderData boxData = environmentObjectData.boxColDatas[data.boxData[b]];
                 BoxCollider col = child.AddComponent<BoxCollider>();
@@ -75,16 +75,13 @@ public class EnvironmentObject : NetworkBehaviour
     [ClientRpc]
     public void RpcInit(int type, int index)
     {
-        switch(type)
+        switch (type)
         {
             case 0:
                 environmentObjectData = environmentData.decorDataList[index];
                 break;
             case 1:
                 environmentObjectData = environmentData.structureDataList[index];
-                break;
-            default:
-                environmentObjectData = environmentData.landMarkDataList[index];
                 break;
         }
 
@@ -100,9 +97,6 @@ public class EnvironmentObject : NetworkBehaviour
                 break;
             case 1:
                 environmentObjectData = environmentData.structureDataList[index];
-                break;
-            default:
-                environmentObjectData = environmentData.landMarkDataList[index];
                 break;
         }
 

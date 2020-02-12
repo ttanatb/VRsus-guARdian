@@ -6,7 +6,7 @@ public class EnvironmentData : ScriptableObject
 {
     public EnvironmentObjectData[] decorDataList;
     public EnvironmentObjectData[] structureDataList;
-    public EnvironmentObjectData[] landMarkDataList;
+    public EnviromentLandmarkData[] landMarkDataList;
 }
 
 [System.Serializable]
@@ -104,8 +104,8 @@ public struct EnvironmentObjectData
         for (int i = 0; i < meshMatDatas.Length; i++)
         {
             Bounds b = meshMatDatas[i].mesh.bounds;
-            Vector3 min = b.min * meshMatDatas[i].scale + meshMatDatas[i].posOffset;
-            Vector3 max = b.max * meshMatDatas[i].scale + meshMatDatas[i].posOffset;
+            Vector3 min = b.min * meshMatDatas[i].scale;
+            Vector3 max = b.max * meshMatDatas[i].scale;
 
             minX = Mathf.Min(minX, min.x);
             maxX = Mathf.Max(maxX, max.x);
@@ -115,8 +115,6 @@ public struct EnvironmentObjectData
         }
 
         radius = Mathf.Max(Mathf.Abs(maxX), Mathf.Abs(minX), Mathf.Abs(minZ), Mathf.Abs(maxZ));
-
-        ReCenter((minX + maxX) / 2.0f, (minZ + maxZ) / 2.0f);
     }
 
     public void ReCenter(float centerX, float centerZ)
@@ -125,6 +123,21 @@ public struct EnvironmentObjectData
         {
             meshMatDatas[i].posOffset -= new Vector3(centerX, 0, centerZ);
         }
+    }
+}
+
+[System.Serializable]
+public struct EnviromentLandmarkData
+{
+    public EnvironmentObjectData obj;
+    public int[] decors;
+    public int[] structures;
+
+    public EnviromentLandmarkData(int decorLength, int structLength)
+    {
+        decors = new int[decorLength];
+        structures = new int[structLength];
+        obj = new EnvironmentObjectData(0);
     }
 }
 

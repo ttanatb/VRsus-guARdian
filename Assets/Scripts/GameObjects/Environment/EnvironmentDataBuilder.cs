@@ -16,7 +16,7 @@ public class EnvironmentDataBuilder : MonoBehaviour
         //Create lists to store the environment information
         List<EnvironmentObjectData> decors = new List<EnvironmentObjectData>();
         List<EnvironmentObjectData> structures = new List<EnvironmentObjectData>();
-        List<EnvironmentObjectData> landMarks = new List<EnvironmentObjectData>();
+        List<EnviromentLandmarkData> landMarks = new List<EnviromentLandmarkData>();
         GameObject[] objs = FindObjectsOfType<GameObject>();
 
         //Whether data should be overwritten or not
@@ -36,26 +36,34 @@ public class EnvironmentDataBuilder : MonoBehaviour
             decorList.landMarkDataList = null;
         }
 
+        int decorOffset = 0;
+        int structureOffset = 0;
+
         foreach (GameObject obj in objs)
         {
+            decorOffset = decors.Count;
+            structureOffset = structures.Count;
+
             //Skip objects that aren't props and aren't the parent object
             if (obj.transform.parent != null) { continue; }
-            if (!obj.name.StartsWith("en_")) { continue; }
+            if (!obj.name.StartsWith("en_") && !obj.name.StartsWith("lm_")) { continue; }
 
             string name = obj.name.Split('_')[1];
-            Debug.Log("Working on: " + name);
+            //Debug.Log("Working on: " + name);
 
             //Create a new environment object
             EnvironmentObjectData envObj = new EnvironmentObjectData(0);
 
             //Get the information about the children
-            Debug.Log(name + " has " + obj.transform.childCount + " children");
+            //Debug.Log(name + " has " + obj.transform.childCount + " children");
 
             //Loop through all of the child objects
             foreach (Transform child in obj.transform)
             {
+                EnvironmentObjectData localObj = new EnvironmentObjectData(0);
+
                 string childName = child.name.Split('_')[1];
-                Debug.Log("Working with: " + childName);
+                //Debug.Log("Working with: " + childName);
 
                 //Get the child mesh renderer
                 MeshRenderer mRenderer = child.GetComponent<MeshRenderer>();
@@ -63,7 +71,7 @@ public class EnvironmentDataBuilder : MonoBehaviour
                 //If there is no mesh renderer go to the next child
                 if (mRenderer)
                 {
-                    Debug.Log("Getting mesh/mat from: " + childName);
+                    //Debug.Log("Getting mesh/mat from: " + childName);
 
                     //Add the mesh renderer
                     envObj.AddMeshMat(child.GetComponent<MeshFilter>().sharedMesh,
@@ -71,10 +79,16 @@ public class EnvironmentDataBuilder : MonoBehaviour
                         child.localScale.x * obj.transform.localScale.x,
                         child.localPosition,
                         child.localRotation);
+
+                    localObj.AddMeshMat(child.GetComponent<MeshFilter>().sharedMesh,
+                        mRenderer.sharedMaterials,
+                        child.localScale.x * obj.transform.localScale.x,
+                        child.localPosition,
+                        child.localRotation);
                 }
                 else
                 {
-                    Debug.Log(childName + " has no mesh/mat");
+                    //Debug.Log(childName + " has no mesh/mat");
                 }
 
                 //If the child has colliders add them to the collider lists
@@ -82,6 +96,27 @@ public class EnvironmentDataBuilder : MonoBehaviour
                 {
                     envObj.AddCapCols(child.GetComponents<CapsuleCollider>(), child.localScale.x, child.localPosition);
                     envObj.AddBoxCols(child.GetComponents<BoxCollider>(), child.localScale.x, child.localPosition);
+
+                    localObj.AddCapCols(child.GetComponents<CapsuleCollider>(), child.localScale.x, child.localPosition);
+                    localObj.AddBoxCols(child.GetComponents<BoxCollider>(), child.localScale.x, child.localPosition);
+
+                    //Get and save all capsule colliders
+                    CapsuleCollider[] lcCol = obj.GetComponents<CapsuleCollider>();
+                    localObj.AddCapCols(lcCol, obj.transform.localScale.x, Vector3.zero);
+
+                    //Get and save all box colliders
+                    BoxCollider[] lbCol = obj.GetComponents<BoxCollider>();
+                    localObj.AddBoxCols(lbCol, obj.transform.localScale.x, Vector3.zero);
+                }
+
+                if (obj.name.StartsWith("lm_"))
+                {
+                    localObj.CalcRadius();
+
+                    if (child.GetComponent<Collider>())
+                        structures.Add(localObj);
+                    else
+                        decors.Add(localObj);
                 }
             }
 
@@ -109,17 +144,30 @@ public class EnvironmentDataBuilder : MonoBehaviour
             envObj.CalcRadius();
 
             //Set the type of prop the object is
-            if (envObj.boxColDatas.Length == 0 && envObj.capColDatas.Length == 0)
+            if (!obj.name.StartsWith("lm_") && envObj.boxColDatas.Length == 0 && envObj.capColDatas.Length == 0)
             {
                 decors.Add(envObj);
             }
-            else if (!envObj.isLandMark)
+            else if (!obj.name.StartsWith("lm_") && !envObj.isLandMark)
             {
                 structures.Add(envObj);
             }
-            else
+
+            if (obj.name.StartsWith("lm_"))
             {
-                landMarks.Add(envObj);
+                EnviromentLandmarkData landMark = new EnviromentLandmarkData(decors.Count - decorList.decorDataList.Length, structures.Count - decorList.structureDataList.Length);
+
+                for (int i = 0; i < decors.Count - decorOffset; i++)
+                {
+                    landMark.decors[i] = decorOffset + i;
+                }
+
+                for (int i = 0; i < structures.Count - structureOffset; i++)
+                {
+                    landMark.structures[i] = structureOffset + i;
+                }
+
+                landMarks.Add(landMark);
             }
 
             //Set all of the array data in the evironment object
@@ -134,7 +182,7 @@ public class EnvironmentDataBuilder : MonoBehaviour
             //Set the name of the new environment asset
             string name = (saveName == "") ? Random.Range(0, int.MaxValue).ToString() : saveName;
 
-            Debug.Log("Created new Env Asset named: " + name);
+            //Debug.Log("Created new Env Asset named: " + name);
 
 #if UNITY_EDITOR
             //Create and save the asset
@@ -143,6 +191,6 @@ public class EnvironmentDataBuilder : MonoBehaviour
 #endif
         }
 
-        Debug.Log("Done building!");
+        //Debug.Log("Done building!");
     }
 }
